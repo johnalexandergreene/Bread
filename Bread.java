@@ -8,11 +8,11 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
 import javax.swing.JTextField;
-import javax.swing.Renderer;
 
-import org.fleen.forsythia.app.bread.composer.Composer;
-import org.fleen.forsythia.app.bread.composer.Composer001_SplitBoil;
-import org.fleen.forsythia.app.bread.renderer.Renderer000;
+import org.fleen.bread.composer.Composer;
+import org.fleen.bread.composer.Composer001_SplitBoil;
+import org.fleen.bread.renderer.Renderer;
+import org.fleen.bread.renderer.Renderer000;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
