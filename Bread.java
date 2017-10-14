@@ -17,6 +17,10 @@ import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
 /*
+ * Bread means money
+ * 
+ * This is a suite of tools for creating products that make money
+ * 
  * bread is a generator of forsythia compositions
  * we use whatever renderer
  * 

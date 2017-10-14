@@ -42,8 +42,8 @@ import javax.imageio.ImageIO;
  */
 public class SpinnerFrameGleaner{
   
-  static final String SOURCEIMAGEPATH="/home/john/Desktop/spinner/i22.png";
-  static final String EXPORTDIRPATH="/home/john/Desktop/spinner/frames";
+  static final String SOURCEIMAGEPATH="/home/john/projects/museum spam/spam000/i22.png";
+  static final String EXPORTDIRPATH="/home/john/projects/museum spam/spam000/frames";
   static final int 
     THICKNESS=400,
     INCREMENT=2;
