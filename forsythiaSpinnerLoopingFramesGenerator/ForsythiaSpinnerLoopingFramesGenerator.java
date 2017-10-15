@@ -1,9 +1,13 @@
 package org.fleen.bread.forsythiaSpinnerLoopingFramesGenerator;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.fleen.forsythia.core.grammar.FMetagon;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
 /*
@@ -101,7 +105,11 @@ public class ForsythiaSpinnerLoopingFramesGenerator{
   File exportdir;
   
   private void initExport(String path){
-    exportdir=new File(path);}
+    try{
+      exportdir=new File(path);
+    }catch(Exception x){
+      System.out.println("exception in export path init");
+      x.printStackTrace();}}
   
   /*
    * ################################
@@ -113,7 +121,7 @@ public class ForsythiaSpinnerLoopingFramesGenerator{
    * gather the rectangular metagons from the grammar
    * 
    * create a strip of rectangles to cover the viewport.
-   * This is the startend.
+   * This is the terminus. The beginning and end.
    * 
    * cultivate the rectangles. Render to viewport (and to a frame, and export that frame)
    * move the viewport across the startend, 1 pixel row at a time
@@ -127,10 +135,73 @@ public class ForsythiaSpinnerLoopingFramesGenerator{
    * then we're done.
    */
   private void createFrames(){
-    
-    
+    initRectangularMetagons();
+    initTerminus();
+    //
+    boolean finished=false;
+    BufferedImage frame;
+    while(!finished){
+      frame=createFrame();
+      if(frame!=null)
+        exportframe(frame);
+      else
+        finished=true;}}
+  
+  /*
+   * ################################
+   * RECTANGULAR METAGONS
+   * ################################
+   */
+  
+  List<FMetagon> rectangularmetagons;
+  
+  void initRectangularMetagons(){
+    rectangularmetagons=new ArrayList<FMetagon>();
+    for(FMetagon m:grammar.getMetagons())
+      if(isRectangular(m))
+        rectangularmetagons.add(m);}
+  
+  private boolean isRectangular(FMetagon m){
+    //a rectangular metagon has 3 vectors
+    if(m.vectors.length!=3)return false;
+    //all 3 vectors have direction=3
+    if(!(
+      m.vectors[0].directiondelta==3&&
+      m.vectors[1].directiondelta==3&&
+      m.vectors[2].directiondelta==3))return false;
+    //the first and last vectors have equal length
+    if(
+      m.vectors[0].relativeinterval!=
+      m.vectors[2].directiondelta)return false;
+    //
+    return true;}
+  
+  /*
+   * ################################
+   * TERMINUS
+   * A strip of rectangles comprising the start and end of our loop of rectangles
+   * It covers up the viewport, with a bit of overlap to account for inter-rectangle graphic influences
+   * ################################
+   */
+  
+  private void initTerminus(){
     
   }
+  
+  /*
+   * ################################
+   * GET RANDOM NEXT RECTANGLE
+   * each rectangle is a forsythia composition
+   * get a random rectangular metagon
+   * create a root grid that puts that metagon polygon rectangle at the edge of our previous rectangle
+   * cultivate it up
+   * init the leaf polygon colors  
+   * 
+   * I think that we should do it left-to-right (AKA east) and then, 
+   * depending on the flow direction, apply a transform to the image if necessary. 
+   * 
+   * ################################
+   */
   
   
   
