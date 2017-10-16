@@ -8,4 +8,9 @@ public interface Composer{
   //create a new composition
   ForsythiaComposition compose(ForsythiaGrammar grammar,double detaillimit);
   
+  //build on an an existing composition
+  void compose(ForsythiaComposition c,double detaillimit);
+  
+  
+  
 }

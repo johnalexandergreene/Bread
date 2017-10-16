@@ -38,6 +38,9 @@ public abstract class Composer_Abstract implements Composer{
     build(composition,detaillimit);
     return composition;}
   
+  public void compose(ForsythiaComposition c,double detaillimit){
+    build(c,detaillimit);}
+  
   /*
    * ################################
    * BUILD
