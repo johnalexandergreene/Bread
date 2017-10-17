@@ -1,4 +1,4 @@
-package org.fleen.bread.forsythiaSpinnerLoopingFramesGenerator;
+package org.fleen.bread.fSLAFG;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -8,9 +8,9 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 public class Viewer extends JFrame{
   
-  ForsythiaSpinnerLoopingFramesGenerator gen;
+  FSLAFG gen;
   
-  public Viewer(ForsythiaSpinnerLoopingFramesGenerator gen,int w,int h){
+  public Viewer(FSLAFG gen,int w,int h){
     this.gen=gen;
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setBounds(50,50,800,800);

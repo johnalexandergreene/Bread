@@ -1,4 +1,4 @@
-package org.fleen.bread.forsythiaSpinnerLoopingFramesGenerator;
+package org.fleen.bread.fSLAFG;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -9,19 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.fleen.bread.composer.Composer;
 import org.fleen.bread.composer.Composer001_SplitBoil;
-import org.fleen.bread.renderer.Renderer;
-import org.fleen.bread.renderer.Renderer000;
-import org.fleen.forsythia.core.composition.FGrid;
-import org.fleen.forsythia.core.composition.FGridRoot;
-import org.fleen.forsythia.core.composition.FPolygon;
-import org.fleen.forsythia.core.composition.ForsythiaComposition;
+import org.fleen.bread.fSLAFG.renderer.Renderer;
+import org.fleen.bread.fSLAFG.renderer.Renderer000;
+import org.fleen.bread.fSLAFG.stripeNode.StripeNode;
 import org.fleen.forsythia.core.grammar.FMetagon;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
-import org.fleen.geom_Kisrhombille.KAnchor;
-import org.fleen.geom_Kisrhombille.KPolygon;
 
 /*
+ * FORSYTHIA SPINNER LOOPING ANIMATION FRAMES GENERATOR
+ * 
+ * 
  * Given
  *   a viewport definition (height and width) 
  *   a flow direction (NESW)
@@ -44,7 +43,7 @@ import org.fleen.geom_Kisrhombille.KPolygon;
  * keep moving until we arrive back at out start position.
  * then we're done.
  */
-public class ForsythiaSpinnerLoopingFramesGenerator{
+public class FSLAFG{
   
   public void generate(int viewportwidth,int viewportheight,int looplength,int flowdir,int edgerange,String grammarpath,String exportpath){
     this.viewportwidth=viewportwidth;
@@ -108,7 +107,7 @@ public class ForsythiaSpinnerLoopingFramesGenerator{
    * ################################
    */
   
-  ForsythiaGrammar grammar=null;
+  public ForsythiaGrammar grammar=null;
   
   private void initGrammar(String path){
     grammar=null;
@@ -130,6 +129,16 @@ public class ForsythiaSpinnerLoopingFramesGenerator{
       ois.close();
     }catch(Exception x){}
     return g;}
+  
+  /*
+   * ################################
+   * COMPOSITION CONTROL
+   * ################################
+   */
+  
+  public double compositiondetaillimit=0.02;
+  
+  public Composer composer=new Composer001_SplitBoil();
   
   /*
    * ################################
@@ -187,21 +196,34 @@ public class ForsythiaSpinnerLoopingFramesGenerator{
   
   /*
    * ################################
-   * RECTANGULAR METAGONS
+   * UTIL
    * ################################
    */
   
-  List<FMetagon> rectangularmetagons;
+  Random random=new Random();
   
-  void initRectangularMetagons(){
+  /*
+   * ################################
+   * RECTANGULAR METAGONS
+   * The rectangular metagons in our working grammar
+   * Used by the stripe node compositions
+   * ################################
+   */
+  
+  private List<FMetagon> rectangularmetagons;
+  
+  private void initRectangularMetagons(){
     rectangularmetagons=new ArrayList<FMetagon>();
     for(FMetagon m:grammar.getMetagons())
       if(isRectangular(m))
         rectangularmetagons.add(m);}
   
+  public FMetagon getRandomRectangularMetagon(){
+    int a=random.nextInt(rectangularmetagons.size());
+    FMetagon m=rectangularmetagons.get(a);
+    return m;}
+  
   private boolean isRectangular(FMetagon m){
-    System.out.println("test metagon for rectangularity : " + m);
-    
     //a rectangular metagon has 2 vectors
     if(m.vectors.length!=2)return false;
     //those vectors have directiondelta=3
@@ -214,6 +236,7 @@ public class ForsythiaSpinnerLoopingFramesGenerator{
     return true;}
   
   //wtfe
+  //close enough to 1
   static final double ONEERROR=0.000000000000005;
   private boolean isOne(double a){
     return (a>1-ONEERROR)&&(a<1+ONEERROR);}
@@ -231,55 +254,7 @@ public class ForsythiaSpinnerLoopingFramesGenerator{
     
   }
   
-  /*
-   * ################################
-   * GET RANDOM NEXT RECTANGLE
-   * each rectangle is the root of a forsythia composition
-   * get a random rectangular metagon
-   * create a root grid that puts that metagon polygon rectangle at the edge of our previous rectangle
-   * cultivate it up
-   * init the leaf polygon colors  
-   * 
-   * I think that we should do it left-to-right (AKA east) and then, 
-   * depending on the flow direction, apply a transform to the image if necessary. 
-   * 
-   * ---
-   * 
-   * given frameindex
-   * get lines from frameindex to frameindex+viewportwidth
-   * 
-   * check foreward from frameindex+viewportwidth by padding lines
-   *   if we run off the right edge of the rectangle then check for the existence of the next rectanglenode
-   *   if it isn't there then create it and link it to the present rectanglenode  
-   * 
-   * ################################
-   */
-  
-  ForsythiaComposition getRandomRectangularComposition(){
-    Random rnd=new Random();
-    FMetagon rootmetagon=rectangularmetagons.get(rnd.nextInt(rectangularmetagons.size()));
-    KPolygon p0=rootmetagon.getPolygon();
-    List<KAnchor> anchors=rootmetagon.getAnchorOptions(p0);
-    KAnchor a=anchors.get(rnd.nextInt(anchors.size()));
-    p0=rootmetagon.getPolygon(a);
-    ForsythiaComposition c=new ForsythiaComposition();
-    c.setGrammar(grammar);
-    //
-    FGridRoot rootgrid=new FGridRoot();
-    FPolygon rootpolygon=new FPolygon(rootmetagon,a);
-    c.initTree(rootgrid,rootpolygon);
-    //scale for viewport
-    //get the height of the root polygon
-    //divide by viewport height to get scale
-    //set grid fish to that 
-    double h=rootpolygon.getDPolygon().getBounds().height;
-    double s=viewportheight/h;
-//    rootgrid.getLocalKGrid().fish=s;
-    
-    //position
-    //
-    new Composer001_SplitBoil().compose(c,0.05);
-    return c;}
+
   
   
   /*
@@ -307,10 +282,16 @@ public class ForsythiaSpinnerLoopingFramesGenerator{
     new Color(0,146,231),
     new Color(251,206,221)};
   
-  //TEST
-  void renderFrame(){
-    ForsythiaComposition c=getRandomRectangularComposition();
-    frame=renderer.createImage(viewportwidth,viewportheight,c,P_TOY_STORY,true);
+  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * TEST
+   * ++++++++++++++++++++++++++++++++
+   */
+  
+  void renderStripeNode(){
+    StripeNode n=new StripeNode(this);
+    frame=renderer.createImage(viewportwidth,viewportheight,n.composition,P_TOY_STORY,true);
     viewer.repaint();
   }
   
@@ -332,14 +313,25 @@ public class ForsythiaSpinnerLoopingFramesGenerator{
    * ################################
    */
   
+  static StripeNode getTestChain(FSLAFG g){
+    StripeNode 
+      n0=new StripeNode(g),
+      n1=new StripeNode(g),
+      n2=new StripeNode(g);
+    n0.next=n1;
+    n1.prior=n0;
+    n1.next=n2;
+    n2.prior=n1;
+    return n0;}
+  
   public static final void main(String[] a){
-    ForsythiaSpinnerLoopingFramesGenerator g=new ForsythiaSpinnerLoopingFramesGenerator();
+    FSLAFG g=new FSLAFG();
     g.generate(500,500,1000,FLOWDIR_NORTH,5,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/newstuff");
     g.initUI();
     for(int i=0;i<100;i++){
-      g.renderFrame();
+      g.renderStripeNode();
       try{
-        Thread.sleep(1000);
+        Thread.sleep(2000);
       }catch(Exception x){}}
     
     
