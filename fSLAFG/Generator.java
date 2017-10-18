@@ -13,7 +13,8 @@ import org.fleen.bread.composer.Composer;
 import org.fleen.bread.composer.Composer001_SplitBoil;
 import org.fleen.bread.fSLAFG.renderer.Renderer;
 import org.fleen.bread.fSLAFG.renderer.Renderer000;
-import org.fleen.bread.fSLAFG.stripeNode.StripeNode;
+import org.fleen.bread.fSLAFG.stripeChain.StripeChain;
+import org.fleen.bread.fSLAFG.ui.UI;
 import org.fleen.forsythia.core.grammar.FMetagon;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
@@ -43,7 +44,7 @@ import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
  * keep moving until we arrive back at out start position.
  * then we're done.
  */
-public class FSLAFG{
+public class Generator{
   
   public void generate(int viewportwidth,int viewportheight,int looplength,int flowdir,int edgerange,String grammarpath,String exportpath){
     this.viewportwidth=viewportwidth;
@@ -62,7 +63,7 @@ public class FSLAFG{
    * ################################
    */
   
-  int 
+  public int 
     viewportwidth,
     viewportheight;
   
@@ -74,7 +75,7 @@ public class FSLAFG{
    * ################################
    */
   
-  int looplength;
+  public int looplength;
   
   /*
    * ################################
@@ -186,11 +187,12 @@ public class FSLAFG{
     initTerminus();
     //
     finished=false;
-    while(!finished){
-      createFrame();
-      updateViewer();
-      exportframe(frame);
-      incrementPerspective();}}
+//    while(!finished){
+//      createFrame();
+//      updateViewer();
+//      exportframe(frame);
+//      incrementPerspective();}
+    }
   
   /*
    * ################################
@@ -255,7 +257,7 @@ public class FSLAFG{
    * ################################
    */
   
-  BufferedImage frame;
+  public BufferedImage frame;
   
   Renderer renderer=new Renderer000();
   
@@ -266,9 +268,15 @@ public class FSLAFG{
    */
   
   void renderStripeNode(){
-    StripeNode n=new StripeNode(this);
-    frame=renderer.createImage(viewportwidth,viewportheight,n.composition,P_TOY_STORY,true);
-    viewer.repaint();
+    StripeChain c=new StripeChain(this);
+    c.createStripeAtEnd();
+    c.createStripeAtEnd();
+    c.createStripeAtEnd();
+    
+    
+//    frame=renderer.createImage(viewportwidth,viewportheight,n.composition,P_TOY_STORY,true);
+    frame=c.getImage();
+    ui.viewer.repaint();
   }
   
   /*
@@ -277,10 +285,10 @@ public class FSLAFG{
    * ################################
    */
   
-  Viewer viewer;
+  UI ui;
   
   void initUI(){
-    viewer=new Viewer(this,viewportwidth+20,viewportheight+20);
+    ui=new UI(this,viewportwidth+20,viewportheight+20);
   }
   
   /*
@@ -316,25 +324,14 @@ public class FSLAFG{
    * ################################
    */
   
-  static StripeNode getTestChain(FSLAFG g){
-    StripeNode 
-      n0=new StripeNode(g),
-      n1=new StripeNode(g),
-      n2=new StripeNode(g);
-    n0.next=n1;
-    n1.prior=n0;
-    n1.next=n2;
-    n2.prior=n1;
-    return n0;}
-  
   public static final void main(String[] a){
-    FSLAFG g=new FSLAFG();
-    g.generate(500,500,1000,FLOWDIR_NORTH,5,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/newstuff");
+    Generator g=new Generator();
+    g.generate(400,400,1000,FLOWDIR_NORTH,5,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/newstuff");
     g.initUI();
     for(int i=0;i<100;i++){
       g.renderStripeNode();
       try{
-        Thread.sleep(2000);
+        Thread.sleep(5000);
       }catch(Exception x){}}
     
     
