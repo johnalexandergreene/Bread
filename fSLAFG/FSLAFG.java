@@ -178,29 +178,19 @@ public class FSLAFG{
    * keep moving until we arrive back at out start position.
    * then we're done.
    */
+  
+  boolean finished;
+  
   private void createFrames(){
     initRectangularMetagons();
-    System.out.println("rectangular metagon count = "+rectangularmetagons.size());
-//    initTerminus();
-//    //
-//    boolean finished=false;
-//    BufferedImage frame;
-//    while(!finished){
-//      frame=createFrame();
-//      if(frame!=null)
-//        exportframe(frame);
-//      else
-//        finished=true;}
-    
-  }
-  
-  /*
-   * ################################
-   * UTIL
-   * ################################
-   */
-  
-  Random random=new Random();
+    initTerminus();
+    //
+    finished=false;
+    while(!finished){
+      createFrame();
+      updateViewer();
+      exportframe(frame);
+      incrementPerspective();}}
   
   /*
    * ################################
@@ -216,10 +206,12 @@ public class FSLAFG{
     rectangularmetagons=new ArrayList<FMetagon>();
     for(FMetagon m:grammar.getMetagons())
       if(isRectangular(m))
-        rectangularmetagons.add(m);}
+        rectangularmetagons.add(m);
+    System.out.println("rectangular metagon count = "+rectangularmetagons.size());}
   
   public FMetagon getRandomRectangularMetagon(){
-    int a=random.nextInt(rectangularmetagons.size());
+    Random rnd=new Random();
+    int a=rnd.nextInt(rectangularmetagons.size());
     FMetagon m=rectangularmetagons.get(a);
     return m;}
   
@@ -268,22 +260,6 @@ public class FSLAFG{
   Renderer renderer=new Renderer000();
   
   /*
-   * TOY STORY MOVIE
-   */
-  static final Color[] P_TOY_STORY=new Color[]{
-    new Color(168,67,39),
-    new Color(250,200,147),
-    new Color(163,187,75),
-    new Color(154,94,154),
-    new Color(232,62,65),
-    new Color(249,212,1),
-    new Color(249,139,90),
-    new Color(236,77,74),
-    new Color(0,146,231),
-    new Color(251,206,221)};
-  
-  
-  /*
    * ++++++++++++++++++++++++++++++++
    * TEST
    * ++++++++++++++++++++++++++++++++
@@ -309,7 +285,34 @@ public class FSLAFG{
   
   /*
    * ################################
+   * PALETTE
+   * ################################
+   */
+  
+  /*
+   * TOY STORY MOVIE
+   */
+  static final Color[] P_TOY_STORY=new Color[]{
+    new Color(168,67,39),
+    new Color(250,200,147),
+    new Color(163,187,75),
+    new Color(154,94,154),
+    new Color(232,62,65),
+    new Color(249,212,1),
+    new Color(249,139,90),
+    new Color(236,77,74),
+    new Color(0,146,231),
+    new Color(251,206,221)};
+  
+  public Color[] palette=P_TOY_STORY;
+  
+  /*
+   * ################################
+   * ################################
+   * ################################
    * MAIN
+   * ################################
+   * ################################
    * ################################
    */
   

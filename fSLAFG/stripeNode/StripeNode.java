@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Random;
 
 import org.fleen.bread.fSLAFG.FSLAFG;
+import org.fleen.bread.fSLAFG.stripeNode.colorMap.ColorMap;
+import org.fleen.bread.fSLAFG.stripeNode.colorMap.ColorMap0000;
 import org.fleen.forsythia.core.composition.FGridRoot;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
@@ -27,7 +29,8 @@ public class StripeNode{
   
   public StripeNode(FSLAFG generator){
     this.generator=generator;
-    initComposition();}
+    initComposition();
+    initColorMap();}
   
   /*
    * ################################
@@ -80,7 +83,18 @@ public class StripeNode{
     generator.composer.compose(composition,getScaledDetailLimit(rootpolygon));}
   
   private double getScaledDetailLimit(FPolygon polygon){
-    return generator.compositiondetaillimit*polygon.getDPolygon().getBounds().height;
-  }
+    return generator.compositiondetaillimit*polygon.getDPolygon().getBounds().height;}
+  
+  /*
+   * ################################
+   * COLOR MAP
+   * Colors mapped to composition leaf polygons 
+   * ################################
+   */
+  
+  public ColorMap colormap;
+  
+  private void initColorMap(){
+    colormap=new ColorMap0000(composition,generator.palette);}
 
 }
