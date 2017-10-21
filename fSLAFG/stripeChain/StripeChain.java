@@ -16,7 +16,6 @@ import java.util.List;
 import org.fleen.bread.fSLAFG.Generator;
 import org.fleen.bread.fSLAFG.stripeChain.stripe.Stripe;
 import org.fleen.forsythia.core.composition.FPolygon;
-import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.util.tree.TreeNode;
 
 /*
@@ -84,6 +83,9 @@ public class StripeChain extends LinkedList<Stripe>{
    * ################################
    * IMAGE
    * Render all of the stripes end-to-end as a continuous strip image
+   * For each stripe composition
+   *   
+   * 
    * ################################
    */
   
@@ -108,7 +110,12 @@ public class StripeChain extends LinkedList<Stripe>{
   
   BufferedImage image=null;
   AffineTransform[] stripeimagetransforms;
-  double totalimagewidth;
+  double imagewidth;//the image is imagewidth X viewportheight
+  
+  public int getImageWidth(){
+    if(image==null)
+      createImage();
+    return (int)imagewidth;}
   
   public BufferedImage getImage(){
     if(image==null)
@@ -117,7 +124,12 @@ public class StripeChain extends LinkedList<Stripe>{
   
   private void createImage(){
     initImageAndTransforms();
-    Graphics2D g=(Graphics2D)image.getGraphics();
+    if(Generator.TEST)createTestImage();
+    Graphics2D g=image.createGraphics();
+    g.setPaint(Color.white);
+    g.fillRect(0,0,image.getWidth(),image.getHeight());
+    g.setRenderingHints(RENDERING_HINTS);
+    //render the image
     for(int i=0;i<size();i++)
       renderFill(g,i);
     for(int i=0;i<size();i++)
@@ -125,7 +137,13 @@ public class StripeChain extends LinkedList<Stripe>{
   
   private void renderFill(Graphics2D g,int stripeindex){
     Stripe stripe=get(stripeindex);
-    g.setTransform(stripeimagetransforms[stripeindex]);
+    //
+    AffineTransform 
+      told=g.getTransform(),
+      t=new AffineTransform(told);
+    t.concatenate(stripeimagetransforms[stripeindex]);
+    g.setTransform(t);
+    //
     Iterator<TreeNode> i=stripe.composition.getLeafPolygonIterator();
     FPolygon p;
     Color color;
@@ -133,20 +151,27 @@ public class StripeChain extends LinkedList<Stripe>{
       p=(FPolygon)i.next();
       color=stripe.colormap.get(p);
       g.setPaint(color);
-      g.fill(p.getDPolygon().getPath2D());}}
+      g.fill(p.getDPolygon().getPath2D());}
+    g.setTransform(told);}
   
   private void renderStroke(Graphics2D g,int stripeindex){
     Stripe stripe=get(stripeindex);
-    g.setTransform(stripeimagetransforms[stripeindex]);
+    System.out.println("render stroke for stripe composition : "+stripe.composition);
+    //
+    AffineTransform 
+      told=g.getTransform(),
+      t=new AffineTransform(told);
+    t.concatenate(stripeimagetransforms[stripeindex]);
+    g.setTransform(t);
+    //
     Iterator<TreeNode> i=stripe.composition.getLeafPolygonIterator();
     FPolygon p;
     g.setPaint(Color.black);
-    g.setStroke(createStroke((float)(0.001/stripeimagetransforms[stripeindex].getScaleX())));
+    g.setStroke(createStroke((float)(2.0/stripeimagetransforms[stripeindex].getScaleX())));
     while(i.hasNext()){
       p=(FPolygon)i.next();
       g.draw(p.getDPolygon().getPath2D());}
-    
-  }
+    g.setTransform(told);}
   
   private Stroke createStroke(float strokewidth){
     Stroke stroke=new BasicStroke(strokewidth,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_ROUND,0,null,0);
@@ -156,14 +181,14 @@ public class StripeChain extends LinkedList<Stripe>{
     int s=size();
     stripeimagetransforms=new AffineTransform[s];
     double stripeimageoffset;
-    totalimagewidth=0;
+    imagewidth=0;
     Stripe stripe;
     for(int i=0;i<s;i++){
-      stripeimageoffset=totalimagewidth;
+      stripeimageoffset=imagewidth;
       stripe=get(i);
       stripeimagetransforms[i]=getStripeImageTransform(get(i),stripeimageoffset);
-      totalimagewidth+=getScaledWidth(stripe);}
-    image=new BufferedImage((int)totalimagewidth,generator.viewportheight,BufferedImage.TYPE_INT_RGB);}
+      imagewidth+=getScaledWidth(stripe);}
+    image=new BufferedImage((int)imagewidth,generator.viewportheight,BufferedImage.TYPE_INT_RGB);}
   
   private double getScaledWidth(Stripe stripe){
     double
@@ -193,8 +218,42 @@ public class StripeChain extends LinkedList<Stripe>{
     double
       xoff=((getScaledWidth(stripe)/scale-cbwidth)/2.0)-cbxmin,
       yoff=-(((generator.viewportheight/scale+cbheight)/2.0)+cbymin);
-    transform.translate(xoff+stripeimageoffset,yoff);
+    transform.translate(xoff+stripeimageoffset/scale,yoff);
     //
     return transform;}
+  
+  /*
+   * ################################
+   * IMAGE STUFF FOR TEST
+   * ################################
+   */
+  
+  public BufferedImage testimage;
+  
+  private void createTestImage(){
+    testimage=new BufferedImage(image.getWidth(),image.getHeight(),BufferedImage.TYPE_INT_RGB);
+    Graphics2D g=testimage.createGraphics();
+    g.setPaint(Color.white);
+    g.fillRect(0,0,image.getWidth(),image.getHeight());
+    g.setRenderingHints(RENDERING_HINTS);
+    for(int i=0;i<size();i++)
+      renderStroke(g,i);
+    for(int i=0;i<size();i++)
+      renderBorder(g,i);}
+  
+  //highlight the borders of each stripe rectangle
+  private void renderBorder(Graphics2D g,int stripeindex){
+    Stripe stripe=get(stripeindex);
+    //
+    AffineTransform 
+      told=g.getTransform(),
+      t=new AffineTransform(told);
+    t.concatenate(stripeimagetransforms[stripeindex]);
+    g.setTransform(t);
+    //
+    g.setPaint(Color.red);
+    g.setStroke(createStroke((float)(8.0/stripeimagetransforms[stripeindex].getScaleX())));
+    g.draw(stripe.composition.getRootPolygon().getDPolygon().getPath2D());
+    g.setTransform(told);}
   
 }

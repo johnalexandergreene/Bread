@@ -1,6 +1,8 @@
 package org.fleen.bread.fSLAFG;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,6 +47,8 @@ import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
  * then we're done.
  */
 public class Generator{
+  
+  public static final boolean TEST=true;
   
   public void generate(int viewportwidth,int viewportheight,int looplength,int flowdir,int edgerange,String grammarpath,String exportpath){
     this.viewportwidth=viewportwidth;
@@ -137,7 +141,7 @@ public class Generator{
    * ################################
    */
   
-  public double compositiondetaillimit=0.02;
+  public double compositiondetaillimit=0.04;
   
   public Composer composer=new Composer001_SplitBoil();
   
@@ -186,6 +190,7 @@ public class Generator{
     initRectangularMetagons();
     initTerminus();
     //
+    viewportposition=edgerange;
     finished=false;
 //    while(!finished){
 //      createFrame();
@@ -237,20 +242,37 @@ public class Generator{
   
   /*
    * ################################
-   * TERMINUS
-   * A strip of rectangles comprising the start and end of our loop of rectangles
+   * STRIPECHAINS
+   * 
+   * We have 1 or 2 stripechains
+   * terminus and present
+   * 
+   * terminus ia a strip of rectangles comprising the start and end of our loop of rectangles
    * It covers up the viewport, with a bit of overlap 
    *   to account for inter-rectangle graphic influences. ie edgerange
+   *   
+   * present changes to keep our viewport filled
+   * 
+   * At init they are the same chain
    * ################################
    */
   
+  public StripeChain 
+    terminus,
+    present;
+  
   private void initTerminus(){
-    
-  }
-  
-
-  
-  
+    terminus=new StripeChain(this);
+    terminus.createStripeAtEnd();
+    while(terminus.getImageWidth()<=viewportwidth+edgerange+edgerange)
+      terminus.createStripeAtEnd();
+    present=terminus;
+    System.out.println("--------------------------------");
+    System.out.println("created terminus");
+    System.out.println("stripecount = "+terminus.size());
+    System.out.println("imagewidth = "+terminus.getImageWidth());
+    System.out.println("--------------------------------");}
+ 
   /*
    * ################################
    * FRAME
@@ -259,25 +281,24 @@ public class Generator{
   
   public BufferedImage frame;
   
+  /*
+   * the position of the viewport in the present chain
+   * we increment it forward, 1 pixel at a time
+   * we also modify it when we modify the chain 
+   */
+  public int viewportposition=0;
+  
   Renderer renderer=new Renderer000();
   
-  /*
-   * ++++++++++++++++++++++++++++++++
-   * TEST
-   * ++++++++++++++++++++++++++++++++
-   */
+  BufferedImage testimage;
   
-  void renderStripeNode(){
-    StripeChain c=new StripeChain(this);
-    c.createStripeAtEnd();
-    c.createStripeAtEnd();
-    c.createStripeAtEnd();
-    
-    
-//    frame=renderer.createImage(viewportwidth,viewportheight,n.composition,P_TOY_STORY,true);
-    frame=c.getImage();
-    ui.viewer.repaint();
-  }
+  void renderFrame(){
+    AffineTransform t=AffineTransform.getTranslateInstance(-viewportposition,0);
+    BufferedImage i0=present.getImage();
+    frame=new BufferedImage(viewportwidth,viewportheight,BufferedImage.TYPE_INT_RGB);
+    Graphics2D g=frame.createGraphics();
+    g.drawImage(i0,t,null);
+    ui.viewer.repaint();}
   
   /*
    * ################################
@@ -326,12 +347,13 @@ public class Generator{
   
   public static final void main(String[] a){
     Generator g=new Generator();
-    g.generate(400,400,1000,FLOWDIR_NORTH,5,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/newstuff");
+    g.generate(200,300,1000,FLOWDIR_NORTH,5,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/newstuff");
     g.initUI();
-    for(int i=0;i<100;i++){
-      g.renderStripeNode();
+    for(int i=0;i<1000;i++){
+      g.renderFrame();
+      g.viewportposition++;
       try{
-        Thread.sleep(5000);
+        Thread.sleep(50);
       }catch(Exception x){}}
     
     

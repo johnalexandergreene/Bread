@@ -71,6 +71,11 @@ public class Stripe{
     composition.initTree(rootgrid,rootpolygon);
     chain.generator.composer.compose(composition,getScaledDetailLimit(rootpolygon));}
   
+  /*
+   * The unscaled height of our rectangular compositions varies, 
+   *   therefore the detail limit varies, 
+   *   therefore it needs to be scaled accordingly.
+   */
   private double getScaledDetailLimit(FPolygon polygon){
     return chain.generator.compositiondetaillimit*polygon.getDPolygon().getBounds().height;}
   
