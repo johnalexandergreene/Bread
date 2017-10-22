@@ -300,6 +300,14 @@ public class Generator{
     g.drawImage(i0,t,null);
     ui.viewer.repaint();}
   
+  public void incrementViewportPosition(){
+    viewportposition++;
+    if(viewportposition+viewportwidth+edgerange>present.getImageWidth())
+      present.createStripeAtEnd();
+  }
+  
+  
+  
   /*
    * ################################
    * UI
@@ -351,7 +359,7 @@ public class Generator{
     g.initUI();
     for(int i=0;i<1000;i++){
       g.renderFrame();
-      g.viewportposition++;
+      g.incrementViewportPosition();
       try{
         Thread.sleep(50);
       }catch(Exception x){}}
