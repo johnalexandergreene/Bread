@@ -14,7 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.fleen.bread.fSLAFG.Generator;
-import org.fleen.bread.fSLAFG.stripeChain.stripe.Stripe;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.util.tree.TreeNode;
 
@@ -54,30 +53,25 @@ public class StripeChain extends LinkedList<Stripe>{
    * ################################
    */
   
+  public int length=0;
+  
   public void createStripeAtEnd(){
     image=null;
-    add(new Stripe(this));}
+    Stripe stripe=new Stripe(this);
+    generator.stripewidthsum+=getStripeImageWidth(stripe);
+    add(stripe);}
   
-  public void removeStripeAtStart(){
-    removeFirst();
-    image=null;}
-  
-  /*
-   * We use this when we've come around the loop and merge our present chain with the terminus chain
-   */
-  public void mergeChainAtStart(StripeChain chain){
+  public void addStripesToEndForFinishingUp(List<Stripe> stripes){
     image=null;
-    
+    addAll(stripes);
   }
   
-  /*
-   * split off an end section of this chain to create a new chain
-   * we use this when the present chain moves beyond the terminus chain at the beginning of the loop
-   */
-  public StripeChain splitChainAtEnd(Stripe stripe){
-    image=null;
-    return null;
-  }
+  public void removeFirstStripe(){
+    Stripe a=getFirst();
+    if((int)(getStripeImageX(a)+getStripeImageWidth(a)+generator.edgerange-1)<generator.viewportposition){
+      generator.viewportposition-=getStripeImageWidth(a);
+      removeFirst();
+      image=null;}}
   
   /*
    * ################################
@@ -156,7 +150,6 @@ public class StripeChain extends LinkedList<Stripe>{
   
   private void renderStroke(Graphics2D g,int stripeindex){
     Stripe stripe=get(stripeindex);
-    System.out.println("render stroke for stripe composition : "+stripe.composition);
     //
     AffineTransform 
       told=g.getTransform(),
@@ -187,45 +180,16 @@ public class StripeChain extends LinkedList<Stripe>{
       stripeimageoffset=imagewidth;
       stripe=get(i);
       stripeimagetransforms[i]=getStripeImageTransform(get(i),stripeimageoffset);
-      imagewidth+=getScaledWidth(stripe);}
+      imagewidth+=getStripeImageWidth(stripe);}
     image=new BufferedImage((int)imagewidth,generator.viewportheight,BufferedImage.TYPE_INT_RGB);}
   
-  private double getScaledWidth(Stripe stripe){
-    double
-      s=getImageScale(stripe),
-      w=stripe.composition.getRootPolygon().getDPolygon().getBounds().width,
-      sw=s*w;
-    return sw;}
-  
-  private double getImageScale(Stripe stripe){
-    double ch=stripe.composition.getRootPolygon().getDPolygon().getBounds().height;
-    double s=generator.viewportheight/ch;
-    return s;}
-  
-  private AffineTransform getStripeImageTransform(Stripe stripe,double stripeimageoffset){
-    //get all the relevant metrics
-    Rectangle2D.Double compositionbounds=stripe.composition.getRootPolygon().getDPolygon().getBounds();
-    double
-      cbwidth=compositionbounds.getWidth(),
-      cbheight=compositionbounds.getHeight(),
-      cbxmin=compositionbounds.getMinX(),
-      cbymin=compositionbounds.getMinY();
-    AffineTransform transform=new AffineTransform();
-    //scale
-    double scale=getImageScale(stripe);
-    transform.scale(scale,-scale);//flip y for proper cartesian orientation
-    //offset
-    double
-      xoff=((getScaledWidth(stripe)/scale-cbwidth)/2.0)-cbxmin,
-      yoff=-(((generator.viewportheight/scale+cbheight)/2.0)+cbymin);
-    transform.translate(xoff+stripeimageoffset/scale,yoff);
-    //
-    return transform;}
-  
   /*
-   * ################################
-   * IMAGE STUFF FOR TEST
-   * ################################
+   * ++++++++++++++++++++++++++++++++
+   * FOR TEST IMAGE
+   * The test image is the whole stripechain
+   * polygons rendered with black strokes
+   * rectangle edge stroked according to nature 
+   * ++++++++++++++++++++++++++++++++
    */
   
   public BufferedImage testimage;
@@ -251,9 +215,82 @@ public class StripeChain extends LinkedList<Stripe>{
     t.concatenate(stripeimagetransforms[stripeindex]);
     g.setTransform(t);
     //
-    g.setPaint(Color.red);
+    if(generator.terminus.contains(stripe)){
+      g.setPaint(Color.red);
+    }else{
+      g.setPaint(Color.blue);}
+    
     g.setStroke(createStroke((float)(8.0/stripeimagetransforms[stripeindex].getScaleX())));
     g.draw(stripe.composition.getRootPolygon().getDPolygon().getPath2D());
     g.setTransform(told);}
+  
+  /*
+   * ################################
+   * STRIPE IMAGE GEOM
+   * ################################
+   */
+  
+  /*
+   * the xcoor of the left edge of the image of the stripe within the image of this chain
+   * which is to say, the x offset of the stripe 
+   */
+  public double getStripeImageX(Stripe stripe){
+    int a=indexOf(stripe),sum=0;
+    for(int i=0;i<a;i++)
+      sum+=getStripeImageWidth(get(i));
+    return sum;}
+  
+  private double getStripeImageWidth(Stripe stripe){
+    double
+      s=getImageScale(stripe),
+      w=stripe.composition.getRootPolygon().getDPolygon().getBounds().width,
+      sw=s*w;
+    return sw;}
+  
+  public double getImageScale(Stripe stripe){
+    double ch=stripe.composition.getRootPolygon().getDPolygon().getBounds().height;
+    double s=generator.viewportheight/ch;
+    return s;}
+  
+  private AffineTransform getStripeImageTransform(Stripe stripe,double stripeimageoffset){
+    //get all the relevant metrics
+    Rectangle2D.Double compositionbounds=stripe.composition.getRootPolygon().getDPolygon().getBounds();
+    double
+      cbwidth=compositionbounds.getWidth(),
+      cbheight=compositionbounds.getHeight(),
+      cbxmin=compositionbounds.getMinX(),
+      cbymin=compositionbounds.getMinY();
+    AffineTransform transform=new AffineTransform();
+    //scale
+    double scale=getImageScale(stripe);
+    transform.scale(scale,-scale);//flip y for proper cartesian orientation
+    //offset
+    double
+      xoff=((getStripeImageWidth(stripe)/scale-cbwidth)/2.0)-cbxmin,
+      yoff=-(((generator.viewportheight/scale+cbheight)/2.0)+cbymin);
+    transform.translate(xoff+stripeimageoffset/scale,yoff);
+    //
+    return transform;}
+  
+  /*
+   * ################################
+   * LOCAL POSITION
+   * Given the viewport position, the left edge of it to which generator.viewportposition corresponds
+   * upon which stripe does this lay and what is the offset from the beginning of that stripe
+   * we use this to get and test our start-stop
+   * ################################
+   */
+  
+  public Stripe localpositionstripe;
+  public int localpositionoffset;
+  
+  public void gleanLocalPositionStripe(){
+    int x0,x1;
+    for(int i=0;i<size();i++){
+      x1=(int)getStripeImageX(get(i));
+      if(x1>generator.viewportposition){
+        localpositionstripe=get(i-1);
+        x0=(int)getStripeImageX(localpositionstripe);
+        localpositionoffset=generator.viewportposition-x0;}}}
   
 }

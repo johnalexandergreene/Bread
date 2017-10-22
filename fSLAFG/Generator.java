@@ -15,6 +15,7 @@ import org.fleen.bread.composer.Composer;
 import org.fleen.bread.composer.Composer001_SplitBoil;
 import org.fleen.bread.fSLAFG.renderer.Renderer;
 import org.fleen.bread.fSLAFG.renderer.Renderer000;
+import org.fleen.bread.fSLAFG.stripeChain.Stripe;
 import org.fleen.bread.fSLAFG.stripeChain.StripeChain;
 import org.fleen.bread.fSLAFG.ui.UI;
 import org.fleen.forsythia.core.grammar.FMetagon;
@@ -58,7 +59,7 @@ public class Generator{
     this.edgerange=edgerange;
     initGrammar(grammarpath);
     initExport(exportpath);
-    createFrames();}
+    initUI();}
   
   /*
    * ################################
@@ -90,7 +91,7 @@ public class Generator{
    * ################################
    */
   
-  int edgerange;
+  public int edgerange;
   
   /*
    * ################################
@@ -184,19 +185,25 @@ public class Generator{
    * then we're done.
    */
   
-  boolean finished;
+  public boolean finished;
   
   private void createFrames(){
     initRectangularMetagons();
-    initTerminus();
-    //
+    initTerminusAndPresent();
     viewportposition=edgerange;
     finished=false;
-//    while(!finished){
-//      createFrame();
-//      updateViewer();
-//      exportframe(frame);
-//      incrementPerspective();}
+    //
+    present.gleanLocalPositionStripe();
+    localpositionstartstripe=present.localpositionstripe;
+    localpositionstartoffset=present.localpositionoffset;
+    //
+    while(!finished){
+      renderFrame();
+      incrementPerspective();
+      try{
+        Thread.sleep(50);
+      }catch(Exception x){}
+      }
     }
   
   /*
@@ -232,7 +239,7 @@ public class Generator{
     //the second vector has length==1 (more or less)
     if(!(isOne(m.vectors[1].relativeinterval)))return false;
     //
-    return true;}
+    return true;} 
   
   //wtfe
   //close enough to 1
@@ -261,17 +268,14 @@ public class Generator{
     terminus,
     present;
   
-  private void initTerminus(){
+  private void initTerminusAndPresent(){
+    //create the terminus
     terminus=new StripeChain(this);
-    terminus.createStripeAtEnd();
+    terminus.createStripeAtEnd();//true means that the new stripe is of terminus
     while(terminus.getImageWidth()<=viewportwidth+edgerange+edgerange)
       terminus.createStripeAtEnd();
-    present=terminus;
-    System.out.println("--------------------------------");
-    System.out.println("created terminus");
-    System.out.println("stripecount = "+terminus.size());
-    System.out.println("imagewidth = "+terminus.getImageWidth());
-    System.out.println("--------------------------------");}
+    //copy it to get present
+    present=new StripeChain(this,terminus);}
  
   /*
    * ################################
@@ -300,11 +304,31 @@ public class Generator{
     g.drawImage(i0,t,null);
     ui.viewer.repaint();}
   
-  public void incrementViewportPosition(){
+  public int stripewidthsum=0;
+  
+  public Stripe localpositionstartstripe;
+  public int localpositionstartoffset;
+  boolean almostdone=false;
+  
+  public void incrementPerspective(){
     viewportposition++;
     if(viewportposition+viewportwidth+edgerange>present.getImageWidth())
       present.createStripeAtEnd();
-  }
+    present.removeFirstStripe();
+    //
+    if((!almostdone)&&stripewidthsum>looplength){
+      present.addStripesToEndForFinishingUp(terminus);
+      almostdone=true;}
+    if(almostdone){
+      present.gleanLocalPositionStripe();
+      if(
+        localpositionstartstripe==present.localpositionstripe&&
+        localpositionstartoffset==present.localpositionoffset)
+        finished=true;}
+    System.out.println("length="+stripewidthsum);}
+  
+  
+  
   
   
   
@@ -353,17 +377,15 @@ public class Generator{
    * ################################
    */
   
+  /*
+   * TODO
+   * put params in constructor
+   * put everything else in generate
+   */
   public static final void main(String[] a){
     Generator g=new Generator();
-    g.generate(200,300,1000,FLOWDIR_NORTH,5,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/newstuff");
-    g.initUI();
-    for(int i=0;i<1000;i++){
-      g.renderFrame();
-      g.incrementViewportPosition();
-      try{
-        Thread.sleep(50);
-      }catch(Exception x){}}
-    
+    g.generate(100,200,2000,FLOWDIR_NORTH,32,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/newstuff");
+    g.createFrames();
     
   }
   

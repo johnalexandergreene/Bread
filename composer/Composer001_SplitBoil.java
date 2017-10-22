@@ -120,11 +120,9 @@ public class Composer001_SplitBoil extends Composer_Abstract{
    * and if it isn't a boiler then it's a splitter
    */
   private boolean isBoiler(Jig jig){
-    for(JigSection s:jig.sections){
-      if(s.tags.hasTag("egg")){
-        System.out.println(">> boiler! <<");
-        return true;}}
-    System.out.println(">> splitter! <<");
+    for(JigSection s:jig.sections)
+      if(s.tags.hasTag("egg"))
+        return true;
     return false;}
   
   

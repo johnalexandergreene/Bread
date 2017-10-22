@@ -1,11 +1,10 @@
-package org.fleen.bread.fSLAFG.stripeChain.stripe;
+package org.fleen.bread.fSLAFG.stripeChain;
 
 import java.util.List;
 import java.util.Random;
 
-import org.fleen.bread.fSLAFG.stripeChain.StripeChain;
-import org.fleen.bread.fSLAFG.stripeChain.stripe.colorMap.ColorMap;
-import org.fleen.bread.fSLAFG.stripeChain.stripe.colorMap.ColorMap0000;
+import org.fleen.bread.fSLAFG.stripeChain.colorMap.ColorMap;
+import org.fleen.bread.fSLAFG.stripeChain.colorMap.ColorMap0000;
 import org.fleen.forsythia.core.composition.FGridRoot;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;

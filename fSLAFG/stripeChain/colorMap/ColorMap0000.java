@@ -1,4 +1,4 @@
-package org.fleen.bread.fSLAFG.stripeChain.stripe.colorMap;
+package org.fleen.bread.fSLAFG.stripeChain.colorMap;
 
 import java.awt.Color;
 import java.util.HashMap;
