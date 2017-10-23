@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.fleen.bread.RasterExporter;
 import org.fleen.bread.composer.Composer;
 import org.fleen.bread.composer.Composer001_SplitBoil;
 import org.fleen.bread.fSLAFG.renderer.Renderer;
@@ -153,13 +154,18 @@ public class Generator{
    */
   
   File exportdir;
+  RasterExporter exporter=new RasterExporter();
   
   private void initExport(String path){
     try{
       exportdir=new File(path);
     }catch(Exception x){
       System.out.println("exception in export path init");
-      x.printStackTrace();}}
+      x.printStackTrace();}
+    exporter.setExportDir(exportdir);}
+  
+  private void exportFrame(){
+    exporter.export(frame,frameindex);}
   
   /*
    * ################################
@@ -186,6 +192,7 @@ public class Generator{
    */
   
   public boolean finished;
+  int frameindex=0;
   
   private void createFrames(){
     initRectangularMetagons();
@@ -199,7 +206,9 @@ public class Generator{
     //
     while(!finished){
       renderFrame();
+      exportFrame();
       incrementPerspective();
+      frameindex++;
       try{
         Thread.sleep(50);
       }catch(Exception x){}
@@ -384,7 +393,7 @@ public class Generator{
    */
   public static final void main(String[] a){
     Generator g=new Generator();
-    g.generate(100,200,2000,FLOWDIR_NORTH,32,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/newstuff");
+    g.generate(200,300,1000,FLOWDIR_NORTH,32,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/spinnerexport");
     g.createFrames();
     
   }

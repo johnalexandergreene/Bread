@@ -22,7 +22,7 @@ public class RasterExporter{
   
   File exportdir;
   
-  void setExportDir(File exportdir){
+  public void setExportDir(File exportdir){
     this.exportdir=exportdir;}
   
   /*
@@ -37,12 +37,17 @@ public class RasterExporter{
   private static final int DPI=300;
   private static final String IMAGEFILEPREFIX="i";
   
-  File export(BufferedImage image){
-    File file=getExportFile(exportdir);
+  public File export(BufferedImage image,int index){
+    File file=getExportFile(index);
     write(image,file);
     return file;}
   
-  private File getExportFile(File exportdir){
+  private File getExportFile(int index){
+    String s = String.format("%1$05d",index);
+    File test=new File(exportdir.getPath()+"/"+s+".png");
+    return test;}
+  
+  private File getExportFile(){
     File f=null;
     boolean nameisused=true;
     int index=0;
