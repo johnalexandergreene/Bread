@@ -143,7 +143,7 @@ public class Generator{
    * ################################
    */
   
-  public double compositiondetaillimit=0.04;
+  public double compositiondetaillimit=0.015;
   
   public Composer composer=new Composer001_SplitBoil();
   
@@ -193,6 +193,7 @@ public class Generator{
   
   public boolean finished;
   int frameindex=0;
+  int targetframecount=0;
   
   private void createFrames(){
     initRectangularMetagons();
@@ -200,18 +201,25 @@ public class Generator{
     viewportposition=edgerange;
     finished=false;
     //
-    present.gleanLocalPositionStripe();
-    localpositionstartstripe=present.localpositionstripe;
-    localpositionstartoffset=present.localpositionoffset;
+//    present.gleanLocalPositionStripe();
+//    localpositionstartstripe=present.localpositionstripe;
+//    localpositionstartoffset=present.localpositionoffset;
     //
     while(!finished){
       renderFrame();
       exportFrame();
       incrementPerspective();
       frameindex++;
-      try{
-        Thread.sleep(50);
-      }catch(Exception x){}
+      if(almostdone&&frameindex>targetframecount)
+        finished=true;
+      
+      System.out.println("frameindex="+frameindex);
+      System.out.println("looplength="+looplength);
+      System.out.println("targetframecount="+targetframecount);
+      
+//      try{
+//        Thread.sleep(50);
+//      }catch(Exception x){}
       }
     }
   
@@ -326,15 +334,17 @@ public class Generator{
     present.removeFirstStripe();
     //
     if((!almostdone)&&stripewidthsum>looplength){
+      targetframecount=stripewidthsum;
       present.addStripesToEndForFinishingUp(terminus);
-      almostdone=true;}
-    if(almostdone){
-      present.gleanLocalPositionStripe();
-      if(
-        localpositionstartstripe==present.localpositionstripe&&
-        localpositionstartoffset==present.localpositionoffset)
-        finished=true;}
-    System.out.println("length="+stripewidthsum);}
+      almostdone=true;}//########################
+//    if(almostdone){
+//      present.gleanLocalPositionStripe();
+//      if(
+//        localpositionstartstripe==present.localpositionstripe&&
+//        localpositionstartoffset==present.localpositionoffset)
+//        finished=true;}
+//    System.out.println("length="+stripewidthsum);
+    }
   
   
   
@@ -393,7 +403,7 @@ public class Generator{
    */
   public static final void main(String[] a){
     Generator g=new Generator();
-    g.generate(200,300,1000,FLOWDIR_NORTH,32,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/spinnerexport");
+    g.generate(800,600,3000,FLOWDIR_NORTH,32,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/spinnerexport");
     g.createFrames();
     
   }
