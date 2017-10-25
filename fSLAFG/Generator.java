@@ -143,7 +143,7 @@ public class Generator{
    * ################################
    */
   
-  public double compositiondetaillimit=0.015;
+  public double compositiondetaillimit=0.013;
   
   public Composer composer=new Composer001_SplitBoil();
   
@@ -403,7 +403,10 @@ public class Generator{
    */
   public static final void main(String[] a){
     Generator g=new Generator();
-    g.generate(800,600,3000,FLOWDIR_NORTH,32,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/spinnerexport");
+//    g.generate(800,600,3000,FLOWDIR_NORTH,32,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/spinnerexport");
+    
+    g.generate(768,1024,54000,FLOWDIR_NORTH,32,"/home/john/Desktop/grammars/g008","/home/john/Desktop/spinnerexport");
+    
     g.createFrames();
     
   }

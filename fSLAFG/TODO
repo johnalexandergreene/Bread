@@ -1,0 +1,7 @@
+sort that toystory palette into 2 complementary sets
+clean up code
+make ui nicer. do a background fill for those out-portal stripes
+make the logo-insert work
+get frame transform working so we can do different flow directions
+get renderer into a class
+get composer into a class

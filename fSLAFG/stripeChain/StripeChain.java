@@ -272,25 +272,4 @@ public class StripeChain extends LinkedList<Stripe>{
     //
     return transform;}
   
-//  /*
-//   * ################################
-//   * LOCAL POSITION
-//   * Given the viewport position, the left edge of it to which generator.viewportposition corresponds
-//   * upon which stripe does this lay and what is the offset from the beginning of that stripe
-//   * we use this to get and test our start-stop
-//   * ################################
-//   */
-//  
-//  public Stripe localpositionstripe;
-//  public int localpositionoffset;
-//  
-//  public void gleanLocalPositionStripe(){
-//    int x0,x1;
-//    for(int i=0;i<size();i++){
-//      x1=(int)getStripeImageX(get(i));
-//      if(x1>generator.viewportposition){
-//        localpositionstripe=get(i-1);
-//        x0=(int)getStripeImageX(localpositionstripe);
-//        localpositionoffset=generator.viewportposition-x0;}}}
-  
 }
