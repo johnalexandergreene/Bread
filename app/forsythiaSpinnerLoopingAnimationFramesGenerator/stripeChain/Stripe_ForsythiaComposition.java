@@ -1,10 +1,8 @@
-package org.fleen.bread.fSLAFG.stripeChain;
+package org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain;
 
 import java.util.List;
 import java.util.Random;
 
-import org.fleen.bread.fSLAFG.stripeChain.colorMap.ColorMap;
-import org.fleen.bread.fSLAFG.stripeChain.colorMap.ColorMap0000;
 import org.fleen.forsythia.core.composition.FGridRoot;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
@@ -18,7 +16,7 @@ import org.fleen.geom_Kisrhombille.KPolygon;
  * refers to a ForsythiaComposition with a rectangular root.
  * 
  */
-public class Stripe{
+public class Stripe_ForsythiaComposition implements Stripe{
   
   /*
    * ################################
@@ -26,7 +24,7 @@ public class Stripe{
    * ################################
    */
   
-  public Stripe(StripeChain chain){
+  public Stripe_ForsythiaComposition(StripeChain chain){
     this.chain=chain;
     initComposition();
     initColorMap();}
@@ -76,7 +74,7 @@ public class Stripe{
    *   therefore it needs to be scaled accordingly.
    */
   private double getScaledDetailLimit(FPolygon polygon){
-    return chain.generator.compositiondetaillimit*polygon.getDPolygon().getBounds().height;}
+    return chain.generator.detaillimit*polygon.getDPolygon().getBounds().height;}
   
   /*
    * ################################
@@ -88,6 +86,6 @@ public class Stripe{
   public ColorMap colormap;
   
   private void initColorMap(){
-    colormap=new ColorMap0000(composition,chain.generator.palette);}
+    colormap=new ColorMap0000_EggLevel(composition,chain.generator.palette);}
 
 }

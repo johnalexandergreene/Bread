@@ -1,4 +1,4 @@
-package org.fleen.bread.fSLAFG.stripeChain.colorMap;
+package org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain;
 
 import java.awt.Color;
 import java.util.Map;

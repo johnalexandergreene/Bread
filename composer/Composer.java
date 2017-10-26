@@ -3,6 +3,9 @@ package org.fleen.bread.composer;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
+/*
+ * creates a tree of forsythia composition nodes
+ */
 public interface Composer{
   
   //create a new composition

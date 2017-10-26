@@ -1,0 +1,9 @@
+
+make ui nicer. 
+  format view. add label with frameindex, eta, etc.
+
+make the logo-insert work
+
+get frame transform working so we can do different flow directions
+
+do a nicer grammar. something in between nuther and that rectangulary one

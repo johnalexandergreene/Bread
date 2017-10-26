@@ -1,8 +1,7 @@
-package org.fleen.bread;
+package org.fleen.bread.app.forsythiaCompositionGenerator;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
 
 import javax.swing.JPanel;
 
@@ -16,7 +15,7 @@ public class ImagePanel extends JPanel{
    * ################################
    */
   
-  ImagePanel(Bread sampler){
+  ImagePanel(FCGenerator sampler){
     this.sampler=sampler;}
   
   /*
@@ -25,7 +24,7 @@ public class ImagePanel extends JPanel{
    * ################################
    */
   
-  Bread sampler;
+  FCGenerator sampler;
   
   /*
    * ################################

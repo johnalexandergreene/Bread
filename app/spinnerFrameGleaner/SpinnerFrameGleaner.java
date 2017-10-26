@@ -1,4 +1,4 @@
-package org.fleen.bread.SpinnerFrameGleaner;
+package org.fleen.bread.app.spinnerFrameGleaner;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

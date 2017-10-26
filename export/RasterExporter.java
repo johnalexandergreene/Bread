@@ -1,4 +1,4 @@
-package org.fleen.bread.SpinnerFrameGleaner;
+package org.fleen.bread.export;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,8 +14,11 @@ import com.sun.imageio.plugins.png.PNGMetadata;
 
 public class RasterExporter{
   
-  public RasterExporter(String a){
-    setExportDir(new File(a));}
+  //To get our pixelsPerUnitXAxis value for the PNG image metadata we multiply this by our 
+  //specified DPI value.
+  private static final double INCHES_IN_A_METER=39.3700787;
+  private static final int DPI=300;
+  private static final String IMAGEFILEPREFIX="i";
   
   /*
    * ################################
@@ -25,7 +28,7 @@ public class RasterExporter{
   
   File exportdir;
   
-  void setExportDir(File exportdir){
+  public void setExportDir(File exportdir){
     this.exportdir=exportdir;}
   
   /*
@@ -34,32 +37,31 @@ public class RasterExporter{
    * ################################
    */
   
-  //To get our pixelsPerUnitXAxis value for the PNG image metadata we multiply this by our 
-  //specified DPI value.
-  private static final double INCHES_IN_A_METER=39.3700787;
-  private static final int DPI=300;
-  private static final String IMAGEFILEPREFIX="i";
-  
-  File export(BufferedImage image,int index){
-    File file=getExportFile(exportdir,index);
+  public File export(BufferedImage image,int index){
+    File file=getExportFile(index);
     write(image,file);
     return file;}
   
-//  private File getExportFile(File exportdir){
-//    File f=null;
-//    boolean nameisused=true;
-//    int index=0;
-//    while(nameisused){
-//      f=new File(exportdir.getPath()+"/"+IMAGEFILEPREFIX+index+".png");
-//      if(f.exists()){
-//        index++;
-//      }else{
-//        nameisused=false;}}
-//    return f;}
+  public File export(BufferedImage image){
+    File file=getExportFile();
+    write(image,file);
+    return file;}
   
-  private File getExportFile(File exportdir,int index){
+  private File getExportFile(int index){
     String s = String.format("%1$05d",index);
-    File f=new File(exportdir.getPath()+"/"+s+".png");
+    File test=new File(exportdir.getPath()+"/"+s+".png");
+    return test;}
+  
+  private File getExportFile(){
+    File f=null;
+    boolean nameisused=true;
+    int index=0;
+    while(nameisused){
+      f=new File(exportdir.getPath()+"/"+IMAGEFILEPREFIX+index+".png");
+      if(f.exists()){
+        index++;
+      }else{
+        nameisused=false;}}
     return f;}
   
   private void write(BufferedImage image,File file){

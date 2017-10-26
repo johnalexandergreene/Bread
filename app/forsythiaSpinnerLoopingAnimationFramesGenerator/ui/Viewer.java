@@ -1,4 +1,4 @@
-package org.fleen.bread.fSLAFG.ui;
+package org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.ui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -8,14 +8,14 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.JPanel;
 
-import org.fleen.bread.fSLAFG.Generator;
+import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.FSLAFGenerator;
 
 @SuppressWarnings("serial")
 public class Viewer extends JPanel{
   
-  Generator gen;
+  FSLAFGenerator gen;
   
-  public Viewer(Generator gen){
+  public Viewer(FSLAFGenerator gen){
     this.gen=gen;}
   
   private static final AffineTransform NICEOFFSET=AffineTransform.getTranslateInstance(700,10);
@@ -25,15 +25,15 @@ public class Viewer extends JPanel{
     if(gen==null||gen.frame==null)return;
     Graphics2D g2=(Graphics2D)g;
     //
-    if(Generator.TEST)paintChainForTest(g2);
+    if(FSLAFGenerator.TEST)paintChainForTest(g2);
     g2.drawImage(gen.frame,NICEOFFSET,null);
-    if(Generator.TEST)paintFrameForTest(g2);
+    if(FSLAFGenerator.TEST)paintFrameForTest(g2);
     }
   
   private void paintChainForTest(Graphics2D g){
     AffineTransform t=new AffineTransform(NICEOFFSET);
     t.concatenate(AffineTransform.getTranslateInstance(-gen.viewportposition,0));
-    g.drawImage(gen.present.testimage,t,null);}
+    g.drawImage(gen.present.debugimage,t,null);}
   
   private void paintFrameForTest(Graphics2D g){
     AffineTransform 

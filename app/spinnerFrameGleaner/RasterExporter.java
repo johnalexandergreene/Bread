@@ -1,4 +1,4 @@
-package org.fleen.bread;
+package org.fleen.bread.app.spinnerFrameGleaner;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,6 +14,9 @@ import com.sun.imageio.plugins.png.PNGMetadata;
 
 public class RasterExporter{
   
+  public RasterExporter(String a){
+    setExportDir(new File(a));}
+  
   /*
    * ################################
    * EXPORT DIR
@@ -22,7 +25,7 @@ public class RasterExporter{
   
   File exportdir;
   
-  public void setExportDir(File exportdir){
+  void setExportDir(File exportdir){
     this.exportdir=exportdir;}
   
   /*
@@ -37,26 +40,26 @@ public class RasterExporter{
   private static final int DPI=300;
   private static final String IMAGEFILEPREFIX="i";
   
-  public File export(BufferedImage image,int index){
-    File file=getExportFile(index);
+  File export(BufferedImage image,int index){
+    File file=getExportFile(exportdir,index);
     write(image,file);
     return file;}
   
-  private File getExportFile(int index){
-    String s = String.format("%1$05d",index);
-    File test=new File(exportdir.getPath()+"/"+s+".png");
-    return test;}
+//  private File getExportFile(File exportdir){
+//    File f=null;
+//    boolean nameisused=true;
+//    int index=0;
+//    while(nameisused){
+//      f=new File(exportdir.getPath()+"/"+IMAGEFILEPREFIX+index+".png");
+//      if(f.exists()){
+//        index++;
+//      }else{
+//        nameisused=false;}}
+//    return f;}
   
-  private File getExportFile(){
-    File f=null;
-    boolean nameisused=true;
-    int index=0;
-    while(nameisused){
-      f=new File(exportdir.getPath()+"/"+IMAGEFILEPREFIX+index+".png");
-      if(f.exists()){
-        index++;
-      }else{
-        nameisused=false;}}
+  private File getExportFile(File exportdir,int index){
+    String s = String.format("%1$05d",index);
+    File f=new File(exportdir.getPath()+"/"+s+".png");
     return f;}
   
   private void write(BufferedImage image,File file){

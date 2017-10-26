@@ -1,23 +1,23 @@
-package org.fleen.bread.fSLAFG.ui;
+package org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.ui;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import org.fleen.bread.fSLAFG.Generator;
+import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.FSLAFGenerator;
 
 public class UI extends JFrame {
 
 	private static final long serialVersionUID = -2749846443106819716L;
 	
-	Generator generator;
+	FSLAFGenerator generator;
   public Viewer viewer;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					UI frame = new UI(null,0,0);
+					UI frame = new UI(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -26,10 +26,10 @@ public class UI extends JFrame {
 		});
 	}
 
-	public UI(Generator generator,int w,int h){
+	public UI(FSLAFGenerator generator){
 	  this.generator=generator;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(50,50,1600,800);
+		this.setExtendedState(MAXIMIZED_BOTH);
 		viewer=new Viewer(generator);
 		setContentPane(viewer);
 		setVisible(true);}

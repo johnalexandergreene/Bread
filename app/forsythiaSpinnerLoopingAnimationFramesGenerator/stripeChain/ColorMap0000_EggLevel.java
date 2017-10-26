@@ -1,4 +1,4 @@
-package org.fleen.bread.fSLAFG.stripeChain.colorMap;
+package org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -18,7 +18,7 @@ import org.fleen.util.tree.TreeNode;
  * this looks good with strokes
  */
 @SuppressWarnings("serial")
-public class ColorMap0000 extends HashMap<FPolygon,Color> implements ColorMap{
+public class ColorMap0000_EggLevel extends HashMap<FPolygon,Color> implements ColorMap{
   
   /*
    * ################################
@@ -26,7 +26,7 @@ public class ColorMap0000 extends HashMap<FPolygon,Color> implements ColorMap{
    * ################################
    */
   
-  public ColorMap0000(ForsythiaComposition composition,Color[] palette){
+  public ColorMap0000_EggLevel(ForsythiaComposition composition,Color[] palette){
     initPalettes(palette);
     doPolygonColors(composition);}
   

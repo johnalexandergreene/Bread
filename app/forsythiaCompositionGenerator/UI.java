@@ -1,4 +1,4 @@
-package org.fleen.bread;
+package org.fleen.bread.app.forsythiaCompositionGenerator;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -31,7 +31,7 @@ public class UI extends JFrame {
 
 	private static final long serialVersionUID = -2749846443106819716L;
 	
-	public Bread sampler;
+	public FCGenerator sampler;
 	
 	JPanel contentPane;
 	JPanel pancontrol;
@@ -63,7 +63,7 @@ public class UI extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public UI(Bread s){
+	public UI(FCGenerator s){
 	  sampler=s;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 709);
