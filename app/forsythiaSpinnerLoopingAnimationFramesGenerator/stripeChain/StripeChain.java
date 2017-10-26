@@ -65,7 +65,7 @@ public class StripeChain extends LinkedList<Stripe>{
     image=null;
     addAll(stripes);}
   
-  public void removeFirstStripe(){
+  public void conditionallyRemoveFirstStripe(){
     Stripe a=getFirst();
     if((int)(getStripeImageX(a)+getStripeImageWidth(a)+generator.edgerange-1)<generator.viewportposition){
       generator.viewportposition-=getStripeImageWidth(a);
@@ -216,7 +216,7 @@ public class StripeChain extends LinkedList<Stripe>{
     t.concatenate(stripeimagetransforms[stripeindex]);
     g.setTransform(t);
     //
-    if(generator.terminus.contains(stripe)){
+    if(generator.terminuschain.contains(stripe)){
       g.setPaint(Color.red);
     }else{
       g.setPaint(Color.blue);}

@@ -1,4 +1,6 @@
 
+fix that core loop. make it simpler
+
 make ui nicer. 
   format view. add label with frameindex, eta, etc.
 

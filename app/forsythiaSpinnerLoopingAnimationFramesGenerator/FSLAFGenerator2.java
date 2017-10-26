@@ -46,7 +46,7 @@ import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
  * keep moving until we arrive back at out start position.
  * then we're done.
  */
-public class FSLAFGenerator{
+public class FSLAFGenerator2{
   
   public static final boolean TEST=true;
   
@@ -56,7 +56,7 @@ public class FSLAFGenerator{
    * ################################
    */
   
-  public FSLAFGenerator(
+  public FSLAFGenerator2(
     int viewportwidth,int viewportheight,int looplength,int flowdir,
     int edgerange,String grammarpath,String exportpath,double detaillimit,
     Color[] palette,boolean debug){
@@ -96,47 +96,42 @@ public class FSLAFGenerator{
    * ################################
    */
   
-  /*
-   * The number of frames created so far
-   */
-  int framecount;
-  /*
-   * the sum length of all stripes that have been created so far
-   */
-  public int stripewidthsum;
-  /*
-   * The stripewidthsum after we're done creating stripes
-   * The actual finishing value for frameindex
-   */
-  int adjustedlooplength;
-  /*
-   * set to true when our total stripe width becomes greater than the param looplength 
-   */
-  boolean almostdone;
+
+  
+  public boolean finished;
+  int frameindex;
+  int targetframecount;
+  public int stripewidthsum=0;
+  boolean almostdone=false;
+  
   /*
    * the position of the viewport within the present chain
    * we increment it forward, 1 pixel at a time
-   * when we modify the chain (by adding or removing a stripe) we adjust 
-   *   it to account for the changed length of the chain. 
+   * when we modify the chain (by adding or removing a stripe) 
+   *   we adjust it to account for the changed length of the chain. 
    */
-  public int viewportposition;
+  public int viewportposition=0;
   
   private void createFrames(){
-    framecount=0;
-    adjustedlooplength=0;
-    stripewidthsum=0;//aka stripe length sum
+    finished=false;
+    frameindex=0;
+    targetframecount=0;
+    stripewidthsum=0;
     almostdone=false;
     //
     initChains();
     viewportposition=edgerange;
-    while(!(almostdone&&framecount>adjustedlooplength)){
-      System.out.println("frameindex="+framecount);
-      System.out.println("looplength="+looplength);
-      System.out.println("adjustedlooplength="+adjustedlooplength);
+    while(!finished){
       renderFrame();
       exportFrame();
       incrementPerspective();
-      framecount++;}}
+      frameindex++;
+      if(almostdone&&frameindex>targetframecount)
+        finished=true;
+      //
+      System.out.println("frameindex="+frameindex);
+      System.out.println("looplength="+looplength);
+      System.out.println("targetframecount="+targetframecount);}}
   
   private void incrementPerspective(){
     viewportposition++;
@@ -145,7 +140,7 @@ public class FSLAFGenerator{
     presentchain.conditionallyRemoveFirstStripe();
     //
     if((!almostdone)&&stripewidthsum>looplength){
-      adjustedlooplength=stripewidthsum;
+      targetframecount=stripewidthsum;
       presentchain.addTerminusStripesToEndForFinishingUp(terminuschain);
       almostdone=true;}}
   
@@ -181,9 +176,9 @@ public class FSLAFGenerator{
   /*
    * ################################
    * LOOP LENGTH
-   * The *specified*, in params, sum of the spans of the stripe rectangles
-   * The actual loop length is generally a bit higher.
-   * We can only specify an estimate because we pick our stripes at random 
+   * The sum of the spans of the stripe rectangles
+   * 
+   * We shoot for an actual sum that is close to the specified length but greater 
    * ################################
    */
   
@@ -276,7 +271,7 @@ public class FSLAFGenerator{
     exporter.setExportDir(exportdir);}
   
   private void exportFrame(){
-    exporter.export(frame,framecount);}
+    exporter.export(frame,frameindex);}
   
   /*
    * ################################
@@ -340,17 +335,17 @@ public class FSLAFGenerator{
     presentchain;
   
   private void initChains(){
-    //create the terminuschain
+    //create the terminus
     terminuschain=new StripeChain(this);
     terminuschain.createStripeFCAtEnd();
     while(terminuschain.getImageWidth()<=viewportwidth+edgerange+edgerange)
       terminuschain.createStripeFCAtEnd();
-    //copy it to get initialized presentchain
+    //copy it to get present
     presentchain=new StripeChain(this,terminuschain);}
  
   /*
    * ################################
-   * RENDER FRAME
+   * FRAME
    * ################################
    */
   
@@ -386,9 +381,9 @@ public class FSLAFGenerator{
    */
   
   public static final void main(String[] a){
-    FSLAFGenerator g=new FSLAFGenerator(
-      300,600,1500,FLOWDIR_NORTH,32,"/home/john/Desktop/grammars/g008",
-      "/home/john/Desktop/spinnerexport",0.015,Palette.P_TOY_STORY_ADJUSTED,true);
+    FSLAFGenerator2 g=new FSLAFGenerator2(
+      300,200,700,FLOWDIR_NORTH,32,"/home/john/Desktop/grammars/g008",
+      "/home/john/Desktop/spinnerexport",0.03,Palette.P_TOY_STORY_ADJUSTED,true);
 //    FSLAFGenerator g=new FSLAFGenerator(
 //      300,200,700,FLOWDIR_NORTH,32,"/home/john/Desktop/grammars/g008",
 //      "/home/john/Desktop/spinnerexport",0.013,Palette.P_TOY_STORY_ADJUSTED,true);
