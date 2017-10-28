@@ -141,7 +141,7 @@ public class FSLAFGenerator{
   private void incrementPerspective(){
     viewportposition++;
     if(viewportposition+viewportwidth+edgerange>presentchain.getImageWidth())
-      presentchain.createStripeFCAtEnd();
+      presentchain.addRandomForsythiaCompositionStripeToEnd();
     presentchain.conditionallyRemoveFirstStripe();
     //
     if((!almostdone)&&stripewidthsum>looplength){
@@ -342,9 +342,9 @@ public class FSLAFGenerator{
   private void initChains(){
     //create the terminuschain
     terminuschain=new StripeChain(this);
-    terminuschain.createStripeFCAtEnd();
+    terminuschain.addRandomForsythiaCompositionStripeToEnd();
     while(terminuschain.getImageWidth()<=viewportwidth+edgerange+edgerange)
-      terminuschain.createStripeFCAtEnd();
+      terminuschain.addRandomForsythiaCompositionStripeToEnd();
     //copy it to get initialized presentchain
     presentchain=new StripeChain(this,terminuschain);}
  

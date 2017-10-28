@@ -14,7 +14,8 @@ public interface Stripe{
   
   double getStripeImageWidth();
   
-//  AffineTransform getStripeImageTransform();
+  void setTransform(AffineTransform t);
   
-
+  AffineTransform getTransform();
+  
 }

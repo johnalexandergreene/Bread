@@ -127,24 +127,16 @@ public class Stripe_ForsythiaComposition implements Stripe{
       sum+=chain.get(i).getStripeImageWidth();
     return sum;}
   
-//  public AffineTransform getStripeImageTransform(){
-//    //get all the relevant metrics
-//    Rectangle2D.Double compositionbounds=composition.getRootPolygon().getDPolygon().getBounds();
-//    double
-//      cbwidth=compositionbounds.getWidth(),
-//      cbheight=compositionbounds.getHeight(),
-//      cbxmin=compositionbounds.getMinX(),
-//      cbymin=compositionbounds.getMinY();
-//    AffineTransform transform=new AffineTransform();
-//    //scale
-//    double scale=getImageScale();
-//    transform.scale(scale,-scale);//flip y for proper cartesian orientation
-//    //offset
-//    double
-//      xoff=((getStripeImageWidth()/scale-cbwidth)/2.0)-cbxmin,
-//      yoff=-(((chain.generator.viewportheight/scale+cbheight)/2.0)+cbymin);
-//    transform.translate(xoff+getStripeImageX()/scale,yoff);
-//    //
-//    return transform;}
+  //----------------
+  
+  AffineTransform transform;
+
+  public void setTransform(AffineTransform t){
+    transform=t;}
+
+  public AffineTransform getTransform(){
+    return transform;}
+  
+  
   
 }
