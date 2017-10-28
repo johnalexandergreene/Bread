@@ -1,5 +1,7 @@
 package org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain;
 
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.Random;
 
@@ -87,5 +89,62 @@ public class Stripe_ForsythiaComposition implements Stripe{
   
   private void initColorMap(){
     colormap=new ColorMap0000_EggLevel(composition,chain.generator.palette);}
+  
+  /*
+   * ################################
+   * GEOMETRY
+   * ################################
+   */
+  
+  /*
+   * ################################
+   * STRIPE IMAGE GEOM
+   * ################################
+   */
+  
+  public double getImageScale(){
+    double ch=composition.getRootPolygon().getDPolygon().getBounds().height;
+    double s=chain.generator.viewportheight/ch;
+    return s;}
 
+  public double getStripeImageWidth(){
+    double
+      s=getImageScale(),
+      w=composition.getRootPolygon().getDPolygon().getBounds().width,
+      sw=s*w;
+    return sw;}
+  
+  public double getStripeImageHeight(){
+    return chain.generator.viewportheight;}
+  
+  /*
+   * the xcoor of the left edge of the image
+   * tah tis, x offset of the stripe image within the chain image 
+   */
+  public double getStripeImageX(){
+    int a=chain.indexOf(this),sum=0;
+    for(int i=0;i<a;i++)
+      sum+=chain.get(i).getStripeImageWidth();
+    return sum;}
+  
+//  public AffineTransform getStripeImageTransform(){
+//    //get all the relevant metrics
+//    Rectangle2D.Double compositionbounds=composition.getRootPolygon().getDPolygon().getBounds();
+//    double
+//      cbwidth=compositionbounds.getWidth(),
+//      cbheight=compositionbounds.getHeight(),
+//      cbxmin=compositionbounds.getMinX(),
+//      cbymin=compositionbounds.getMinY();
+//    AffineTransform transform=new AffineTransform();
+//    //scale
+//    double scale=getImageScale();
+//    transform.scale(scale,-scale);//flip y for proper cartesian orientation
+//    //offset
+//    double
+//      xoff=((getStripeImageWidth()/scale-cbwidth)/2.0)-cbxmin,
+//      yoff=-(((chain.generator.viewportheight/scale+cbheight)/2.0)+cbymin);
+//    transform.translate(xoff+getStripeImageX()/scale,yoff);
+//    //
+//    return transform;}
+  
 }

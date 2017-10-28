@@ -387,8 +387,8 @@ public class FSLAFGenerator{
   
   public static final void main(String[] a){
     FSLAFGenerator g=new FSLAFGenerator(
-      300,600,1500,FLOWDIR_NORTH,32,"/home/john/Desktop/grammars/g008",
-      "/home/john/Desktop/spinnerexport",0.015,Palette.P_TOY_STORY_ADJUSTED,true);
+      200,300,1000,FLOWDIR_NORTH,32,"/home/john/Desktop/grammars/g008",
+      "/home/john/Desktop/spinnerexport",0.03,Palette.P_TOY_STORY_ADJUSTED,true);
 //    FSLAFGenerator g=new FSLAFGenerator(
 //      300,200,700,FLOWDIR_NORTH,32,"/home/john/Desktop/grammars/g008",
 //      "/home/john/Desktop/spinnerexport",0.013,Palette.P_TOY_STORY_ADJUSTED,true);
