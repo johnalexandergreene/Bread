@@ -63,6 +63,7 @@ public class StripeChain extends LinkedList<Stripe>{
   public void addLiteralImageStripe(String path){
     image=null;
     Stripe s=new Stripe_LiteralImage(this,path);
+    generator.stripewidthsum+=getStripeImageWidth(s);
     add(s);}
   
   public void addTerminusStripesToEndForFinishingUp(List<Stripe> stripes){
