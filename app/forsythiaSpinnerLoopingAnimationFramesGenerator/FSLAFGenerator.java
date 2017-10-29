@@ -57,9 +57,17 @@ public class FSLAFGenerator{
    */
   
   public FSLAFGenerator(
-    int viewportwidth,int viewportheight,int looplength,int flowdir,
-    int edgerange,String grammarpath,String exportpath,double detaillimit,
-    Color[] palette,boolean debug){
+    int viewportwidth,int viewportheight,//dimensions of the viewport and videoframe
+    int looplength,//the desired length of the video loop. The actual length will be a bit higher
+    int flowdir,//the direction that the graphics flow. NESW
+    int edgerange,
+    String grammarpath,
+    String exportpath,
+    double detaillimit,
+    Color[] palette,
+    String insertpath,
+    int insertfrequency,
+    boolean debug){
     this.viewportwidth=viewportwidth;
     this.viewportheight=viewportheight;
     this.looplength=looplength;
@@ -67,6 +75,8 @@ public class FSLAFGenerator{
     this.edgerange=edgerange;
     this.detaillimit=detaillimit;
     this.palette=palette;
+    this.insertpath=insertpath;
+    this.insertfrequency=insertfrequency;
     this.debug=debug;
     initGrammar(grammarpath);
     initExport(exportpath);
@@ -122,6 +132,10 @@ public class FSLAFGenerator{
   public int viewportposition;
   
   private void createFrames(){
+    System.out.println("+++++++++++++++++++++++");
+    System.out.println("+ CREATE FRAMES START +");
+    System.out.println("+++++++++++++++++++++++");
+    //
     framecount=0;
     adjustedlooplength=0;
     stripewidthsum=0;//aka stripe length sum
@@ -130,18 +144,39 @@ public class FSLAFGenerator{
     initChains();
     viewportposition=edgerange;
     while(!(almostdone&&framecount>adjustedlooplength)){
-      System.out.println("frameindex="+framecount);
-      System.out.println("looplength="+looplength);
-      System.out.println("adjustedlooplength="+adjustedlooplength);
+      System.out.println("frameindex="+framecount+" looplength="+looplength+" adjustedlooplength="+adjustedlooplength);
       renderFrame();
       exportFrame();
       incrementPerspective();
-      framecount++;}}
+      framecount++;
+      //
+//      try{
+//        Thread.sleep(20);
+//      }catch(Exception x){}
+    //
+    }
+    //
+    System.out.println("---------------------");
+    System.out.println("- CREATE FRAMES END -");
+    System.out.println("---------------------");}
   
+  int insertcount=1;
+  
+  /*
+   * at every increment test the position of the stripechain relative to the viewport
+   * when we need another stripe, create
+   * when we're done with a stripe, discard
+   */
   private void incrementPerspective(){
     viewportposition++;
-    if(viewportposition+viewportwidth+edgerange>presentchain.getImageWidth())
-      presentchain.addRandomForsythiaCompositionStripeToEnd();
+    if(viewportposition+viewportwidth+edgerange>presentchain.getImageWidth()){
+      if(
+        (INSERTPATH!=null)&&
+        framecount>(((double)insertcount)/((double)insertfrequency))*looplength){
+        insertcount++;
+        presentchain.addInsertStripe(INSERTPATH);
+      }else{
+        presentchain.addRandomForsythiaCompositionStripeToEnd();}} 
     presentchain.conditionallyRemoveFirstStripe();
     //
     if((!almostdone)&&stripewidthsum>looplength){
@@ -264,10 +299,11 @@ public class FSLAFGenerator{
    * ################################
    */
   
-  File exportdir;
+  File exportdir=null;
   RasterExporter exporter=new RasterExporter();
   
   private void initExport(String path){
+    if(path==null)return;//no export
     try{
       exportdir=new File(path);
     }catch(Exception x){
@@ -276,6 +312,7 @@ public class FSLAFGenerator{
     exporter.setExportDir(exportdir);}
   
   private void exportFrame(){
+    if(exportdir==null)return;//no export
     exporter.export(frame,framecount);}
   
   /*
@@ -342,7 +379,8 @@ public class FSLAFGenerator{
   private void initChains(){
     //create the terminuschain
     terminuschain=new StripeChain(this);
-    terminuschain.addRandomForsythiaCompositionStripeToEnd();
+    terminuschain.addRandomForsythiaCompositionStripeToEnd();//add a composition stripe
+    terminuschain.addInsertStripe(insertpath);//add an insert stripe
     while(terminuschain.getImageWidth()<=viewportwidth+edgerange+edgerange)
       terminuschain.addRandomForsythiaCompositionStripeToEnd();
     //copy it to get initialized presentchain
@@ -377,6 +415,17 @@ public class FSLAFGenerator{
   
   /*
    * ################################
+   * INSERT
+   * if insertpath is null then we do no inserts
+   * ################################
+   */
+  
+  public String insertpath;
+  
+  public int insertfrequency;
+  
+  /*
+   * ################################
    * ++++++++++++++++++++++++++++++++
    * ################################
    * MAIN
@@ -385,10 +434,18 @@ public class FSLAFGenerator{
    * ################################
    */
   
+  private static final String 
+    GRAMMARPATH="/home/john/Desktop/grammars/g008",
+    EXPORTPATH="/home/john/Desktop/spinnerexport",
+    INSERTPATH="/home/john/Desktop/foobert.png";
+  
   public static final void main(String[] a){
     FSLAFGenerator g=new FSLAFGenerator(
-      200,300,1000,FLOWDIR_NORTH,32,"/home/john/Desktop/grammars/g008",
-      "/home/john/Desktop/spinnerexport",0.03,Palette.P_TOY_STORY_ADJUSTED,true);
+      200,300,2000,FLOWDIR_NORTH,32,GRAMMARPATH,
+      EXPORTPATH,
+      0.03,Palette.P_TOY_STORY_ADJUSTED,
+      INSERTPATH,2,
+      true);
 //    FSLAFGenerator g=new FSLAFGenerator(
 //      300,200,700,FLOWDIR_NORTH,32,"/home/john/Desktop/grammars/g008",
 //      "/home/john/Desktop/spinnerexport",0.013,Palette.P_TOY_STORY_ADJUSTED,true);

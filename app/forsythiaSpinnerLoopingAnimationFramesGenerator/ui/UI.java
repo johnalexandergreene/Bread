@@ -29,7 +29,8 @@ public class UI extends JFrame {
 	public UI(FSLAFGenerator generator){
 	  this.generator=generator;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setExtendedState(MAXIMIZED_BOTH);
+//		setExtendedState(MAXIMIZED_BOTH);
+		setBounds(50,50,1000,800);
 		viewer=new Viewer(generator);
 		setContentPane(viewer);
 		setVisible(true);}

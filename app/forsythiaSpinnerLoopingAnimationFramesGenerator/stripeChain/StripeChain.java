@@ -57,12 +57,11 @@ public class StripeChain extends LinkedList<Stripe>{
     image=null;
     Stripe s=new Stripe_ForsythiaComposition(this);
     generator.stripewidthsum+=getStripeImageWidth(s);
-    add(s);
-    addLiteralImageStripe("/home/john/Desktop/foobert.png");}
+    add(s);}
   
-  public void addLiteralImageStripe(String path){
+  public void addInsertStripe(String path){
     image=null;
-    Stripe s=new Stripe_LiteralImage(this,path);
+    Stripe s=new Stripe_Insert(this,path);
     generator.stripewidthsum+=getStripeImageWidth(s);
     add(s);}
   
@@ -141,11 +140,11 @@ public class StripeChain extends LinkedList<Stripe>{
   
   private void renderLiteralImage(Graphics2D g){
     for(int i=0;i<size();i++)
-      if(get(i) instanceof Stripe_LiteralImage)
+      if(get(i) instanceof Stripe_Insert)
         renderLiteralImage(g,i);}
   
   private void renderLiteralImage(Graphics2D g,int stripeindex){
-    Stripe_LiteralImage stripe=(Stripe_LiteralImage)get(stripeindex);
+    Stripe_Insert stripe=(Stripe_Insert)get(stripeindex);
     double offset=getStripeImageX(stripe);
     //
     AffineTransform 
@@ -201,7 +200,7 @@ public class StripeChain extends LinkedList<Stripe>{
   
   private void renderPolygonStroke(Graphics2D g,int stripeindex){
     Stripe stripe=get(stripeindex);
-    if(stripe instanceof Stripe_LiteralImage)return;
+    if(stripe instanceof Stripe_Insert)return;
     //
     AffineTransform 
       told=g.getTransform(),
@@ -262,7 +261,7 @@ public class StripeChain extends LinkedList<Stripe>{
    */
   private void renderBlockfill(Graphics2D g,int stripeindex){
     Stripe stripe=get(stripeindex);
-    if(stripe instanceof Stripe_LiteralImage)return;
+    if(stripe instanceof Stripe_Insert)return;
     //
     AffineTransform 
       told=g.getTransform(),
@@ -295,7 +294,7 @@ public class StripeChain extends LinkedList<Stripe>{
     return sum;}
   
   public double getStripeImageWidth(Stripe stripe){
-    if(stripe instanceof Stripe_LiteralImage)return ((Stripe_LiteralImage)stripe).getStripeImageWidth();
+    if(stripe instanceof Stripe_Insert)return ((Stripe_Insert)stripe).getStripeImageWidth();
     double
       s=getImageScale(stripe),
       w=((Stripe_ForsythiaComposition)stripe).composition.getRootPolygon().getDPolygon().getBounds().width,
@@ -308,7 +307,7 @@ public class StripeChain extends LinkedList<Stripe>{
     return s;}
   
   private AffineTransform getStripeImageTransform(Stripe stripe,double stripeimageoffset){
-    if(stripe instanceof Stripe_LiteralImage)return null;
+    if(stripe instanceof Stripe_Insert)return null;
     //get all the relevant metrics
     Rectangle2D.Double compositionbounds=((Stripe_ForsythiaComposition)stripe).composition.getRootPolygon().getDPolygon().getBounds();
     double
