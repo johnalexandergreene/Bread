@@ -295,28 +295,6 @@ public class FSLAFGenerator{
   
   /*
    * ################################
-   * FRAME EXPORT
-   * ################################
-   */
-  
-  File exportdir=null;
-  RasterExporter exporter=new RasterExporter();
-  
-  private void initExport(String path){
-    if(path==null)return;//no export
-    try{
-      exportdir=new File(path);
-    }catch(Exception x){
-      System.out.println("exception in export path init");
-      x.printStackTrace();}
-    exporter.setExportDir(exportdir);}
-  
-  private void exportFrame(){
-    if(exportdir==null)return;//no export
-    exporter.export(frame,framecount);}
-  
-  /*
-   * ################################
    * RECTANGULAR METAGONS
    * The rectangular metagons in our working grammar
    * Used as root polygon by the stripe node compositions
@@ -426,6 +404,82 @@ public class FSLAFGenerator{
   
   /*
    * ################################
+   * FRAME EXPORT
+   * Write a frame PNG
+   * This is also where we do the transform for getting NESW flow
+   * ################################
+   */
+  
+  File exportdir=null;
+  RasterExporter exporter=new RasterExporter();
+  
+  private void initExport(String path){
+    if(path==null)return;//no export
+    try{
+      exportdir=new File(path);
+    }catch(Exception x){
+      System.out.println("exception in export path init");
+      x.printStackTrace();}
+    exporter.setExportDir(exportdir);}
+  
+  private void exportFrame(){
+    if(exportdir==null)return;//no export
+    BufferedImage tf=getFlowDirTransformedFrameForExport();
+    exporter.export(tf,framecount);}
+  
+  /*
+   * we're gonna do this brutishly
+   * getpixel and setpixel
+   */
+  private BufferedImage getFlowDirTransformedFrameForExport(){
+    BufferedImage transformed=null;
+    if(flowdir==FLOWDIR_NORTH){
+      transformed=getNorthFlowDirTransformedFrameForExport();
+    }else if(flowdir==FLOWDIR_EAST){
+      transformed=getEastFlowDirTransformedFrameForExport();
+    }else if(flowdir==FLOWDIR_SOUTH){
+      transformed=getSouthFlowDirTransformedFrameForExport();
+    }else if(flowdir==FLOWDIR_WEST){
+      transformed=getWestFlowDirTransformedFrameForExport();
+    }else{
+      throw new IllegalArgumentException("invali flow dir specified");}
+    return transformed;}
+  
+  private BufferedImage getNorthFlowDirTransformedFrameForExport(){
+    int w=frame.getWidth(),h=frame.getHeight();
+    BufferedImage i=new BufferedImage(h,w,BufferedImage.TYPE_INT_RGB);
+    int rgb;
+    for(int x=0;x<w;x++){
+      for(int y=0;y<h;y++){
+        rgb=frame.getRGB(x,y);
+        i.setRGB(h-y-1,x,rgb);}}
+    return i;}
+  
+  private BufferedImage getEastFlowDirTransformedFrameForExport(){
+    int w=frame.getWidth(),h=frame.getHeight();
+    BufferedImage i=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
+    int rgb;
+    for(int x=0;x<w;x++){
+      for(int y=0;y<h;y++){
+        rgb=frame.getRGB(x,y);
+        i.setRGB(w-x-1,h-y-1,rgb);}}
+    return i;}
+  
+  private BufferedImage getSouthFlowDirTransformedFrameForExport(){
+    int w=frame.getWidth(),h=frame.getHeight();
+    BufferedImage i=new BufferedImage(h,w,BufferedImage.TYPE_INT_RGB);
+    int rgb;
+    for(int x=0;x<w;x++){
+      for(int y=0;y<h;y++){
+        rgb=frame.getRGB(x,y);
+        i.setRGB(y,w-x-1,rgb);}}
+    return i;}
+  
+  private BufferedImage getWestFlowDirTransformedFrameForExport(){
+    return frame;}//because that's the default
+  
+  /*
+   * ################################
    * ++++++++++++++++++++++++++++++++
    * ################################
    * MAIN
@@ -441,7 +495,7 @@ public class FSLAFGenerator{
   
   public static final void main(String[] a){
     FSLAFGenerator g=new FSLAFGenerator(
-      200,300,2000,FLOWDIR_NORTH,32,GRAMMARPATH,
+      200,300,2000,FLOWDIR_EAST,32,GRAMMARPATH,
       EXPORTPATH,
       0.03,Palette.P_TOY_STORY_ADJUSTED,
       INSERTPATH,2,
