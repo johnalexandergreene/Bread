@@ -1,6 +1,5 @@
 package org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain;
 
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -40,23 +39,19 @@ public class Stripe_Insert implements Stripe{
       System.out.println("exception in image init");
       x.printStackTrace();}}
 
-  public double getStripeImageX(){
-    return 2;
-  }
-
-  public double getStripeImageWidth(){
+  /*
+   * ################################
+   * GEOMETRY
+   * ################################
+   */
+  
+  public int getImageWidth(){
     return image.getWidth();}
-
-  @Override
-  public void setTransform(AffineTransform t){
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public AffineTransform getTransform(){
-    // TODO Auto-generated method stub
-    return null;
-  }
+  
+  public int getImageX(){
+    int a=chain.indexOf(this),sum=0;
+    for(int i=0;i<a;i++)
+      sum+=chain.get(i).getImageWidth();
+    return sum;}
   
 }

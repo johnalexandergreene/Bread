@@ -1,11 +1,13 @@
+clean code
 
-fix that core loop. make it simpler
 
 make ui nicer. 
   format view. add label with frameindex, eta, etc.
 
-make the logo-insert work
+use integers (instead of doubles) for all stripe length calculations.
+we are getting a little skip at the end of long (54000 frame) loops and I think it's because of rounding error.
 
-get frame transform working so we can do different flow directions
+increase root noise in composer. Needs more root random. Too much symmetry presently
+We might even have a special set of first-jigs for the root rectangles. That's a little involved tho.
 
-do a nicer grammar. something in between nuther and that rectangulary one
+the pink in the modified toystory palette should be a little redder

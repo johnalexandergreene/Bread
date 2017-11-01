@@ -50,7 +50,7 @@ public abstract class Composer_Abstract implements Composer{
   //handy reference
   protected int buildcycleindex;
   
-  private void build(ForsythiaComposition composition,double detaillimit){
+  protected void build(ForsythiaComposition composition,double detaillimit){
     boolean creatednodes=true;
     buildcycleindex=0;
     while(creatednodes){

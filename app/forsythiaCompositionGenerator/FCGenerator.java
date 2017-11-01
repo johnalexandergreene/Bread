@@ -13,14 +13,12 @@ import org.fleen.bread.composer.Composer;
 import org.fleen.bread.composer.Composer001_SplitBoil;
 import org.fleen.bread.export.RasterExporter;
 import org.fleen.bread.renderer.Renderer;
-import org.fleen.bread.renderer.Renderer000;
+import org.fleen.bread.renderer.Renderer001;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
 /*
- * Bread means money
- * 
- * This is a suite of tools for creating products that make money
+ * a single forsythia composition
  */
 public class FCGenerator{
   
@@ -47,14 +45,14 @@ public class FCGenerator{
   
   Color[] palette=P_TOY_STORY;
   
-  String grammar_file_path="/home/john/Desktop/stripegrammar/s003.grammar";
-//  String grammar_file_path="/home/john/Desktop/ge/nuther003.grammar";
+//  String grammar_file_path="/home/john/Desktop/stripegrammar/s003.grammar";
+  String grammar_file_path="/home/john/Desktop/ge/nuther003.grammar";
 //  String grammar_file_path="/home/john/Desktop/ge/aa004.grammar";
   
   Composer composer=new Composer001_SplitBoil();
-  static final double DETAIL_LIMIT=0.025;
+  static final double DETAIL_LIMIT=0.04;
 //  Renderer renderer=new Renderer_Rasterizer003();
-  Renderer renderer=new Renderer000();
+  Renderer renderer=new Renderer001();
   String exportdirpath="/home/john/Desktop/newstuff";
   
   /*

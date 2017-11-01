@@ -14,7 +14,7 @@ import java.util.Random;
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain.StripeChain;
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.ui.UI;
 import org.fleen.bread.composer.Composer;
-import org.fleen.bread.composer.Composer001_SplitBoil;
+import org.fleen.bread.composer.Composer002_SplitBoil_WithALittleNoiseNearTheRoot;
 import org.fleen.bread.export.RasterExporter;
 import org.fleen.bread.palette.Palette;
 import org.fleen.forsythia.core.grammar.FMetagon;
@@ -291,7 +291,7 @@ public class FSLAFGenerator{
   
   public double detaillimit=0.013;
   
-  public Composer composer=new Composer001_SplitBoil();
+  public Composer composer=new Composer002_SplitBoil_WithALittleNoiseNearTheRoot();
   
   /*
    * ################################
@@ -489,23 +489,26 @@ public class FSLAFGenerator{
    */
   
   private static final String 
-    GRAMMARPATH="/home/john/Desktop/grammars/g008",
+//    GRAMMARPATH="/home/john/Desktop/grammars/g008",
+  GRAMMARPATH="/home/john/Desktop/grammars/s008.grammar",
     EXPORTPATH="/home/john/Desktop/spinnerexport",
-    INSERTPATH="/home/john/Desktop/foobert.png";
+//    INSERTPATH="/home/john/Desktop/foobert.png";
+    INSERTPATH="/home/john/projects/graphics/spinner logo insert/i000_1280.png";
+  
   
   public static final void main(String[] a){
     FSLAFGenerator g=new FSLAFGenerator(
-      200,300,2000,FLOWDIR_EAST,32,GRAMMARPATH,
-      EXPORTPATH,
-      0.03,Palette.P_TOY_STORY_ADJUSTED,
-      INSERTPATH,2,
-      true);
+        300,300,2000,FLOWDIR_NORTH,32,GRAMMARPATH,
+        EXPORTPATH,
+        0.03,Palette.P_TOY_STORY_ADJUSTED,
+        INSERTPATH,3,
+        true);
 //    FSLAFGenerator g=new FSLAFGenerator(
-//      300,200,700,FLOWDIR_NORTH,32,"/home/john/Desktop/grammars/g008",
-//      "/home/john/Desktop/spinnerexport",0.013,Palette.P_TOY_STORY_ADJUSTED,true);
-    
-//    g.generate(800,600,3000,FLOWDIR_NORTH,32,"/home/john/Desktop/ge/nuther003.grammar","/home/john/Desktop/spinnerexport");
-//    g.generate(768,1024,54000,FLOWDIR_NORTH,32,"/home/john/Desktop/grammars/g008","/home/john/Desktop/spinnerexport");
+//      720,1280,54000,FLOWDIR_NORTH,32,GRAMMARPATH,
+//      EXPORTPATH,
+//      0.008,Palette.P_TOY_STORY_ADJUSTED2,
+//      INSERTPATH,3,
+//      true);
     
     g.createFrames();
     

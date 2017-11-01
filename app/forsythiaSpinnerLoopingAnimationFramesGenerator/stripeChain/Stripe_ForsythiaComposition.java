@@ -1,7 +1,5 @@
 package org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain;
 
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.Random;
 
@@ -98,45 +96,29 @@ public class Stripe_ForsythiaComposition implements Stripe{
   
   /*
    * ################################
-   * STRIPE IMAGE GEOM
+   * IMAGE GEOM
    * ################################
    */
+
+  public int getImageWidth(){
+    double
+      s=getImageScale(),
+      w=composition.getRootPolygon().getDPolygon().getBounds().width;
+    int sw=(int)(s*w);
+    return sw;}
+  
+  public int getImageHeight(){
+    return chain.generator.viewportheight;}
   
   public double getImageScale(){
     double ch=composition.getRootPolygon().getDPolygon().getBounds().height;
     double s=chain.generator.viewportheight/ch;
     return s;}
 
-  public double getStripeImageWidth(){
-    double
-      s=getImageScale(),
-      w=composition.getRootPolygon().getDPolygon().getBounds().width,
-      sw=s*w;
-    return sw;}
-  
-  public double getStripeImageHeight(){
-    return chain.generator.viewportheight;}
-  
-  /*
-   * the xcoor of the left edge of the image
-   * tah tis, x offset of the stripe image within the chain image 
-   */
-  public double getStripeImageX(){
+  public int getImageX(){
     int a=chain.indexOf(this),sum=0;
     for(int i=0;i<a;i++)
-      sum+=chain.get(i).getStripeImageWidth();
+      sum+=chain.get(i).getImageWidth();
     return sum;}
-  
-  //----------------
-  
-  AffineTransform transform;
-
-  public void setTransform(AffineTransform t){
-    transform=t;}
-
-  public AffineTransform getTransform(){
-    return transform;}
-  
-  
-  
+    
 }

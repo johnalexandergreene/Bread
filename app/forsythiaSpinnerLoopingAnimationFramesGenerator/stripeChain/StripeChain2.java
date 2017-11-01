@@ -21,7 +21,7 @@ import org.fleen.util.tree.TreeNode;
  * A chain of stripe nodes
  */
 @SuppressWarnings("serial")
-public class StripeChain extends LinkedList<Stripe>{
+public class StripeChain2 extends LinkedList<Stripe>{
   
   /*
    * ################################
@@ -29,10 +29,10 @@ public class StripeChain extends LinkedList<Stripe>{
    * ################################
    */
   
-  public StripeChain(FSLAFGenerator generator){
+  public StripeChain2(FSLAFGenerator generator){
     this.generator=generator;}
   
-  public StripeChain(FSLAFGenerator generator,List<Stripe> stripes){
+  public StripeChain2(FSLAFGenerator generator,List<Stripe> stripes){
     this(generator);
     addAll(stripes);}
   
@@ -56,13 +56,13 @@ public class StripeChain extends LinkedList<Stripe>{
   public void addRandomForsythiaCompositionStripeToEnd(){
     image=null;
     Stripe s=new Stripe_ForsythiaComposition(this);
-    generator.stripewidthsum+=s.getImageWidth();
+    generator.stripewidthsum+=getStripeImageWidth(s);
     add(s);}
   
   public void addInsertStripe(String path){
     image=null;
     Stripe s=new Stripe_Insert(this,path);
-    generator.stripewidthsum+=s.getImageWidth();
+    generator.stripewidthsum+=getStripeImageWidth(s);
     add(s);}
   
   public void addTerminusStripesToEndForFinishingUp(List<Stripe> stripes){
@@ -73,9 +73,9 @@ public class StripeChain extends LinkedList<Stripe>{
    * if the first stripe has moved entirely outside the viewport then remove it
    */
   public void conditionallyRemoveFirstStripe(){
-    Stripe stripe=getFirst();
-    if((int)(stripe.getImageX()+stripe.getImageWidth()+generator.edgerange-1)<generator.viewportposition){
-      generator.viewportposition-=stripe.getImageWidth();
+    Stripe a=getFirst();
+    if((int)(getStripeImageX(a)+getStripeImageWidth(a)+generator.edgerange-1)<generator.viewportposition){
+      generator.viewportposition-=getStripeImageWidth(a);
       removeFirst();
       image=null;}}
   
@@ -129,7 +129,7 @@ public class StripeChain extends LinkedList<Stripe>{
     g.fillRect(0,0,image.getWidth(),image.getHeight());
     g.setRenderingHints(RENDERING_HINTS);
     renderPolygonFill(g);
-    renderInsertImage(g);
+    renderLiteralImage(g);
     renderPolygonStroke(g);}
   
   /*
@@ -138,14 +138,14 @@ public class StripeChain extends LinkedList<Stripe>{
    * ################################
    */
   
-  private void renderInsertImage(Graphics2D g){
+  private void renderLiteralImage(Graphics2D g){
     for(int i=0;i<size();i++)
       if(get(i) instanceof Stripe_Insert)
         renderLiteralImage(g,i);}
   
   private void renderLiteralImage(Graphics2D g,int stripeindex){
     Stripe_Insert stripe=(Stripe_Insert)get(stripeindex);
-    double offset=stripe.getImageX();
+    double offset=getStripeImageX(stripe);
     //
     AffineTransform 
       told=g.getTransform(),
@@ -231,7 +231,7 @@ public class StripeChain extends LinkedList<Stripe>{
       stripeimageoffset=imagewidth;
       stripe=get(i);
       stripeimagetransforms[i]=getStripeImageTransform(get(i),stripeimageoffset);
-      imagewidth+=stripe.getImageWidth();}
+      imagewidth+=getStripeImageWidth(stripe);}
     image=new BufferedImage((int)imagewidth,generator.viewportheight,BufferedImage.TYPE_INT_RGB);}
   
   /*
@@ -283,6 +283,24 @@ public class StripeChain extends LinkedList<Stripe>{
    * ################################
    */
   
+  /*
+   * the xcoor of the left edge of the image of the stripe within the image of this chain
+   * which is to say, the x offset of the stripe 
+   */
+  public double getStripeImageX(Stripe stripe){
+    int a=indexOf(stripe),sum=0;
+    for(int i=0;i<a;i++)
+      sum+=getStripeImageWidth(get(i));
+    return sum;}
+  
+  public int getStripeImageWidth(Stripe stripe){
+    if(stripe instanceof Stripe_Insert)return ((Stripe_Insert)stripe).getImageWidth();
+    double s=getImageScale(stripe);
+    int 
+      w=(int)((Stripe_ForsythiaComposition)stripe).composition.getRootPolygon().getDPolygon().getBounds().width,
+      sw=(int)(s*w);
+    return sw;}
+  
   public double getImageScale(Stripe stripe){
     double ch=((Stripe_ForsythiaComposition)stripe).composition.getRootPolygon().getDPolygon().getBounds().height;
     double s=generator.viewportheight/ch;
@@ -303,7 +321,7 @@ public class StripeChain extends LinkedList<Stripe>{
     transform.scale(scale,-scale);//flip y for proper cartesian orientation
     //offset
     double
-      xoff=((stripe.getImageWidth()/scale-cbwidth)/2.0)-cbxmin,
+      xoff=((getStripeImageWidth(stripe)/scale-cbwidth)/2.0)-cbxmin,
       yoff=-(((generator.viewportheight/scale+cbheight)/2.0)+cbymin);
     transform.translate(xoff+stripeimageoffset/scale,yoff);
     //

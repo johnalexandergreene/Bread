@@ -29,6 +29,18 @@ public class Palette{
     new Color(0,146,232),
     new Color(251,205,231)};
   
+  //reddened that pale pink
+  public static final Color[] P_TOY_STORY_ADJUSTED2=new Color[]{
+    new Color(168,67,39),
+    new Color(251,206,89),
+    new Color(88,184,121),
+    new Color(154,94,154),
+    new Color(234,61,65),
+    new Color(248,237,23),
+    new Color(249,139,90),
+    new Color(0,146,232),
+    new Color(254,178,213)};
+  
   public static final Color[] P_PORCO_ROSSO=new Color[]{
     new Color(227,237,76),
     new Color(184,194,105),
