@@ -94,31 +94,36 @@ public class Stripe_ForsythiaComposition implements Stripe{
    * ################################
    */
   
-  /*
-   * ################################
-   * IMAGE GEOM
-   * ################################
-   */
-
-  public int getImageWidth(){
-    double
-      s=getImageScale(),
-      w=composition.getRootPolygon().getDPolygon().getBounds().width;
-    int sw=(int)(s*w);
-    return sw;}
-  
-  public int getImageHeight(){
-    return chain.generator.viewportheight;}
-  
   public double getImageScale(){
-    double ch=composition.getRootPolygon().getDPolygon().getBounds().height;
-    double s=chain.generator.viewportheight/ch;
-    return s;}
+    double a=composition.getRootPolygon().getDPolygon().getBounds().height;
+    double b=chain.generator.viewportheight/a;
+    return b;}
 
   public int getImageX(){
-    int a=chain.indexOf(this),sum=0;
+    int 
+      a=chain.indexOf(this),
+      sum=0;
     for(int i=0;i<a;i++)
       sum+=chain.get(i).getImageWidth();
     return sum;}
+  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * IMAGE WIDTH
+   * ++++++++++++++++++++++++++++++++
+   */
+  
+  private int imagewidth=-1;
+  
+  public int getImageWidth(){
+    if(imagewidth==-1)
+      initImageWidth();
+    return imagewidth;}
+  
+  private void initImageWidth(){
+    double
+      s=getImageScale(),
+      w=composition.getRootPolygon().getDPolygon().getBounds().width;
+    imagewidth=(int)(s*w);}
     
 }

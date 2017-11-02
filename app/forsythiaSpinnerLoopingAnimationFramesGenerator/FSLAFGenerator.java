@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain.Stripe;
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain.StripeChain;
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.ui.UI;
 import org.fleen.bread.composer.Composer;
@@ -143,7 +144,7 @@ public class FSLAFGenerator{
     //
     initChains();
     viewportposition=edgerange;
-    while(!(almostdone&&framecount>adjustedlooplength)){
+    while(!(almostdone&&framecount==adjustedlooplength)){
       System.out.println("frameindex="+framecount+" looplength="+looplength+" adjustedlooplength="+adjustedlooplength);
       renderFrame();
       exportFrame();
@@ -169,19 +170,19 @@ public class FSLAFGenerator{
    */
   private void incrementPerspective(){
     viewportposition++;
-    if(viewportposition+viewportwidth+edgerange>presentchain.getImageWidth()){
+    if(viewportposition+viewportwidth+edgerange>chain.getImageWidth()){
       if(
         (INSERTPATH!=null)&&
         framecount>(((double)insertcount)/((double)insertfrequency))*looplength){
         insertcount++;
-        presentchain.addInsertStripe(INSERTPATH);
+        chain.addInsertStripe(INSERTPATH);
       }else{
-        presentchain.addRandomForsythiaCompositionStripeToEnd();}} 
-    presentchain.conditionallyRemoveFirstStripe();
+        chain.addRandomForsythiaCompositionStripeToEnd();}} 
+    chain.conditionallyRemoveFirstStripe();
     //
     if((!almostdone)&&stripewidthsum>looplength){
       adjustedlooplength=stripewidthsum;
-      presentchain.addTerminusStripesToEndForFinishingUp(terminuschain);
+      chain.addTerminusStripesToEndForFinishingUp(terminus);
       almostdone=true;}}
   
   /*
@@ -336,10 +337,7 @@ public class FSLAFGenerator{
   
   /*
    * ################################
-   * STRIPECHAINS
-   * 
-   * We have 2 stripechains
-   * terminus and present
+   * STRIPECHAIN
    * 
    * terminus ia a strip of rectangles comprising the start and end of our loop of rectangles
    * It covers up the viewport, with a bit of overlap 
@@ -350,19 +348,18 @@ public class FSLAFGenerator{
    * ################################
    */
   
-  public StripeChain 
-    terminuschain,
-    presentchain;
+  public StripeChain chain;
+  public List<Stripe> terminus;
   
   private void initChains(){
-    //create the terminuschain
-    terminuschain=new StripeChain(this);
-    terminuschain.addRandomForsythiaCompositionStripeToEnd();//add a composition stripe
-    terminuschain.addInsertStripe(insertpath);//add an insert stripe
-    while(terminuschain.getImageWidth()<=viewportwidth+edgerange+edgerange)
-      terminuschain.addRandomForsythiaCompositionStripeToEnd();
-    //copy it to get initialized presentchain
-    presentchain=new StripeChain(this,terminuschain);}
+    //create the chain
+    chain=new StripeChain(this);
+    chain.addRandomForsythiaCompositionStripeToEnd();//add a composition stripe
+    chain.addInsertStripe(insertpath);//add an insert stripe
+    while(chain.getImageWidth()<=viewportwidth+edgerange+edgerange)
+      chain.addRandomForsythiaCompositionStripeToEnd();
+    //store terminus stripes
+    terminus=new ArrayList<Stripe>(chain);}
  
   /*
    * ################################
@@ -374,7 +371,7 @@ public class FSLAFGenerator{
   
   private void renderFrame(){
     AffineTransform t=AffineTransform.getTranslateInstance(-viewportposition,0);
-    BufferedImage i0=presentchain.getImage();
+    BufferedImage i0=chain.getImage();
     frame=new BufferedImage(viewportwidth,viewportheight,BufferedImage.TYPE_INT_RGB);
     Graphics2D g=frame.createGraphics();
     g.drawImage(i0,t,null);

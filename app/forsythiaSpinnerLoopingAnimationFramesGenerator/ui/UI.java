@@ -30,7 +30,7 @@ public class UI extends JFrame {
 	  this.generator=generator;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		setExtendedState(MAXIMIZED_BOTH);
-		setBounds(50,50,1000,800);
+		setBounds(50,50,1500,800);
 		viewer=new Viewer(generator);
 		setContentPane(viewer);
 		setVisible(true);}

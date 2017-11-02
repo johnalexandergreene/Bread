@@ -49,7 +49,9 @@ public class Stripe_Insert implements Stripe{
     return image.getWidth();}
   
   public int getImageX(){
-    int a=chain.indexOf(this),sum=0;
+    int 
+      a=chain.indexOf(this),
+      sum=0;
     for(int i=0;i<a;i++)
       sum+=chain.get(i).getImageWidth();
     return sum;}

@@ -65,16 +65,24 @@ public class StripeChain extends LinkedList<Stripe>{
     generator.stripewidthsum+=s.getImageWidth();
     add(s);}
   
+  /*
+   * note that these stripe lengths were accounted for at the beginning of 
+   * the loop, when they were added using the other stripe adding methods.
+   * Therefor we do no add their lengths to the stripewidthsum again. 
+   */
   public void addTerminusStripesToEndForFinishingUp(List<Stripe> stripes){
     image=null;
     addAll(stripes);}
   
   /*
    * if the first stripe has moved entirely outside the viewport then remove it
+   * TODO
+   *   cache image width and image x
+   *   invalidate image x on chain edit
    */
   public void conditionallyRemoveFirstStripe(){
     Stripe stripe=getFirst();
-    if((int)(stripe.getImageX()+stripe.getImageWidth()+generator.edgerange-1)<generator.viewportposition){
+    if(stripe.getImageX()+stripe.getImageWidth()+generator.edgerange-1<generator.viewportposition){
       generator.viewportposition-=stripe.getImageWidth();
       removeFirst();
       image=null;}}
@@ -112,9 +120,10 @@ public class StripeChain extends LinkedList<Stripe>{
   int imagewidth;//the image is imagewidth X viewportheight
   
   public int getImageWidth(){
-    if(image==null)
-      createImage();
-    return (int)imagewidth;}
+    int a=0;
+    for(Stripe s:this)
+      a+=s.getImageWidth();
+    return a;}
   
   public BufferedImage getImage(){
     if(image==null)
@@ -134,28 +143,18 @@ public class StripeChain extends LinkedList<Stripe>{
   
   /*
    * ################################
-   * RENDER LITERAL IMAGE
+   * RENDER INSERT IMAGE
    * ################################
    */
   
   private void renderInsertImage(Graphics2D g){
-    for(int i=0;i<size();i++)
-      if(get(i) instanceof Stripe_Insert)
-        renderLiteralImage(g,i);}
+    for(Stripe stripe:this)
+      if(stripe instanceof Stripe_Insert)
+        renderInsertImage(g,(Stripe_Insert)stripe);}
   
-  private void renderLiteralImage(Graphics2D g,int stripeindex){
-    Stripe_Insert stripe=(Stripe_Insert)get(stripeindex);
-    double offset=stripe.getImageX();
-    //
-    AffineTransform 
-      told=g.getTransform(),
-      t=new AffineTransform(told);
-    t.concatenate(AffineTransform.getTranslateInstance(offset,0));
-    g.setTransform(t);
-    //
-    g.drawImage(stripe.image,null,null);
-    //
-    g.setTransform(told);}
+  private void renderInsertImage(Graphics2D g,Stripe_Insert stripe){
+    AffineTransform t=AffineTransform.getTranslateInstance(stripe.getImageX(),0);
+    g.drawImage(stripe.image,t,null);}
   
   /*
    * ################################
@@ -269,7 +268,7 @@ public class StripeChain extends LinkedList<Stripe>{
     t.concatenate(stripeimagetransforms[stripeindex]);
     g.setTransform(t);
     //
-    if(generator.terminuschain.contains(stripe)){
+    if(generator.terminus.contains(stripe)){
       g.setPaint(Color.red);
     }else{
       g.setPaint(Color.blue);}
