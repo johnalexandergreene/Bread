@@ -54,13 +54,13 @@ public class StripeChain extends LinkedList<Stripe>{
    */
   
   public void addRandomForsythiaCompositionStripeToEnd(){
-    image=null;
+    invalidateImage();
     Stripe s=new Stripe_ForsythiaComposition(this);
     generator.stripewidthsum+=s.getImageWidth();
     add(s);}
   
   public void addInsertStripe(String path){
-    image=null;
+    invalidateImage();
     Stripe s=new Stripe_Insert(this,path);
     generator.stripewidthsum+=s.getImageWidth();
     add(s);}
@@ -71,7 +71,7 @@ public class StripeChain extends LinkedList<Stripe>{
    * Therefor we do no add their lengths to the stripewidthsum again. 
    */
   public void addTerminusStripesToEndForFinishingUp(List<Stripe> stripes){
-    image=null;
+    invalidateImage();
     addAll(stripes);}
   
   /*
@@ -83,9 +83,9 @@ public class StripeChain extends LinkedList<Stripe>{
   public void conditionallyRemoveFirstStripe(){
     Stripe stripe=getFirst();
     if(stripe.getImageX()+stripe.getImageWidth()+generator.edgerange-1<generator.viewportposition){
+      invalidateImage();
       generator.viewportposition-=stripe.getImageWidth();
-      removeFirst();
-      image=null;}}
+      removeFirst();}}
   
   /*
    * ################################
@@ -116,8 +116,10 @@ public class StripeChain extends LinkedList<Stripe>{
       RenderingHints.KEY_STROKE_CONTROL,RenderingHints.VALUE_STROKE_NORMALIZE);}
   
   BufferedImage image=null;
-  AffineTransform[] stripeimagetransforms;
-  int imagewidth;//the image is imagewidth X viewportheight
+  
+  private void invalidateImage(){
+    image=null;
+    debugimage=null;}
   
   public int getImageWidth(){
     int a=0;
@@ -131,49 +133,88 @@ public class StripeChain extends LinkedList<Stripe>{
     return image;}
   
   private void createImage(){
-    initImageAndTransforms();
-    if(generator.debug)createDebugImage();
+    image=new BufferedImage(getImageWidth(),generator.viewportheight,BufferedImage.TYPE_INT_RGB);
     Graphics2D g=image.createGraphics();
     g.setPaint(Color.black);
     g.fillRect(0,0,image.getWidth(),image.getHeight());
     g.setRenderingHints(RENDERING_HINTS);
     renderPolygonFill(g);
-    renderInsertImage(g);
+    renderInsert(g);
+    renderPolygonStroke(g);}
+  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * FOR DEBUG IMAGE
+   * The debug image is the whole stripechain
+   * blockfill with red for terminus stripes, blue for nonterminus stripes and white for insert stripes 
+   * polygons rendered with black strokes
+   * ++++++++++++++++++++++++++++++++
+   */
+  
+  private BufferedImage debugimage=null;
+  
+  public BufferedImage getDebugImage(){
+    if(debugimage==null)
+      initDebugImage();
+    return debugimage;}
+  
+  private void initDebugImage(){
+    debugimage=new BufferedImage(getImageWidth(),generator.viewportheight,BufferedImage.TYPE_INT_RGB);
+    Graphics2D g=debugimage.createGraphics();
+    g.setPaint(Color.white);
+    g.fillRect(0,0,image.getWidth(),image.getHeight());
+    g.setRenderingHints(RENDERING_HINTS);
+    renderStripeBlockfill(g);
     renderPolygonStroke(g);}
   
   /*
    * ################################
-   * RENDER INSERT IMAGE
+   * STRIPE IMAGE GEOM
    * ################################
    */
   
-  private void renderInsertImage(Graphics2D g){
-    for(Stripe stripe:this)
-      if(stripe instanceof Stripe_Insert)
-        renderInsertImage(g,(Stripe_Insert)stripe);}
-  
-  private void renderInsertImage(Graphics2D g,Stripe_Insert stripe){
-    AffineTransform t=AffineTransform.getTranslateInstance(stripe.getImageX(),0);
-    g.drawImage(stripe.image,t,null);}
+  private AffineTransform getStripeFCImageTransform(Stripe_ForsythiaComposition stripe){
+    //get all the relevant metrics
+    Rectangle2D.Double compositionbounds=((Stripe_ForsythiaComposition)stripe).composition.getRootPolygon().getDPolygon().getBounds();
+    double
+      cbwidth=compositionbounds.getWidth(),
+      cbheight=compositionbounds.getHeight(),
+      cbxmin=compositionbounds.getMinX(),
+      cbymin=compositionbounds.getMinY();
+    AffineTransform transform=new AffineTransform();
+    //scale
+    double scale=stripe.getImageScale();
+    transform.scale(scale,-scale);//flip y for proper cartesian orientation
+    //offset
+    double
+      xoff=((stripe.getImageWidth()/scale-cbwidth)/2.0)-cbxmin,
+      yoff=-(((generator.viewportheight/scale+cbheight)/2.0)+cbymin);
+    transform.translate(xoff+stripe.getImageX()/scale,yoff);
+    //
+    return transform;}
   
   /*
    * ################################
-   * RENDER POLYGON FILL
+   * RENDER METHODS
    * ################################
    */
   
-  private void renderPolygonFill(Graphics2D g){
-    for(int i=0;i<size();i++)
-      if(get(i) instanceof Stripe_ForsythiaComposition)
-        renderPolygonFill(g,i);}
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * RENDER POLYGON FILL
+   * ++++++++++++++++++++++++++++++++
+   */
   
-  private void renderPolygonFill(Graphics2D g,int stripeindex){
-    Stripe stripe=get(stripeindex);
-    //
+  private void renderPolygonFill(Graphics2D g){
+    for(Stripe stripe:this)
+      if(stripe instanceof Stripe_ForsythiaComposition)
+        renderPolygonFill(g,(Stripe_ForsythiaComposition)stripe);}
+  
+  private void renderPolygonFill(Graphics2D g,Stripe_ForsythiaComposition stripe){
     AffineTransform 
       told=g.getTransform(),
       t=new AffineTransform(told);
-    t.concatenate(stripeimagetransforms[stripeindex]);
+    t.concatenate(getStripeFCImageTransform(stripe));
     g.setTransform(t);
     //
     Iterator<TreeNode> i=((Stripe_ForsythiaComposition)stripe).composition.getLeafPolygonIterator();
@@ -187,30 +228,27 @@ public class StripeChain extends LinkedList<Stripe>{
     g.setTransform(told);}
   
   /*
-   * ################################
+   * ++++++++++++++++++++++++++++++++
    * RENDER POLYGON STROKE
-   * ################################
+   * ++++++++++++++++++++++++++++++++
    */
   
   private void renderPolygonStroke(Graphics2D g){
-    for(int i=0;i<size();i++)
-      if(get(i) instanceof Stripe_ForsythiaComposition)
-        renderPolygonStroke(g,i);}
+    for(Stripe stripe:this)
+      if(stripe instanceof Stripe_ForsythiaComposition)
+        renderPolygonStroke(g,(Stripe_ForsythiaComposition)stripe);}
   
-  private void renderPolygonStroke(Graphics2D g,int stripeindex){
-    Stripe stripe=get(stripeindex);
-    if(stripe instanceof Stripe_Insert)return;
-    //
+  private void renderPolygonStroke(Graphics2D g,Stripe_ForsythiaComposition stripe){
     AffineTransform 
       told=g.getTransform(),
       t=new AffineTransform(told);
-    t.concatenate(stripeimagetransforms[stripeindex]);
+    t.concatenate(getStripeFCImageTransform(stripe));
     g.setTransform(t);
     //
     Iterator<TreeNode> i=((Stripe_ForsythiaComposition)stripe).composition.getLeafPolygonIterator();
     FPolygon p;
     g.setPaint(Color.black);
-    g.setStroke(createStroke((float)(STROKETHICKNESS/stripeimagetransforms[stripeindex].getScaleX())));
+    g.setStroke(createStroke((float)(STROKETHICKNESS/getStripeFCImageTransform(stripe).getScaleX())));
     while(i.hasNext()){
       p=(FPolygon)i.next();
       g.draw(p.getDPolygon().getPath2D());}
@@ -220,52 +258,24 @@ public class StripeChain extends LinkedList<Stripe>{
     Stroke stroke=new BasicStroke(strokewidth,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_ROUND,0,null,0);
     return stroke;}
   
-  private void initImageAndTransforms(){
-    int s=size();
-    stripeimagetransforms=new AffineTransform[s];
-    double stripeimageoffset;
-    imagewidth=0;
-    Stripe stripe;
-    for(int i=0;i<s;i++){
-      stripeimageoffset=imagewidth;
-      stripe=get(i);
-      stripeimagetransforms[i]=getStripeImageTransform(get(i),stripeimageoffset);
-      imagewidth+=stripe.getImageWidth();}
-    image=new BufferedImage((int)imagewidth,generator.viewportheight,BufferedImage.TYPE_INT_RGB);}
-  
   /*
    * ++++++++++++++++++++++++++++++++
-   * FOR DEBUG IMAGE
-   * The debug image is the whole stripechain
-   * polygons rendered with black strokes
-   * rectangle edge stroked according to nature 
+   * RENDER STRIPE BLOCK FILL
+   * fill up the whole stripe rectangle with a single color
+   * used for debug
    * ++++++++++++++++++++++++++++++++
    */
   
-  public BufferedImage debugimage;
-  
-  private void createDebugImage(){
-    debugimage=new BufferedImage(image.getWidth(),image.getHeight(),BufferedImage.TYPE_INT_RGB);
-    Graphics2D g=debugimage.createGraphics();
-    g.setPaint(Color.white);
-    g.fillRect(0,0,image.getWidth(),image.getHeight());
-    g.setRenderingHints(RENDERING_HINTS);
-    for(int i=0;i<size();i++)
-      renderBlockfill(g,i);
-    for(int i=0;i<size();i++)
-      renderPolygonStroke(g,i);}
-  
-  /*
-   * fill up the whole stripe with a single color
-   */
-  private void renderBlockfill(Graphics2D g,int stripeindex){
-    Stripe stripe=get(stripeindex);
-    if(stripe instanceof Stripe_Insert)return;
-    //
+  private void renderStripeBlockfill(Graphics2D g){
+    for(Stripe stripe:this)
+      if(stripe instanceof Stripe_ForsythiaComposition)
+        renderStripeBlockfill(g,(Stripe_ForsythiaComposition)stripe);}
+
+  private void renderStripeBlockfill(Graphics2D g,Stripe_ForsythiaComposition stripe){
     AffineTransform 
       told=g.getTransform(),
       t=new AffineTransform(told);
-    t.concatenate(stripeimagetransforms[stripeindex]);
+    t.concatenate(getStripeFCImageTransform(stripe));
     g.setTransform(t);
     //
     if(generator.terminus.contains(stripe)){
@@ -277,35 +287,20 @@ public class StripeChain extends LinkedList<Stripe>{
     g.setTransform(told);}
   
   /*
-   * ################################
-   * STRIPE IMAGE GEOM
-   * ################################
+   * ++++++++++++++++++++++++++++++++
+   * RENDER INSERT
+   * Just paint the image
+   * ++++++++++++++++++++++++++++++++
    */
   
-  public double getImageScale(Stripe stripe){
-    double ch=((Stripe_ForsythiaComposition)stripe).composition.getRootPolygon().getDPolygon().getBounds().height;
-    double s=generator.viewportheight/ch;
-    return s;}
+  private void renderInsert(Graphics2D g){
+    for(Stripe stripe:this)
+      if(stripe instanceof Stripe_Insert)
+        renderInsert(g,(Stripe_Insert)stripe);}
   
-  private AffineTransform getStripeImageTransform(Stripe stripe,double stripeimageoffset){
-    if(stripe instanceof Stripe_Insert)return null;
-    //get all the relevant metrics
-    Rectangle2D.Double compositionbounds=((Stripe_ForsythiaComposition)stripe).composition.getRootPolygon().getDPolygon().getBounds();
-    double
-      cbwidth=compositionbounds.getWidth(),
-      cbheight=compositionbounds.getHeight(),
-      cbxmin=compositionbounds.getMinX(),
-      cbymin=compositionbounds.getMinY();
-    AffineTransform transform=new AffineTransform();
-    //scale
-    double scale=getImageScale(stripe);
-    transform.scale(scale,-scale);//flip y for proper cartesian orientation
-    //offset
-    double
-      xoff=((stripe.getImageWidth()/scale-cbwidth)/2.0)-cbxmin,
-      yoff=-(((generator.viewportheight/scale+cbheight)/2.0)+cbymin);
-    transform.translate(xoff+stripeimageoffset/scale,yoff);
-    //
-    return transform;}
+  private void renderInsert(Graphics2D g,Stripe_Insert stripe){
+    AffineTransform t=AffineTransform.getTranslateInstance(stripe.getImageX(),0);
+    g.drawImage(stripe.image,t,null);}
+  
   
 }

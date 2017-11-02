@@ -86,6 +86,31 @@ public class FSLAFGenerator{
   
   /*
    * ################################
+   * CHAIN
+   * ################################
+   */
+  
+  public StripeChain chain;
+  
+  /*
+   * terminus is a strip of stripes comprising the start and end of our loop
+   * It covers up the viewport (+ a little extra for edgerange)
+   * we keep it because we want it twice, at the beginning and end
+   */
+  public List<Stripe> terminus;
+  
+  private void initChain(){
+    //create the chain
+    chain=new StripeChain(this);
+    chain.addRandomForsythiaCompositionStripeToEnd();//add a composition stripe
+    chain.addInsertStripe(insertpath);//add an insert stripe
+    while(chain.getImageWidth()<=viewportwidth+edgerange+edgerange)
+      chain.addRandomForsythiaCompositionStripeToEnd();
+    //store terminus stripes
+    terminus=new ArrayList<Stripe>(chain);}
+  
+  /*
+   * ################################
    * CREATE FRAMES
    *
    * Init the chains
@@ -142,14 +167,14 @@ public class FSLAFGenerator{
     stripewidthsum=0;//aka stripe length sum
     almostdone=false;
     //
-    initChains();
+    initChain();
     viewportposition=edgerange;
     while(!(almostdone&&framecount==adjustedlooplength)){
-      System.out.println("frameindex="+framecount+" looplength="+looplength+" adjustedlooplength="+adjustedlooplength);
       renderFrame();
       exportFrame();
       incrementPerspective();
       framecount++;
+      System.out.println("frameindex="+framecount+" looplength="+looplength+" adjustedlooplength="+adjustedlooplength);
       //
 //      try{
 //        Thread.sleep(20);
@@ -334,32 +359,6 @@ public class FSLAFGenerator{
   static final double ONEERROR=0.000000000000005;
   private boolean isOne(double a){
     return (a>1-ONEERROR)&&(a<1+ONEERROR);}
-  
-  /*
-   * ################################
-   * STRIPECHAIN
-   * 
-   * terminus ia a strip of rectangles comprising the start and end of our loop of rectangles
-   * It covers up the viewport, with a bit of overlap 
-   *   to account for inter-rectangle graphic influences. ie edgerange
-   *   
-   * present changes to keep our viewport filled
-   *  
-   * ################################
-   */
-  
-  public StripeChain chain;
-  public List<Stripe> terminus;
-  
-  private void initChains(){
-    //create the chain
-    chain=new StripeChain(this);
-    chain.addRandomForsythiaCompositionStripeToEnd();//add a composition stripe
-    chain.addInsertStripe(insertpath);//add an insert stripe
-    while(chain.getImageWidth()<=viewportwidth+edgerange+edgerange)
-      chain.addRandomForsythiaCompositionStripeToEnd();
-    //store terminus stripes
-    terminus=new ArrayList<Stripe>(chain);}
  
   /*
    * ################################

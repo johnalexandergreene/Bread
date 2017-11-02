@@ -33,7 +33,7 @@ public class Viewer extends JPanel{
   private void paintChainForTest(Graphics2D g){
     AffineTransform t=new AffineTransform(NICEOFFSET);
     t.concatenate(AffineTransform.getTranslateInstance(-gen.viewportposition,0));
-    g.drawImage(gen.chain.debugimage,t,null);}
+    g.drawImage(gen.chain.getDebugImage(),t,null);}
   
   private void paintFrameForTest(Graphics2D g){
     AffineTransform 
