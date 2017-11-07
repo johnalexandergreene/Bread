@@ -90,9 +90,20 @@ public abstract class Renderer_Abstract implements Renderer{
     render(composition,palette,graphics,transform);
     return image;}
   
+  public BufferedImage createImage(int width,int height,ForsythiaComposition composition,Color[][] palette,boolean rebuildcolormap){
+    image=getInitImage(width,height);
+    AffineTransform transform=getTransform(width,height,composition);
+    Graphics2D graphics=(Graphics2D)image.getGraphics();
+    graphics.setTransform(transform);
+    graphics.setRenderingHints(RENDERING_HINTS);
+    render(composition,palette,graphics,transform);
+    return image;}
+  
   //render the specified composition to the specified graphics
   //pass transform too because it's handy sometimes, like for stroking
-  protected abstract void render(ForsythiaComposition composition,Color[] palette,Graphics2D graphics,AffineTransform transform);
+  protected void render(ForsythiaComposition composition,Color[] palette,Graphics2D graphics,AffineTransform transform){}
+  
+  protected void render(ForsythiaComposition composition,Color[][] palette,Graphics2D graphics,AffineTransform transform){}
   
   private BufferedImage getInitImage(int w,int h){
     BufferedImage image=new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);

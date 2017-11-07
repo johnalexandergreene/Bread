@@ -11,14 +11,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.fleen.geom_2D.rasterMap.Cell;
+import org.fleen.geom_2D.rasterMap.Presence;
+import org.fleen.geom_2D.rasterMap.RasterMap;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.FPolygonSignature;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.geom_2D.DPoint;
 import org.fleen.geom_2D.DPolygon;
-import org.fleen.geom_2D.rasterMap.Cell;
-import org.fleen.geom_2D.rasterMap.Presence;
-import org.fleen.geom_2D.rasterMap.RasterMap;
 
 /*
  * this renders first egg in ancestry

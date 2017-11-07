@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.fleen.geom_2D.rasterMap.Cell;
-import org.fleen.geom_2D.rasterMap.Presence;
-import org.fleen.geom_2D.rasterMap.RasterMap;
+import org.fleen.bread.RDSystem.Cell;
+import org.fleen.bread.RDSystem.Presence;
+import org.fleen.bread.RDSystem.RDSystem;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.FPolygonSignature;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
@@ -22,9 +22,9 @@ import org.fleen.geom_2D.DPolygon;
 import org.fleen.util.tree.TreeNode;
 
 /*
- * this renders first egg in ancestry
+ * a little more color differentiation at root 
  */
-public class Renderer_Rasterizer002 implements Renderer{
+public class Renderer_Rasterizer005_TestRDSystem implements Renderer{
   
   /*
    * it controls the fatness of the blend between polygonal areas of cells/pixels
@@ -56,7 +56,7 @@ public class Renderer_Rasterizer002 implements Renderer{
       initPolygonColors(composition);}
     //create rastermap, create image
     //render rastermap to image using palette
-    RasterMap prm=new RasterMap(
+    RDSystem prm=new RDSystem(
       width,height,getTransformForRasterMap(width,height,composition),GLOWSPAN,getLeafDPolygons(composition));
     BufferedImage image=new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
     for(Cell c:prm)
@@ -175,6 +175,9 @@ public class Renderer_Rasterizer002 implements Renderer{
   
   private boolean isBase(FPolygon polygon){
     if(polygon.isRootPolygon())return true;
+    
+    if(polygon.getPolygonDepth()==2)return true;
+    
     if(polygon.getPolygonParent().isRootPolygon())return true;
     if(polygon.getPolygonParent().hasTags("egg"))return true;
     if(polygon.isLeaf()&&polygon.hasTags("egg"))return true;

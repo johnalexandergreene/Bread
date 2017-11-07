@@ -17,7 +17,7 @@ import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.geom_2D.DPoint;
 import org.fleen.util.tree.TreeNode;
 
-public class Renderer001 extends Renderer_Abstract{
+public class Renderer_002_ArbitrarySubPalettes extends Renderer_Abstract{
   
   /*
    * ################################
@@ -25,29 +25,9 @@ public class Renderer001 extends Renderer_Abstract{
    * ################################
    */
   
-  private Color strokecolor;
-  private static final Color[][] COLORS={
-      {
-        new Color(227,161,117),  
-        new Color(227,117,117),
-        new Color(227,117,161),
-      },
-      
-      {
-        new Color(182,227,117),  
-        new Color(226,227,117),
-        new Color(227,184,117),
-        
-      },
-      
-      {
-        new Color(161,117,227),  
-        new Color(117,117,227),
-        new Color(117,161,227),
-        
-      }
-        
-    };
+  
+  private Color[][] palette;
+  private Color strokecolor=Color.black;
   
   private Map<FPolygonSignature,Color> polygoncolors=new Hashtable<FPolygonSignature,Color>();
   
@@ -57,23 +37,10 @@ public class Renderer001 extends Renderer_Abstract{
     if(color==null){
       int 
         eggdepth=getTagDepth(polygon,"egg"),
-        paletteindex=eggdepth%3,
-        colorindex=rnd.nextInt(COLORS[paletteindex].length);
-      color=COLORS[paletteindex][colorindex];}
+        subpaletteindex=eggdepth%palette.length,
+        colorindex=rnd.nextInt(palette[subpaletteindex].length);
+      color=palette[subpaletteindex][colorindex];}
     return color;}
-  
-  private void initColors(Color[] palette){
-    strokecolor=Color.black;
-//    int a=palette.length/2;
-//    color0=new Color[a];
-//    color1=new Color[palette.length-a];
-//    for(int i=0;i<a;i++)
-//      color0[i]=palette[i];
-//    for(int i=a;i<palette.length;i++)
-//      color1[i-a]=palette[i];
-    
-  
-  }
   
   /*
    * ################################
@@ -81,7 +48,7 @@ public class Renderer001 extends Renderer_Abstract{
    * ################################
    */
   
-  private float strokewidth;
+  private float strokewidth=0.004f;
   
   private Stroke createStroke(){
     Stroke stroke=new BasicStroke(strokewidth,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_ROUND,0,null,0);
@@ -95,11 +62,8 @@ public class Renderer001 extends Renderer_Abstract{
   
   Random rnd=new Random();
   
-  protected void render(ForsythiaComposition forsythia,Color[] palette,Graphics2D graphics,AffineTransform transform){
-    
-    strokewidth=0.004f;
-    
-    initColors(palette);
+  protected void render(ForsythiaComposition forsythia,Color[][] palette,Graphics2D graphics,AffineTransform transform){
+    this.palette=palette;
     Path2D path;
     //FILL POLYGONS
     Color color;

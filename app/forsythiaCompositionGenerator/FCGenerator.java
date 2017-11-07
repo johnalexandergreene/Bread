@@ -12,8 +12,9 @@ import javax.swing.JTextField;
 import org.fleen.bread.composer.Composer;
 import org.fleen.bread.composer.Composer001_SplitBoil;
 import org.fleen.bread.export.RasterExporter;
+import org.fleen.bread.palette.Palette;
 import org.fleen.bread.renderer.Renderer;
-import org.fleen.bread.renderer.Renderer001;
+import org.fleen.bread.renderer.Renderer_Rasterizer005_TestRDSystem;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
@@ -21,8 +22,6 @@ import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
  * a single forsythia composition
  */
 public class FCGenerator{
-  
-//  int bullshit;
   
   /*
    * ################################
@@ -43,78 +42,32 @@ public class FCGenerator{
    * ################################
    */
   
-  Color[] palette=P_TOY_STORY;
+  Color[] palette=Palette.P_TOY_STORY_ADJUSTED2;
+
+//  Color[][] palette=new Color[][]{
+//    {new Color(255,180,0),new Color(255,222,1),new Color(255,127,1)},
+//    {new Color(0,218,0),new Color(0,218,210),new Color(185,218,0)},
+//    {new Color(253,123,255),new Color(253,125,146),new Color(197,124,254)},
+//    {new Color(216,216,216),new Color(168,168,168),new Color(189,189,189)}
+//  };
+  
+//  Color[][] palette=new Color[][]{
+//    {new Color(255,180,0),new Color(255,222,1),new Color(255,127,1)},
+//    {new Color(0,218,0),new Color(0,218,210),new Color(185,218,0)},
+//    {new Color(253,123,255),new Color(253,125,146),new Color(197,124,254)}
+//  };
   
 //  String grammar_file_path="/home/john/Desktop/stripegrammar/s003.grammar";
-  String grammar_file_path="/home/john/Desktop/ge/nuther003.grammar";
+//  String grammar_file_path="/home/john/Desktop/ge/nuther003.grammar";
 //  String grammar_file_path="/home/john/Desktop/ge/aa004.grammar";
+  String grammar_file_path="/home/john/Desktop/grammars/s008.grammar";
   
   Composer composer=new Composer001_SplitBoil();
-  static final double DETAIL_LIMIT=0.04;
-//  Renderer renderer=new Renderer_Rasterizer003();
-  Renderer renderer=new Renderer001();
+  static final double DETAIL_LIMIT=0.05;
+  Renderer renderer=new Renderer_Rasterizer005_TestRDSystem();
+//  Renderer renderer=new Renderer_002_ArbitrarySubPalettes();
+//  Renderer renderer=new Renderer_001();
   String exportdirpath="/home/john/Desktop/newstuff";
-  
-  /*
-   * ++++++++++++++++++++++++++++++++
-   * COLOR
-   * ++++++++++++++++++++++++++++++++
-   */
-  
-  /*
-   * THOUGHT PROVOKING
-   * down palette. rich, earthy
-   * beth dislikes it
-   */
-  static final Color[] P_THOUGHT_PROVOKING=new Color[]{
-      new Color(236,208,120),
-      new Color(217,91,67),
-      new Color(192,41,66),
-      new Color(84,36,55),
-      new Color(83,119,122),
-    };
-
-  /*
-   * WANDERLUST GLAMPING
-   * really juicy, bright, candy. 
-   * Beth gives it a big thumbs up.
-   */
-  static final Color[] P_WANDERLUST_GLAMPING=new Color[]{
-    new Color(1,24,107),
-    new Color(64,203,200),
-    new Color(203,54,166),
-    new Color(199,203,54),
-    new Color(224,135,48),};
-  
-  /*
-   * THOR MOVIE POSTER
-   */
-  static final Color[] P_THOR_MOVIE_POSTER=new Color[]{
-    new Color(186,137,132),
-    new Color(43,44,38),
-    new Color(241,240,196),
-    new Color(55,62,70),
-    new Color(119,39,32),
-    new Color(133,133,133),
-    new Color(136,120,68),
-    new Color(232,170,59),
-    new Color(94,89,85),
-    new Color(66,48,36)};
-  
-  /*
-   * TOY STORY MOVIE
-   */
-  static final Color[] P_TOY_STORY=new Color[]{
-    new Color(168,67,39),
-    new Color(250,200,147),
-    new Color(163,187,75),
-    new Color(154,94,154),
-    new Color(232,62,65),
-    new Color(249,212,1),
-    new Color(249,139,90),
-    new Color(236,77,74),
-    new Color(0,146,231),
-    new Color(251,206,221)};
   
   /*
    * ++++++++++++++++++++++++++++++++

@@ -4,6 +4,46 @@ import java.awt.Color;
 
 public class Palette{
   
+  /*
+   * THOUGHT PROVOKING
+   * down palette. rich, earthy
+   * beth dislikes it
+   */
+  static final Color[] P_THOUGHT_PROVOKING=new Color[]{
+      new Color(236,208,120),
+      new Color(217,91,67),
+      new Color(192,41,66),
+      new Color(84,36,55),
+      new Color(83,119,122),
+    };
+
+  /*
+   * WANDERLUST GLAMPING
+   * really juicy, bright, candy. 
+   * Beth gives it a big thumbs up.
+   */
+  static final Color[] P_WANDERLUST_GLAMPING=new Color[]{
+    new Color(1,24,107),
+    new Color(64,203,200),
+    new Color(203,54,166),
+    new Color(199,203,54),
+    new Color(224,135,48),};
+  
+  /*
+   * THOR MOVIE POSTER
+   */
+  static final Color[] P_THOR_MOVIE_POSTER=new Color[]{
+    new Color(186,137,132),
+    new Color(43,44,38),
+    new Color(241,240,196),
+    new Color(55,62,70),
+    new Color(119,39,32),
+    new Color(133,133,133),
+    new Color(136,120,68),
+    new Color(232,170,59),
+    new Color(94,89,85),
+    new Color(66,48,36)};
+  
   public static final Color[] P_TOY_STORY=new Color[]{
     new Color(168,67,39),
     new Color(250,200,147),
