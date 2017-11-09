@@ -14,7 +14,7 @@ import org.fleen.bread.composer.Composer001_SplitBoil;
 import org.fleen.bread.export.RasterExporter;
 import org.fleen.bread.palette.Palette;
 import org.fleen.bread.renderer.Renderer;
-import org.fleen.bread.renderer.Renderer_Rasterizer005_TestRDSystem;
+import org.fleen.bread.renderer.Renderer_001;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
@@ -60,13 +60,15 @@ public class FCGenerator{
 //  String grammar_file_path="/home/john/Desktop/stripegrammar/s003.grammar";
 //  String grammar_file_path="/home/john/Desktop/ge/nuther003.grammar";
 //  String grammar_file_path="/home/john/Desktop/ge/aa004.grammar";
-  String grammar_file_path="/home/john/Desktop/grammars/s008.grammar";
+//  String grammar_file_path="/home/john/Desktop/grammars/s008.grammar";
+  String grammar_file_path="/home/john/Desktop/grammars/s008stripe.grammar";
   
+//  Composer composer=new Composer002_SplitBoil_WithALittleNoiseNearTheRoot();
   Composer composer=new Composer001_SplitBoil();
   static final double DETAIL_LIMIT=0.05;
-  Renderer renderer=new Renderer_Rasterizer005_TestRDSystem();
+//  Renderer renderer=new Renderer_Rasterizer005_TestRDSystem();
 //  Renderer renderer=new Renderer_002_ArbitrarySubPalettes();
-//  Renderer renderer=new Renderer_001();
+  Renderer renderer=new Renderer_001();
   String exportdirpath="/home/john/Desktop/newstuff";
   
   /*

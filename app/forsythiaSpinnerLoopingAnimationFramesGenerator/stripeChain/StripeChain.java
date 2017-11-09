@@ -60,6 +60,7 @@ public class StripeChain extends LinkedList<Stripe>{
     add(s);}
   
   public void addInsertStripe(String path){
+    if(path==null)return;
     invalidateImage();
     Stripe s=new Stripe_Insert(this,path);
     generator.stripewidthsum+=s.getImageWidth();

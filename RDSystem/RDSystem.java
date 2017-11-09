@@ -50,26 +50,14 @@ public class RDSystem implements Iterable<Cell>{
    * ################################
    */
   
-  //empty
+  /*
+   * TODO
+   * glowspan and transform should be specified in the presence casting methods
+   */
   public RDSystem(int w,int h,AffineTransform t,double glowspan){
     this.glowspan=glowspan;
     this.transform=t;
     initCells(w,h);}
-  
-  //1 polygon
-  public RDSystem(int w,int h,AffineTransform t,double glowspan,DPolygon polygon){
-    this(w,h,t,glowspan);
-    castPresence(polygon);}
-  
-  //a list of polygons
-  public RDSystem(int w,int h,AffineTransform t,double glowspan,List<DPolygon> polygons){
-    this(w,h,t,glowspan);
-    castPresence(polygons);}
-  
-  //an array of polygons
-  public RDSystem(int w,int h,AffineTransform t,double glowspan,DPolygon... polygons){
-    this(w,h,t,glowspan);
-    castPresence(polygons);}
   
   /*
    * ################################
@@ -161,8 +149,6 @@ public class RDSystem implements Iterable<Cell>{
     return pcm;}
   
   public void castPresence(List<DPolygon> polygons){
-//    Map<DPolygon,PolygonCells> maps=new HashMap<DPolygon,PolygonCells>();
-//    PolygonCells pcm;
     for(DPolygon polygon:polygons)
       castPresence(polygon);}
   

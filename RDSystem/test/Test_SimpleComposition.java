@@ -1,34 +1,42 @@
-package org.fleen.bread.RDSystem;
+package org.fleen.bread.RDSystem.test;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+import org.fleen.bread.RDSystem.Cell;
+import org.fleen.bread.RDSystem.PolygonCells;
+import org.fleen.bread.RDSystem.Presence;
+import org.fleen.bread.RDSystem.RDSystem;
+import org.fleen.bread.RDSystem.Test_2AdjacentRectangles;
+import org.fleen.forsythia.core.composition.ForsythiaComposition;
+import org.fleen.forsythia.core.grammar.FMetagon;
+import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
+import org.fleen.forsythia.core.grammar.Jig;
 import org.fleen.geom_2D.DPoint;
 import org.fleen.geom_2D.DPolygon;
 
-/*
- * create 2 adjacent rectangles
- * colorize to distinguish from each other and background
- * render at different scales
- */
-public class Test_2AdjacentRectangles{
-  
+public class Test_SimpleComposition{
+
   /*
    * ################################
    * CONSTRUCTOR
    * ################################
    */
   
-  Test_2AdjacentRectangles(){
+  Test_SimpleComposition(){
     initFrame();
-    initRasterMap();
-    rastermap.castPresence(rectangle0,rectangle1);
+    initForsythiaComposition();
+    initRDS();
+    rds.castPresence(rectangle0,rectangle1);
     frame.repaint();}
   
   /*
@@ -58,6 +66,45 @@ public class Test_2AdjacentRectangles{
   
   /*
    * ################################
+   * COMPOSITION
+   * ################################
+   */
+  
+  static final String GRAMMARPATH="/home/john/Desktop/grammars/rdtest.grammar";
+  ForsythiaComposition composition;
+  
+  private void initForsythiaComposition(){
+    composition=new ForsythiaComposition();
+    ForsythiaGrammar grammar=getGrammar();
+    composition.setGrammar(getGrammar());
+    FMetagon rm=getRootMetagon(grammar);
+    composition.initTree(rm);
+    Jig j=grammar.getJigs(rm).get(0);
+    j.createNodes(composition.getRootPolygon());}
+  
+  private FMetagon getRootMetagon(ForsythiaGrammar grammar){
+    for(FMetagon m:grammar.getMetagons()){
+      if(m.hasTags("root"))
+        return m;}
+    throw new IllegalArgumentException("exception is root metagon acquirement");}
+  
+  private ForsythiaGrammar getGrammar(){
+    File file=new File(GRAMMARPATH);
+    FileInputStream fis;
+    ObjectInputStream ois;
+    ForsythiaGrammar g=null;
+    try{
+      fis=new FileInputStream(file);
+      ois=new ObjectInputStream(fis);
+      g=(ForsythiaGrammar)ois.readObject();
+      ois.close();
+    }catch(Exception x){
+      System.out.println("exception in gramar import");
+      x.printStackTrace();}
+    return g;}
+  
+  /*
+   * ################################
    * POLYGONS
    * ################################
    */
@@ -68,7 +115,7 @@ public class Test_2AdjacentRectangles{
   
   /*
    * ################################
-   * RASTER MAP
+   * RD SYSTEM
    * ################################
    */
   
@@ -76,17 +123,17 @@ public class Test_2AdjacentRectangles{
     CELLARRAYWIDTH=800,
     CELLARRAYHEIGHT=800;
   private static final double GLOWSPAN=1.5;
-  RDSystem rastermap;
+  RDSystem rds;
   PolygonCells polygoncellmap;//the cells that feel the presence of the polygon
   
-  void initRasterMap(){
+  void initRDS(){
     AffineTransform t=new AffineTransform();
     
     t.translate(60,60);
     t.rotate(0.2);
     t.scale(12.0,12.0);
     
-    rastermap=new RDSystem(CELLARRAYWIDTH,CELLARRAYHEIGHT,t,GLOWSPAN);}
+    rds=new RDSystem(CELLARRAYWIDTH,CELLARRAYHEIGHT,t,GLOWSPAN);}
   
   /*
    * ################################
@@ -94,29 +141,17 @@ public class Test_2AdjacentRectangles{
    * ################################
    */
   
-  int imagewidth=800,imageheight=800;
-  
   BufferedImage render(){
-    BufferedImage image=new BufferedImage(imagewidth,imageheight,BufferedImage.TYPE_INT_RGB);
-    //render cells
-    for(Cell c:rastermap)
+    BufferedImage image=new BufferedImage(CELLARRAYWIDTH,CELLARRAYHEIGHT,BufferedImage.TYPE_INT_RGB);
+    for(Cell c:rds)
       image.setRGB(c.x,c.y,getColor(c).getRGB());
     return image;}
   
-/*
- * ################################
- * COLOR LOGIC
- * Given a cell, get the color for that cell
- * for each presence get the color for the associated polygon
- * do a weighted sum of r g b color components
- * 
- * TODO add an edge darkness. just a touch of darkness at the border. 
- * not really a line but enough to distinguish between 2 identically colored polygons
- * we could square the intensity, that gives us a curve that shrinks more at the bottom
- * or something
- * 
- * ################################
- */
+  /*
+   * ################################
+   * CELL COLOR LOGIC
+   * ################################
+   */
   
   private static final Color 
     COLOR_R0=new Color(112,229,254),
@@ -153,6 +188,6 @@ public class Test_2AdjacentRectangles{
    */
   
   public static final void main(String[] a){
-    new Test_2AdjacentRectangles();}
+    new Test_SimpleComposition();}
   
 }
