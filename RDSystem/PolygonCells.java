@@ -1,5 +1,6 @@
 package org.fleen.bread.RDSystem;
 
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,10 +44,11 @@ public class PolygonCells{
    * ################################
    */
   
-  PolygonCells(RDSystem rastermap,DPolygon polygon){
-    this.rastermap=rastermap;
+  PolygonCells(RDSystem rds,DPolygon polygon,AffineTransform transform,double glowspan){
+    this.rds=rds;
     this.polygon=polygon;
-    initTransformedPolygon();
+    this.glowspan=glowspan;
+    initTransformedPolygon(transform);
     doCells();}
   
   /*
@@ -55,7 +57,7 @@ public class PolygonCells{
    * ################################
    */
   
-  RDSystem rastermap;
+  RDSystem rds;
   
   /*
    * ################################
@@ -67,15 +69,24 @@ public class PolygonCells{
     polygon,
     transformedpolygon;//x0,y0,x1,y1...
   
-  private void initTransformedPolygon(){
+  private void initTransformedPolygon(AffineTransform t){
     int s=polygon.size();
     transformedpolygon=new DPolygon(s);
     double[] a=new double[2];
     for(DPoint p:polygon){
       a[0]=p.x;
       a[1]=p.y;
-      rastermap.transform.transform(a,0,a,0,1);
+      t.transform(a,0,a,0,1);
       transformedpolygon.add(new DPoint(a));}}
+  
+  /*
+   * ################################
+   * GLOWSPAN
+   * The distance to which a thing's presence bleeds out beyond its edge
+   * ################################
+   */
+  
+  double glowspan;
   
   /*
    * ################################
@@ -107,19 +118,29 @@ public class PolygonCells{
     doInteriorCells();}
   
   /*
-   * first check locally for the cell, then check the rastermap 
+   * first check locally for the cell, then check the rds 
    */
   Cell getCell(int x,int y){
     CellKey k=new CellKey(x,y);
     Cell c=localcellcache.get(k);
     if(c==null){
-      c=rastermap.getCell(x,y);
+      c=rds.getCell(x,y);
       localcellcache.put(k,c);}
     return c;}
   
   Cell getCellContainingPoint(double x,double y){
-    Cell c=rastermap.getCellContainingPoint(x,y);
+    Cell c=rds.getCellContainingPoint(x,y);
     return getCell(c.x,c.y);}
+  
+  public int getCellCount(){
+    int a=0;
+    for(Set<Cell> b:edgeinteriorlayers)
+      a+=b.size();
+    for(Set<Cell> b:edgeexteriorlayers)
+      a+=b.size();
+    for(Set<Cell> b:interiorlayers)
+      a+=b.size();
+    return a;}
   
   /*
    * ################################
@@ -141,7 +162,7 @@ public class PolygonCells{
     Cell c;
     while(i.hasNext()){
       c=i.next();
-      if(rastermap.isOffMap(c.x,c.y))
+      if(rds.isOffMap(c.x,c.y))
         i.remove();}}
   
   /*
@@ -177,7 +198,7 @@ public class PolygonCells{
     edgeexteriorlayers.add(exlayer);
     //now the first interior and exterior edge layers are done
     //get the number of additional edge layers to do
-    int additionaledgelayerscount=(int)(rastermap.glowspan/RDSystem.CELLSPAN)+1;
+    int additionaledgelayerscount=(int)(glowspan/RDSystem.CELLSPAN)+1;
     doAdditionalInteriorEdgeLayers(inlayer,additionaledgelayerscount);
     doAdditionalExteriorEdgeLayers(exlayer,additionaledgelayerscount);}
   
@@ -312,9 +333,9 @@ public class PolygonCells{
       isinterior=transformedpolygon.containsPoint(c.x,c.y);
       dis=transformedpolygon.getDistance(c.x,c.y);
       if(isinterior)
-        presence=0.5+(dis/rastermap.glowspan)*0.5;
+        presence=0.5+(dis/glowspan)*0.5;
       else
-        presence=0.5-(dis/rastermap.glowspan)*0.5;
+        presence=0.5-(dis/glowspan)*0.5;
       if(presence<0)presence=0;
       if(presence>1)presence=1;
       c.addPresence(polygon,presence);}}
@@ -323,20 +344,20 @@ public class PolygonCells{
     double dis,presence;
     for(Cell c:cells){
       dis=transformedpolygon.getDistance(c.x,c.y);
-      if(dis>rastermap.glowspan)
+      if(dis>glowspan)
         presence=1.0;
       else
-        presence=0.5+(dis/rastermap.glowspan)*0.5;
+        presence=0.5+(dis/glowspan)*0.5;
       c.addPresence(polygon,presence);}}
   
   private void markExteriorEdgeCells(Collection<Cell> cells){
     double dis,presence;
     for(Cell c:cells){
       dis=transformedpolygon.getDistance(c.x,c.y);
-      if(dis>rastermap.glowspan)
+      if(dis>glowspan)
         presence=0;
       else
-        presence=0.5-(dis/rastermap.glowspan)*0.5;
+        presence=0.5-(dis/glowspan)*0.5;
       c.addPresence(polygon,presence);}}
   
   private void markInteriorCells(Collection<Cell> cells){

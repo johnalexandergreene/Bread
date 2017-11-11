@@ -1,9 +1,7 @@
 package org.fleen.bread.RDSystem;
 
 import java.awt.geom.AffineTransform;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
 import org.fleen.geom_2D.DPolygon;
 
@@ -50,30 +48,8 @@ public class RDSystem implements Iterable<Cell>{
    * ################################
    */
   
-  /*
-   * TODO
-   * glowspan and transform should be specified in the presence casting methods
-   */
-  public RDSystem(int w,int h,AffineTransform t,double glowspan){
-    this.glowspan=glowspan;
-    this.transform=t;
+  public RDSystem(int w,int h){
     initCells(w,h);}
-  
-  /*
-   * ################################
-   * TRANSFORM
-   * ################################
-   */
-  
-  AffineTransform transform;
-  
-  /*
-   * ################################
-   * GLOWSPAN
-   * ################################
-   */
-  
-  double glowspan;
   
   /*
    * ################################
@@ -131,6 +107,12 @@ public class RDSystem implements Iterable<Cell>{
   public Iterator<Cell> iterator(){
     return new CellIterator(this);}
   
+  public int getWidth(){
+    return cellarraywidth;}
+  
+  public int getHeight(){
+    return cellarrayheight;}
+  
   /*
    * ################################
    * MAP POLYGON TO CELLS
@@ -140,19 +122,12 @@ public class RDSystem implements Iterable<Cell>{
    * ################################
    */
   
-  public PolygonCells castPresence(DPolygon polygon){
+  public PolygonCells castPresence(DPolygon polygon,AffineTransform transform,double glowspan){
     //cast the presence, create the polygoncellmap and return it
     //if the polygon crosses the edge of the viewport then the polygoncellmap will contain some cells that are not within this rastermap
     //the polygoncellmap is just a way of doing the cell presences in an orderly way
     //Yes we return the PolygonCells object but after this method we will probably never use PolygonCells except for debugging and maybe tools 
-    PolygonCells pcm=new PolygonCells(this,polygon);
+    PolygonCells pcm=new PolygonCells(this,polygon,transform,glowspan);
     return pcm;}
-  
-  public void castPresence(List<DPolygon> polygons){
-    for(DPolygon polygon:polygons)
-      castPresence(polygon);}
-  
-  public void castPresence(DPolygon... polygons){
-    castPresence(Arrays.asList(polygons));}
   
 }

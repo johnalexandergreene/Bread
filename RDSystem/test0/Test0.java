@@ -1,27 +1,11 @@
 package org.fleen.bread.RDSystem.test0;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 
-import javax.swing.JFrame;
-import javax.swing.WindowConstants;
-
-import org.fleen.bread.RDSystem.Cell;
-import org.fleen.bread.RDSystem.PolygonCells;
-import org.fleen.bread.RDSystem.Presence;
 import org.fleen.bread.RDSystem.RDSystem;
-import org.fleen.bread.RDSystem.Test_2AdjacentRectangles;
-import org.fleen.forsythia.core.composition.ForsythiaComposition;
-import org.fleen.forsythia.core.grammar.FMetagon;
-import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
-import org.fleen.forsythia.core.grammar.Jig;
-import org.fleen.geom_2D.DPoint;
+import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.geom_2D.DPolygon;
 
 public class Test0{
@@ -34,9 +18,11 @@ public class Test0{
   
   Test0(){
     initUI();
-    initRenderer();
     initComposition();
-    initRDS();}
+    initRDS();
+    initCompositionRDSTransform();
+    castCompositionToRDS();
+    initRenderer();}
   
   /*
    * ################################
@@ -45,10 +31,12 @@ public class Test0{
    */
   
   public void run(){
-    for(int i=0;i<3;i++){
-//      doRules();
-      render();
-    }
+//    for(int i=0;i<3;i++){
+////      doRules();
+//      render();
+//    }
+
+    render();
     
   }
   
@@ -76,30 +64,55 @@ public class Test0{
   
   /*
    * ################################
-   * RD SYSTEM
+   * COMPOSITION RDS TRANSFORM
+   * scale up the composition because, dimensionally, it's pretty small
+   * translate it to put the left and top edges at 0, + padding 
    * ################################
    */
   
-  int
-    rdswidth=800,
-    rdsheight=800;
+  int padding=16;
+  double scale=80;
+  AffineTransform compositionrdstransform;
+  
+  private void initCompositionRDSTransform(){
+    //note that we flip the y to convert cartesian coors to array coors
+    compositionrdstransform=AffineTransform.getScaleInstance(scale,-scale);
+    //
+    Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
+    double 
+      tx=-bounds.x*scale+padding/scale,
+      ty=-bounds.y*scale+padding/scale-rds.getHeight()/scale;
+    compositionrdstransform.translate(tx,ty);}
+  
+  /*
+   * ################################
+   * RDS
+   * Our Reaction Diffusion System
+   * ################################
+   */
   
   double glowspan=1.5;
   
   RDSystem rds;
   
   void initRDS(){
-    rds=new RDSystem(rdswidth,rdsheight,new AffineTransform(),glowspan);}
+    Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
+    int 
+      w=(int)(bounds.width*scale+padding+padding),
+      h=(int)(bounds.height*scale+padding+padding);
+    rds=new RDSystem(w,h);}
+  
+  void castCompositionToRDS(){
+    DPolygon d;
+    for(FPolygon p:composition.getLeafPolygons()){
+      d=p.getDPolygon();
+      rds.castPresence(d,compositionrdstransform,glowspan);}}
   
   /*
    * ################################
    * IMAGE
    * ################################
    */
-  
-  int
-    imagewidth=800,
-    imageheight=800;
   
   Renderer renderer;
   BufferedImage image=null;
