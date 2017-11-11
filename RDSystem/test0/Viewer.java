@@ -1,4 +1,4 @@
-package org.fleen.bread.RDSystem.test;
+package org.fleen.bread.RDSystem.test0;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -13,19 +13,16 @@ import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.FSLAF
 @SuppressWarnings("serial")
 public class Viewer extends JPanel{
   
-  Test_SimpleComposition test;
+  UI ui;
   
-  public Viewer(Test_SimpleComposition test){
-    this.test=test;}
-  
-  private static final AffineTransform NICEOFFSET=AffineTransform.getTranslateInstance(700,10);
+  public Viewer(UI ui){
+    this.ui=ui;}
   
   public void paint(Graphics g){
     super.paint(g);
-    if(test==null||test.frame==null)return;
+    if(ui==null||ui.test==null||ui.test.image==null)return;
     Graphics2D g2=(Graphics2D)g;
-    g2.drawImage(test.frame,NICEOFFSET,null);
-    }
+    g2.drawImage(ui.test.image,null,null);}
   
   
 }
