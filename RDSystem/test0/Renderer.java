@@ -2,6 +2,7 @@ package org.fleen.bread.RDSystem.test0;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -18,6 +19,25 @@ import org.fleen.geom_2D.DPolygon;
  * scale image to fit viewer
  */
 public class Renderer{
+  
+  public static final HashMap<RenderingHints.Key,Object> RENDERING_HINTS=
+      new HashMap<RenderingHints.Key,Object>();
+    
+  static{
+    RENDERING_HINTS.put(
+      RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_OFF);
+    RENDERING_HINTS.put(
+      RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_SPEED);
+    RENDERING_HINTS.put(
+      RenderingHints.KEY_DITHERING,RenderingHints.VALUE_DITHER_DISABLE);
+    RENDERING_HINTS.put(
+      RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+    RENDERING_HINTS.put(
+      RenderingHints.KEY_ALPHA_INTERPOLATION,RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
+    RENDERING_HINTS.put(
+      RenderingHints.KEY_COLOR_RENDERING,RenderingHints.VALUE_COLOR_RENDER_SPEED); 
+    RENDERING_HINTS.put(
+      RenderingHints.KEY_STROKE_CONTROL,RenderingHints.VALUE_STROKE_PURE);}
   
   Test0 test;
   
@@ -42,8 +62,8 @@ public class Renderer{
     int
       imagewidth=image0.getWidth(),
       imageheight=image0.getHeight(),
-      viewerwidth=test.ui.viewer.getWidth(),
-      viewerheight=test.ui.viewer.getHeight();
+      viewerwidth=test.ui.viewer.getPaddedWidth(),
+      viewerheight=test.ui.viewer.getPaddedHeight();
     double 
       imagedimsratio=((double)imagewidth)/((double)imageheight),
       viewerdimsratio=((double)viewerwidth)/((double)viewerheight),
@@ -60,8 +80,9 @@ public class Renderer{
       BufferedImage.TYPE_INT_RGB);
     Graphics2D g=image1.createGraphics();
     AffineTransform t=AffineTransform.getScaleInstance(scale,scale);
+    g.setRenderingHints(RENDERING_HINTS);
     g.drawImage(image0,t,null);
-    
+    //
     test.image=image1;}
   
   /*

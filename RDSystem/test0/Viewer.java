@@ -1,17 +1,16 @@
 package org.fleen.bread.RDSystem.test0;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.FSLAFGenerator;
-
 @SuppressWarnings("serial")
 public class Viewer extends JPanel{
+  
+  static final int PADDING=20;
   
   UI ui;
   
@@ -22,7 +21,24 @@ public class Viewer extends JPanel{
     super.paint(g);
     if(ui==null||ui.test==null||ui.test.image==null)return;
     Graphics2D g2=(Graphics2D)g;
-    g2.drawImage(ui.test.image,null,null);}
+    AffineTransform t=getCenterTransform(ui.test.image);
+    g2.drawImage(ui.test.image,t,null);}
   
+  public int getPaddedWidth(){
+    return getWidth()-(2*PADDING);}
+  
+  public int getPaddedHeight(){
+    return getHeight()-(2*PADDING);}
+  
+  private AffineTransform getCenterTransform(BufferedImage image){
+    int 
+      iw=image.getWidth(),
+      ih=image.getHeight(),
+      vw=getWidth(),
+      vh=getHeight(),
+      tx=(vw-iw)/2,
+      ty=(vh-ih)/2;
+    AffineTransform t=AffineTransform.getTranslateInstance(tx,ty);
+    return t;}
   
 }

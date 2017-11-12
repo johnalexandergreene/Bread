@@ -71,7 +71,7 @@ public class Test0{
    */
   
   int padding=16;
-  double scale=80;
+  double scale=12;
   AffineTransform compositionrdstransform;
   
   private void initCompositionRDSTransform(){

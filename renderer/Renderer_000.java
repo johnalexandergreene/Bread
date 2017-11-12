@@ -17,7 +17,7 @@ import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.geom_2D.DPoint;
 import org.fleen.util.tree.TreeNode;
 
-public class Renderer000 extends Renderer_Abstract{
+public class Renderer_000 extends Renderer_Abstract{
   
   /*
    * ################################

@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
-public class ImagePanel extends JPanel{
+public class Viewer extends JPanel{
 
   private static final long serialVersionUID=581500866418502553L;
   
@@ -15,7 +15,7 @@ public class ImagePanel extends JPanel{
    * ################################
    */
   
-  ImagePanel(FCGenerator sampler){
+  Viewer(FCGenerator sampler){
     this.sampler=sampler;}
   
   /*

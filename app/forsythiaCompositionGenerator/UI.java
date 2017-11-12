@@ -35,7 +35,7 @@ public class UI extends JFrame {
 	
 	JPanel contentPane;
 	JPanel pancontrol;
-  ImagePanel panimage;
+  Viewer panimage;
 	JTextField 
 	  txtinterval,txtexportsize;
 	JButton lblmode,lblstartstop;
@@ -214,7 +214,7 @@ public class UI extends JFrame {
 		pangenerate.setLayout(gl_pangenerate);
 		pancontrol.setLayout(gl_pancontrol);
 		
-		panimage = new ImagePanel(sampler);
+		panimage = new Viewer(sampler);
 		panimage.setBorder(null);
 		panimage.setBackground(new Color(154, 205, 50));
 		panimage.addKeyListener(new KeyAdapter() {
