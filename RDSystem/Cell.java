@@ -28,22 +28,22 @@ public class Cell{
   /*
    * xcoor, ycoor, center x, center y, the cellarray that contains this cell
    */
-  Cell(RDSystem rastermap,int x,int y){
-    this.rastermap=rastermap;
+  Cell(RDSystem rds,int x,int y){
+    this.rds=rds;
     this.x=x;
     this.y=y;}
   
-  Cell(RDSystem rastermap,int x,int y,boolean offmap){
-    this(rastermap,x,y);
+  Cell(RDSystem rds,int x,int y,boolean offmap){
+    this(rds,x,y);
     this.offmap=offmap;}
   
   /*
    * ################################
-   * RASTER MAP
+   * RDS
    * ################################
    */
   
-  RDSystem rastermap;
+  RDSystem rds;
   //the cell may be off the raster map. it happens when we're 
   //rendering a polygon that's only partially within the viewport
   boolean offmap=false;
@@ -61,28 +61,28 @@ public class Cell{
   List<Cell> getNeighbors(){
     List<Cell> n=new ArrayList<Cell>(8);
     //N
-    Cell a=rastermap.getCell(x,y+1);
+    Cell a=rds.getCell(x,y+1);
     if(a!=null)n.add(a);
     //NE
-    a=rastermap.getCell(x+1,y+1);
+    a=rds.getCell(x+1,y+1);
     if(a!=null)n.add(a);
     //E
-    a=rastermap.getCell(x+1,y);
+    a=rds.getCell(x+1,y);
     if(a!=null)n.add(a);
     //SE
-    a=rastermap.getCell(x+1,y-1);
+    a=rds.getCell(x+1,y-1);
     if(a!=null)n.add(a);
     //S
-    a=rastermap.getCell(x,y-1);
+    a=rds.getCell(x,y-1);
     if(a!=null)n.add(a);
     //SW
-    a=rastermap.getCell(x-1,y-1);
+    a=rds.getCell(x-1,y-1);
     if(a!=null)n.add(a);
     //W
-    a=rastermap.getCell(x-1,y);
+    a=rds.getCell(x-1,y);
     if(a!=null)n.add(a);
     //NW
-    a=rastermap.getCell(x-1,y+1);
+    a=rds.getCell(x-1,y+1);
     if(a!=null)n.add(a);
     //
     return n;}
@@ -92,7 +92,7 @@ public class Cell{
    * we sometimes want to refer to cells that are in the polygoncellmap.cellcache but not
    * in the rastermap. So we check the cache first.
    */
-  List<Cell> getNeighbors(PolygonCells pc){
+  List<Cell> getNeighbors(CellMass pc){
     List<Cell> n=new ArrayList<Cell>(8);
     //N
     Cell a=pc.getCell(x,y+1);

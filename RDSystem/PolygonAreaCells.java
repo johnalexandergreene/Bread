@@ -36,7 +36,7 @@ import org.fleen.geom_2D.DPolygon;
  *  
  * 
  */
-public class PolygonCells{
+public class PolygonAreaCells implements CellMass{
   
   /*
    * ################################
@@ -44,7 +44,7 @@ public class PolygonCells{
    * ################################
    */
   
-  PolygonCells(RDSystem rds,DPolygon polygon,AffineTransform transform,double glowspan){
+  PolygonAreaCells(RDSystem rds,DPolygon polygon,AffineTransform transform,double glowspan){
     this.rds=rds;
     this.polygon=polygon;
     this.glowspan=glowspan;
@@ -120,7 +120,7 @@ public class PolygonCells{
   /*
    * first check locally for the cell, then check the rds 
    */
-  Cell getCell(int x,int y){
+  public Cell getCell(int x,int y){
     CellKey k=new CellKey(x,y);
     Cell c=localcellcache.get(k);
     if(c==null){

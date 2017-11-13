@@ -104,9 +104,16 @@ public class Test0{
   
   void castCompositionToRDS(){
     DPolygon d;
+    
     for(FPolygon p:composition.getLeafPolygons()){
       d=p.getDPolygon();
-      rds.castPresence(d,compositionrdstransform,glowspan);}}
+      rds.mapPolygonArea(d,compositionrdstransform,glowspan);}
+    
+//    for(FPolygon p:composition.getPolygons()){
+//      d=p.getDPolygon();
+//      rds.mapPolygonEdge(d,compositionrdstransform,glowspan);}
+    
+  }
   
   /*
    * ################################
