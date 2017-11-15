@@ -92,21 +92,16 @@ public class Renderer{
    */
   
   private Color getColor(Cell c){
-    //get intensity sum
-    double intensitysum=0;
-    for(Presence p:c.presences)
-      intensitysum+=p.intensity;
-    //get normalized intensity for each presence and sum weighted r g b color components
     int r=0,g=0,b=0;
     Color color;
-    double normalized;
     for(Presence p:c.presences){
-      normalized=p.intensity/intensitysum;
       color=getPolygonColor(p.polygon);
-      r+=(int)(color.getRed()*normalized);
-      g+=(int)(color.getGreen()*normalized);
-      b+=(int)(color.getBlue()*normalized);}
-    //
+      r+=(int)(color.getRed()*p.intensity);
+      g+=(int)(color.getGreen()*p.intensity);
+      b+=(int)(color.getBlue()*p.intensity);}
+    if(r>255)r=255;
+    if(g>255)g=255;
+    if(b>255)b=255;
     return new Color(r,g,b);}
   
   int colorindex=0;

@@ -1,6 +1,7 @@
 package org.fleen.bread.RDSystem;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.fleen.geom_2D.DPolygon;
@@ -123,15 +124,14 @@ public class Cell{
   
   /*
    * ################################
-   * POLYGON PRESENCES
+   * PRESENCES
+   * The cell holds the presence of 0..n things
+   * The things are polygons or polygon edges or whatever
    * ################################
    */
   
-  /*
-   * TODO optimize this
-   * make it just bigger than the biggest size we expect
-   */
-  private static final int INITPRESENCELISTSIZE=10;
+  //we make it just bigger than the biggest size we expect
+  private static final int INITPRESENCELISTSIZE=9;
   
   public List<Presence> presences=new ArrayList<Presence>(INITPRESENCELISTSIZE);
   
@@ -142,8 +142,8 @@ public class Cell{
     addPresence(new Presence(polygon,intensity));}
   
   /*
-   * this is for interior presence.
    * intensity is assumed to be 1.0
+   * we use it for polygon interiors.
    */
   void addPresence(DPolygon polygon){
     addPresence(polygon,1.0);}
@@ -165,6 +165,45 @@ public class Cell{
       if(p.polygon==polygon)
         return p.intensity;
     return 0;}
+  
+  /*
+   * ################################
+   * CLEAN
+   * remove zero intensity presences
+   * normalize presence intensities 
+   * ################################
+   */
+  
+  private static final double ZEROISHINTENSITY=0.0000001;
+  
+  public void clean(){
+    cullZeroIntensityPresences();
+    normalizePresenceIntensities();}
+  
+  private void cullZeroIntensityPresences(){
+    Iterator<Presence> i=presences.iterator();
+    Presence p;
+    while(i.hasNext()){
+      p=i.next();
+      if(p.intensity<ZEROISHINTENSITY)
+        i.remove();}}
+  
+  private void normalizePresenceIntensities(){
+    double s=getPresenceSum();
+    if(s>0){
+      double n=1.0/s;
+      for(Presence p:presences)
+        p.intensity*=n;}}
+  
+  /*
+   * pre-normalization it's whatever
+   * post notmalization it should be 1.0
+   */
+  private double getPresenceSum(){
+    int s=0;
+    for(Presence p:presences)
+      s+=p.intensity;
+    return s;}
   
   /*
    * ################################

@@ -4,6 +4,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+import org.fleen.bread.RDSystem.Cell;
+import org.fleen.bread.RDSystem.Presence;
 import org.fleen.bread.RDSystem.RDSystem;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.geom_2D.DPolygon;
@@ -71,7 +73,7 @@ public class Test0{
    */
   
   int padding=16;
-  double scale=20;
+  double scale=15;
   AffineTransform compositionrdstransform;
   
   private void initCompositionRDSTransform(){
@@ -102,32 +104,35 @@ public class Test0{
       h=(int)(bounds.height*scale+padding+padding);
     rds=new RDSystem(w,h);}
   
-//  void castCompositionToRDS(){
-//    DPolygon d;
-//    
-//    for(FPolygon p:composition.getLeafPolygons()){
-//      d=p.getDPolygon();
-//      rds.mapPolygonArea(d,compositionrdstransform,glowspan);}
-//    
-////    for(FPolygon p:composition.getPolygons()){
-////      d=p.getDPolygon();
-////      rds.mapPolygonEdge(d,compositionrdstransform,glowspan);}
-//    
-//  }
-  
   void castCompositionToRDS(){
+//    mapRootArea();
+    mapLeafAreas();
+    mapHexEdge();
+    rds.clean();
+    //
+    for(Cell c:rds){
+      System.out.println("cell");
+      for(Presence p:c.presences){
+        System.out.print(p.intensity+" ");
+      }
+      System.out.println("");
+    }}
+  
+  void mapRootArea(){
     DPolygon d=composition.getRootPolygon().getDPolygon();
-    rds.mapPolygonArea(d,compositionrdstransform,glowspan);
-    //get hex
+    rds.mapPolygonArea(d,compositionrdstransform,glowspan);}
+  
+  void mapLeafAreas(){
+    DPolygon d;
+    for(FPolygon p:composition.getLeafPolygons()){
+      d=p.getDPolygon();
+      rds.mapPolygonArea(d,compositionrdstransform,glowspan);}}
+  
+  void mapHexEdge(){
     for(FPolygon p:composition.getLeafPolygons()){
       if(p.hasTags("hex")){
-        d=p.getDPolygon();
-        rds.mapPolygonEdge(d,compositionrdstransform,glowspan);}}
-    
-    
-  }
-  
-  
+        DPolygon d=p.getDPolygon();
+        rds.mapPolygonEdge(d,compositionrdstransform,glowspan);}}}
   
   /*
    * ################################

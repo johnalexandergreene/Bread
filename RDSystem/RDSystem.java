@@ -130,12 +130,19 @@ public class RDSystem implements Iterable<Cell>{
     PolygonAreaCells c=new PolygonAreaCells(this,polygon,transform,glowspan);
     return c;}
   
-  /*
-   * TODO
-   * make it grab just the edge
-   */
   public PolygonEdgeCells mapPolygonEdge(DPolygon polygon,AffineTransform transform,double glowspan){
     PolygonEdgeCells c=new PolygonEdgeCells(this,polygon,transform,glowspan);
     return c;}
+  
+  /*
+   * ################################
+   * CLEAN CELLS
+   * Do this after all casting is done
+   * ################################
+   */
+  
+  public void clean(){
+    for(Cell c:this)
+      c.clean();}
   
 }
