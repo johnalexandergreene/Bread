@@ -49,7 +49,9 @@ public class RDSystem implements Iterable<Cell>{
    */
   
   public RDSystem(int w,int h){
-    System.out.println("RD SYSTEM INIT "+w+"x"+h);
+    System.out.println("RD SYSTEM INIT");
+    System.out.println(w+"x"+h);
+    System.out.println("cellcount="+(w*h));
     initCells(w,h);}
   
   /*
@@ -122,22 +124,23 @@ public class RDSystem implements Iterable<Cell>{
    * ################################
    */
   
-  public PolygonAreaCells mapPolygonArea(DPolygon polygon,AffineTransform transform,double glowspan){
-    //cast the presence, create the polygoncellmap and return it
-    //if the polygon crosses the edge of the viewport then the polygoncellmap will contain some cells that are not within this rastermap
-    //the polygoncellmap is just a way of doing the cell presences in an orderly way
-    //Yes we return the PolygonCells object but after this method we will probably never use PolygonCells except for debugging and maybe tools 
-    PolygonAreaCells c=new PolygonAreaCells(this,polygon,transform,glowspan);
+  public PolygonAreaCells mapPolygonArea(DPolygon areapolygon,AffineTransform areapolygontransform,double glowspan){
+    PolygonAreaCells c=new PolygonAreaCells(this,areapolygon,areapolygontransform,glowspan);
     return c;}
   
-  public PolygonEdgeCells mapPolygonEdge(DPolygon polygon,AffineTransform transform,double glowspan){
-    PolygonEdgeCells c=new PolygonEdgeCells(this,polygon,transform,glowspan);
+  public PolygonEdgeCells mapPolygonEdge(DPolygon edgepolygon,AffineTransform areapolygontransform,double glowspan){
+    PolygonEdgeCells c=new PolygonEdgeCells(this,edgepolygon,areapolygontransform,glowspan);
     return c;}
+  
+  public MarginCells mapMarginCells(DPolygon rootpolygon,AffineTransform rootpolygontransform,double glowspan){
+    MarginCells c=new MarginCells();
+    return c;
+  }
   
   /*
    * ################################
    * CLEAN CELLS
-   * Do this after all casting is done
+   * Do this after all mapping is done
    * ################################
    */
   

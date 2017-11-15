@@ -92,5 +92,17 @@ public class Palette{
     new Color(220,178,164),
     new Color(90,14,0),
     new Color(189,53,31)};
+  
+  public static final Color[] P_CRUDERAINBOW=new Color[]{
+      new Color(248,77,64),
+      new Color(248,155,64),
+      new Color(248,185,64),
+      new Color(248,233,64),
+      new Color(168,248,64),
+      new Color(64,248,181),
+      new Color(64,216,248),
+      new Color(64,120,248),
+      new Color(194,64,248)
+  };
 
 }

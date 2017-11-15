@@ -7,6 +7,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.fleen.bread.RDSystem.Cell;
 import org.fleen.bread.RDSystem.Presence;
@@ -104,6 +105,7 @@ public class Renderer{
     if(b>255)b=255;
     return new Color(r,g,b);}
   
+  Random rnd=new Random();
   int colorindex=0;
   
   Map<DPolygon,Color> colorbypolygon=new HashMap<DPolygon,Color>();
@@ -111,8 +113,9 @@ public class Renderer{
   private Color getPolygonColor(DPolygon p){
     Color c=colorbypolygon.get(p);
     if(c==null){
-      c=Palette.P_TOY_STORY_ADJUSTED2[colorindex%Palette.P_TOY_STORY_ADJUSTED2.length];
-      colorindex++;
+      c=Palette.P_CRUDERAINBOW[colorindex%Palette.P_CRUDERAINBOW.length];
+//      c=Palette.P_CRUDERAINBOW[rnd.nextInt(Palette.P_CRUDERAINBOW.length)];
+      colorindex+=4;
       colorbypolygon.put(p,c);}
     return c;}
 

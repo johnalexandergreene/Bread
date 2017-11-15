@@ -185,22 +185,22 @@ public class Cell{
     Presence p;
     while(i.hasNext()){
       p=i.next();
-      if(p.intensity<ZEROISHINTENSITY)
-        i.remove();}}
+      if(p.intensity<ZEROISHINTENSITY){
+        i.remove();}}}
   
   private void normalizePresenceIntensities(){
-    double s=getPresenceSum();
+    double s=getPresenceIntensitySum();
     if(s>0){
       double n=1.0/s;
       for(Presence p:presences)
         p.intensity*=n;}}
   
   /*
-   * pre-normalization it's whatever
-   * post notmalization it should be 1.0
+   * pre-normalization it's something >0
+   * post normalization it should be 1.0
    */
-  private double getPresenceSum(){
-    int s=0;
+  public double getPresenceIntensitySum(){
+    double s=0;
     for(Presence p:presences)
       s+=p.intensity;
     return s;}

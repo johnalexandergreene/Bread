@@ -4,8 +4,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import org.fleen.bread.RDSystem.Cell;
-import org.fleen.bread.RDSystem.Presence;
 import org.fleen.bread.RDSystem.RDSystem;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.geom_2D.DPolygon;
@@ -68,12 +66,12 @@ public class Test0{
    * ################################
    * COMPOSITION RDS TRANSFORM
    * scale up the composition because, dimensionally, it's pretty small
-   * translate it to put the left and top edges at 0, + padding 
+   * translate it to put the left and top edges at 0, + margin 
    * ################################
    */
   
-  int padding=16;
-  double scale=15;
+  int margin=16;
+  double scale=25;
   AffineTransform compositionrdstransform;
   
   private void initCompositionRDSTransform(){
@@ -82,8 +80,8 @@ public class Test0{
     //
     Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
     double 
-      tx=-bounds.x*scale+padding/scale,
-      ty=-bounds.y*scale+padding/scale-rds.getHeight()/scale;
+      tx=-bounds.x*scale+margin/scale,
+      ty=-bounds.y*scale+margin/scale-rds.getHeight()/scale;
     compositionrdstransform.translate(tx,ty);}
   
   /*
@@ -100,23 +98,15 @@ public class Test0{
   void initRDS(){
     Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
     int 
-      w=(int)(bounds.width*scale+padding+padding),
-      h=(int)(bounds.height*scale+padding+padding);
+      w=(int)(bounds.width*scale+margin+margin),
+      h=(int)(bounds.height*scale+margin+margin);
     rds=new RDSystem(w,h);}
   
   void castCompositionToRDS(){
 //    mapRootArea();
     mapLeafAreas();
     mapHexEdge();
-    rds.clean();
-    //
-    for(Cell c:rds){
-      System.out.println("cell");
-      for(Presence p:c.presences){
-        System.out.print(p.intensity+" ");
-      }
-      System.out.println("");
-    }}
+    rds.clean();}
   
   void mapRootArea(){
     DPolygon d=composition.getRootPolygon().getDPolygon();
