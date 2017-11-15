@@ -134,20 +134,20 @@ public class PolygonEdgeCells implements CellMass{
     Set<Cell> firstinnerouteredgelayer=getLayerOfUnmarkedCells(primaryedgecells);
     markEdgeCells(firstinnerouteredgelayer);
     Set<Cell> 
-      inlayer=new HashSet<Cell>(),
-      exlayer=new HashSet<Cell>();
+      interiorlayer=new HashSet<Cell>(),
+      exteriorlayer=new HashSet<Cell>();
     for(Cell c:firstinnerouteredgelayer){
       if(c.getPresenceIntensity(polygon)>0.5)
-        inlayer.add(c);
+        interiorlayer.add(c);
       else
-        exlayer.add(c);}
-    edgeinteriorlayers.add(inlayer);
-    edgeexteriorlayers.add(exlayer);
+        exteriorlayer.add(c);}
+    edgeinteriorlayers.add(interiorlayer);
+    edgeexteriorlayers.add(exteriorlayer);
     //now the first interior and exterior edge layers are done
     //get the number of additional edge layers to do
     int additionaledgelayerscount=(int)(glowspan/RDSystem.CELLSPAN)+1;
-    doAdditionalInteriorEdgeLayers(inlayer,additionaledgelayerscount);
-    doAdditionalExteriorEdgeLayers(exlayer,additionaledgelayerscount);}
+    doAdditionalInteriorEdgeLayers(interiorlayer,additionaledgelayerscount);
+    doAdditionalExteriorEdgeLayers(exteriorlayer,additionaledgelayerscount);}
   
   private void doAdditionalInteriorEdgeLayers(Set<Cell> inlayer,int count){
     Set<Cell> layer=inlayer;
@@ -280,7 +280,7 @@ public class PolygonEdgeCells implements CellMass{
       isinterior=transformedpolygon.containsPoint(c.x,c.y);
       dis=transformedpolygon.getDistance(c.x,c.y);
       if(isinterior)
-        presence=0.5+(dis/glowspan)*0.5;
+        presence=0.5-(dis/glowspan)*0.5;
       else
         presence=0.5-(dis/glowspan)*0.5;
       if(presence<0)presence=0;
@@ -294,7 +294,7 @@ public class PolygonEdgeCells implements CellMass{
       if(dis>glowspan)
         presence=1.0;
       else
-        presence=0.5+(dis/glowspan)*0.5;
+        presence=0.5-(dis/glowspan)*0.5;
       c.addPresence(polygon,presence);}}
   
   private void markExteriorEdgeCells(Collection<Cell> cells){

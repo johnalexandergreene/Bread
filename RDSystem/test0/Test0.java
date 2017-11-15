@@ -71,7 +71,7 @@ public class Test0{
    */
   
   int padding=16;
-  double scale=12;
+  double scale=20;
   AffineTransform compositionrdstransform;
   
   private void initCompositionRDSTransform(){
@@ -102,18 +102,32 @@ public class Test0{
       h=(int)(bounds.height*scale+padding+padding);
     rds=new RDSystem(w,h);}
   
-  void castCompositionToRDS(){
-    DPolygon d;
-    
-    for(FPolygon p:composition.getLeafPolygons()){
-      d=p.getDPolygon();
-      rds.mapPolygonArea(d,compositionrdstransform,glowspan);}
-    
-//    for(FPolygon p:composition.getPolygons()){
+//  void castCompositionToRDS(){
+//    DPolygon d;
+//    
+//    for(FPolygon p:composition.getLeafPolygons()){
 //      d=p.getDPolygon();
-//      rds.mapPolygonEdge(d,compositionrdstransform,glowspan);}
+//      rds.mapPolygonArea(d,compositionrdstransform,glowspan);}
+//    
+////    for(FPolygon p:composition.getPolygons()){
+////      d=p.getDPolygon();
+////      rds.mapPolygonEdge(d,compositionrdstransform,glowspan);}
+//    
+//  }
+  
+  void castCompositionToRDS(){
+    DPolygon d=composition.getRootPolygon().getDPolygon();
+    rds.mapPolygonArea(d,compositionrdstransform,glowspan);
+    //get hex
+    for(FPolygon p:composition.getLeafPolygons()){
+      if(p.hasTags("hex")){
+        d=p.getDPolygon();
+        rds.mapPolygonEdge(d,compositionrdstransform,glowspan);}}
+    
     
   }
+  
+  
   
   /*
    * ################################
