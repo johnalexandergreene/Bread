@@ -1,30 +1,21 @@
-package org.fleen.bread.RDSystem;
+package org.fleen.bread.FuzzyCellSystem;
 
 import java.awt.geom.AffineTransform;
 import java.util.Iterator;
 
 import org.fleen.geom_2D.DPolygon;
 
-/* RASTER MAP
+/* 
+ * It's a reaction diffusion system
  * 
- * Map vector geometry objects to this raster
- *  
- * Vector geometry objects that we map:
- *   Point
- *   Seg
- *   OpenCurve (as sequence of points aka polyseg)
- *   ClosedCurve (aka edge of a polygon)
- *   Polygon area
+ * Map polygons and other things to cell array
  * 
- * The raster is a rectangular array of 1x1 cells
+ * It is assumed that all of the polygons are within the map bounds
  * 
- * A vector geometry object is mapped to a cell in terms of Presence
- *   How close is that artifact to that cell?
- *   Specifically
- *     In the case of a Point, Seg, OpenCurve or ClosedCurve, how close is that object to the cell's center point?
- *     In the case of a Polygon, is the cell's center contained within that polygonal area?
- *     And how strong is the VG (all mapped objects have a Strength property)? 
- *       
+ * We have a margin area
+ * 
+ * We do cell-ish stuff, to manipulate thing-areas
+ * 
  * ---For example, a Presence may go like this for a polygon
  *   Closeness
  *     The Closeness of the Presence corrosponds roughly to the degree to which the polygon covers the cell-square.
@@ -40,7 +31,7 @@ import org.fleen.geom_2D.DPolygon;
  *   Our constructors will be with a collection of those or without .
  *   
  */
-public class RDSystem implements Iterable<Cell>{
+public class FuzzyCellSystem implements Iterable<Cell>{
   
   /*
    * ################################
@@ -48,7 +39,7 @@ public class RDSystem implements Iterable<Cell>{
    * ################################
    */
   
-  public RDSystem(int w,int h){
+  public FuzzyCellSystem(int w,int h){
     System.out.println("RD SYSTEM INIT");
     System.out.println(w+"x"+h);
     System.out.println("cellcount="+(w*h));
@@ -77,7 +68,7 @@ public class RDSystem implements Iterable<Cell>{
     cells=new Cell[w][h];
     for(int x=0;x<w;x++){
       for(int y=0;y<h;y++){
-        cells[x][y]=new Cell(this,x,y);}}}
+        cells[x][y]=new Cell(x,y);}}}
   
   /*
    * return the cell that contains the specified point
@@ -85,7 +76,6 @@ public class RDSystem implements Iterable<Cell>{
    * the cell's square spans cell.x-0.5 to cell.y+0.5 and cell.y-0.5 to cell.y+0.5
    */
   Cell getCellContainingPoint(double x,double y){
-    //TODO this could be improved
     if(x-Math.floor(x)<0.5)
       x=Math.floor(x);
     else
@@ -97,15 +87,9 @@ public class RDSystem implements Iterable<Cell>{
     return getCell((int)x,(int)y);}
   
   Cell getCell(int x,int y){
-    //if the cell is off array then create it and return it
-    if(isOffMap(x,y)){
-      return new Cell(this,x,y,true);
-    //if the cell is on the array then return that cell
-    }else{
-      return cells[x][y];}}
-  
-  boolean isOffMap(int x,int y){
-    return x<0||x>=cellarraywidth||y<0||y>=cellarrayheight;}
+    if(x<0||x>=cellarraywidth||y<0||y>=cellarrayheight)
+      return null;
+    return cells[x][y];}
   
   public Iterator<Cell> iterator(){
     return new CellIterator(this);}
@@ -119,23 +103,33 @@ public class RDSystem implements Iterable<Cell>{
   /*
    * ################################
    * MAP THINGS TO CELLS
-   * We map polygons and polygon-edges
    * Cast the presence of the thing, like a shadow, on the cells
    * ################################
    */
   
   public PolygonAreaCells mapPolygonArea(DPolygon areapolygon,AffineTransform areapolygontransform,double glowspan){
-    PolygonAreaCells c=new PolygonAreaCells(this,areapolygon,areapolygontransform,glowspan);
+    PolygonAreaCells c=new PolygonAreaCells(areapolygon,areapolygontransform,glowspan);
+    Cell b;
+    for(Cell a:c.getCells()){
+      b=cells[a.x][a.y];
+      b.presences.add(a.presences.get(0));}
     return c;}
   
-  public PolygonEdgeCells mapPolygonEdge(DPolygon edgepolygon,AffineTransform areapolygontransform,double glowspan){
-    PolygonEdgeCells c=new PolygonEdgeCells(this,edgepolygon,areapolygontransform,glowspan);
+  public PolygonEdgeCells mapPolygonEdge(DPolygon edgepolygon,AffineTransform edgepolygontransform,double glowspan){
+    PolygonEdgeCells c=new PolygonEdgeCells(edgepolygon,edgepolygontransform,glowspan);
+    Cell b;
+    for(Cell a:c.getCells()){
+      b=cells[a.x][a.y];
+      b.presences.add(a.presences.get(0));}
     return c;}
   
   public MarginCells mapMarginCells(DPolygon rootpolygon,AffineTransform rootpolygontransform,double glowspan){
-    MarginCells c=new MarginCells();
-    return c;
-  }
+    MarginCells c=new MarginCells(cellarraywidth,cellarrayheight,rootpolygon,rootpolygontransform,glowspan);
+    Cell b;
+    for(Cell a:c.getCells()){
+      b=cells[a.x][a.y];
+      b.presences.add(a.presences.get(0));}
+    return c;}
   
   /*
    * ################################

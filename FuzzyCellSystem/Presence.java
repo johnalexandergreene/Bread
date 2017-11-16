@@ -1,4 +1,4 @@
-package org.fleen.bread.RDSystem;
+package org.fleen.bread.FuzzyCellSystem;
 
 import org.fleen.geom_2D.DPolygon;
 

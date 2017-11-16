@@ -1,11 +1,10 @@
-package org.fleen.bread.RDSystem;
+package org.fleen.bread.FuzzyCellSystem;
 
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,24 +16,6 @@ import org.fleen.geom_2D.DPolygon;
 /*
  * A polygon's shadow upon the raster cell array
  * all of the cells in which the Polygon manifests as a non-zero intensity Presence
- * 
- * 
- * TODO this is too memory consuming
- * 
- * New alg
- * 
- * for each cell
- *   get relationship to all polygons
- *     contained, near edge, etc
- * optimize the crap out of that
- * 
- * wait
- *   new interior cell getter
- *   stop at off-graph cells
- * 
- * 
- *  
- * 
  */
 public class PolygonAreaCells implements CellMass{
   
@@ -44,8 +25,7 @@ public class PolygonAreaCells implements CellMass{
    * ################################
    */
   
-  PolygonAreaCells(RDSystem rds,DPolygon polygon,AffineTransform transform,double glowspan){
-    this.rds=rds;
+  PolygonAreaCells(DPolygon polygon,AffineTransform transform,double glowspan){
     this.polygon=polygon;
     this.glowspan=glowspan;
     initTransformedPolygon(transform);
@@ -53,11 +33,11 @@ public class PolygonAreaCells implements CellMass{
   
   /*
    * ################################
-   * RASTER MAP
+   * RDS
    * ################################
    */
   
-  RDSystem rds;
+  FuzzyCellSystem rds;
   
   /*
    * ################################
@@ -94,13 +74,9 @@ public class PolygonAreaCells implements CellMass{
    * ################################
    */
   
-  /*
-   * when we're getting cells we first look in the local cache
-   * if the cell isn't there then we get it from the raster map (from the cells array or create it) and stick it in the local cache
-   */
-  Map<CellKey,Cell> localcellcache=new HashMap<CellKey,Cell>();
+  Map<CellKey,Cell> cells=new HashMap<CellKey,Cell>();
   
-  //the cells right on the edge-line of the polygon
+  //the cells on the edge-line of the polygon
   Set<Cell> primaryedgecells=new HashSet<Cell>();
   
   List<Set<Cell>>
@@ -118,29 +94,33 @@ public class PolygonAreaCells implements CellMass{
     doInteriorCells();}
   
   /*
-   * first check locally for the cell, then check the rds 
+   * check the cell cache first
+   * if the cell isn't there then create it 
    */
   public Cell getCell(int x,int y){
     CellKey k=new CellKey(x,y);
-    Cell c=localcellcache.get(k);
+    Cell c=cells.get(k);
     if(c==null){
-      c=rds.getCell(x,y);
-      localcellcache.put(k,c);}
+      c=new Cell(x,y);
+      cells.put(k,c);}
     return c;}
   
   Cell getCellContainingPoint(double x,double y){
-    Cell c=rds.getCellContainingPoint(x,y);
-    return getCell(c.x,c.y);}
+    if(x-Math.floor(x)<0.5)
+      x=Math.floor(x);
+    else
+      x=Math.ceil(x);
+    if(y-Math.floor(y)<0.5)
+      y=Math.floor(y);
+    else
+      y=Math.ceil(y);
+    return getCell((int)x,(int)y);}
   
   public int getCellCount(){
-    int a=0;
-    for(Set<Cell> b:edgeinteriorlayers)
-      a+=b.size();
-    for(Set<Cell> b:edgeexteriorlayers)
-      a+=b.size();
-    for(Set<Cell> b:interiorlayers)
-      a+=b.size();
-    return a;}
+    return cells.size();}
+  
+  public Collection<Cell> getCells(){
+    return cells.values();}
   
   /*
    * ################################
@@ -150,20 +130,10 @@ public class PolygonAreaCells implements CellMass{
   
   private void doInteriorCells(){
     Set<Cell> layer=edgeinteriorlayers.get(edgeinteriorlayers.size()-1);
-    removeOffMapCells(layer);
     while(!layer.isEmpty()){
       layer=getLayerOfUnmarkedCells(layer);
-      removeOffMapCells(layer);
       markInteriorCells(layer);
       interiorlayers.add(layer);}}
-  
-  private void removeOffMapCells(Set<Cell> cells){
-    Iterator<Cell> i=cells.iterator();
-    Cell c;
-    while(i.hasNext()){
-      c=i.next();
-      if(rds.isOffMap(c.x,c.y))
-        i.remove();}}
   
   /*
    * ################################
@@ -198,7 +168,7 @@ public class PolygonAreaCells implements CellMass{
     edgeexteriorlayers.add(exlayer);
     //now the first interior and exterior edge layers are done
     //get the number of additional edge layers to do
-    int additionaledgelayerscount=(int)(glowspan/RDSystem.CELLSPAN)+1;
+    int additionaledgelayerscount=(int)(glowspan/FuzzyCellSystem.CELLSPAN)+1;
     doAdditionalInteriorEdgeLayers(inlayer,additionaledgelayerscount);
     doAdditionalExteriorEdgeLayers(exlayer,additionaledgelayerscount);}
   

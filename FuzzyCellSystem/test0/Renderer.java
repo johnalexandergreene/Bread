@@ -1,4 +1,4 @@
-package org.fleen.bread.RDSystem.test0;
+package org.fleen.bread.FuzzyCellSystem.test0;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.fleen.bread.RDSystem.Cell;
-import org.fleen.bread.RDSystem.Presence;
+import org.fleen.bread.FuzzyCellSystem.Cell;
+import org.fleen.bread.FuzzyCellSystem.Presence;
 import org.fleen.bread.palette.Palette;
 import org.fleen.geom_2D.DPolygon;
 

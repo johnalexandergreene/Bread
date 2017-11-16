@@ -1,10 +1,10 @@
-package org.fleen.bread.RDSystem.test0;
+package org.fleen.bread.FuzzyCellSystem.test0;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import org.fleen.bread.RDSystem.RDSystem;
+import org.fleen.bread.FuzzyCellSystem.FuzzyCellSystem;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.geom_2D.DPolygon;
 
@@ -19,9 +19,9 @@ public class Test0{
   Test0(){
     initUI();
     initComposition();
-    initRDS();
-    initCompositionRDSTransform();
-    castCompositionToRDS();
+    initFCS();
+    initCompositionFCSTransform();
+    castCompositionToFCS();
     initRenderer();}
   
   /*
@@ -64,7 +64,7 @@ public class Test0{
   
   /*
    * ################################
-   * COMPOSITION RDS TRANSFORM
+   * COMPOSITION FCS TRANSFORM
    * scale up the composition because, dimensionally, it's pretty small
    * translate it to put the left and top edges at 0, + margin 
    * ################################
@@ -74,7 +74,7 @@ public class Test0{
   double scale=25;
   AffineTransform compositionrdstransform;
   
-  private void initCompositionRDSTransform(){
+  private void initCompositionFCSTransform(){
     //note that we flip the y to convert cartesian coors to array coors
     compositionrdstransform=AffineTransform.getScaleInstance(scale,-scale);
     //
@@ -86,26 +86,27 @@ public class Test0{
   
   /*
    * ################################
-   * RDS
+   * FCS
    * Our Reaction Diffusion System
    * ################################
    */
   
   double glowspan=1.5;
   
-  RDSystem rds;
+  FuzzyCellSystem rds;
   
-  void initRDS(){
+  void initFCS(){
     Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
     int 
       w=(int)(bounds.width*scale+margin+margin),
       h=(int)(bounds.height*scale+margin+margin);
-    rds=new RDSystem(w,h);}
+    rds=new FuzzyCellSystem(w,h);}
   
-  void castCompositionToRDS(){
+  void castCompositionToFCS(){
 //    mapRootArea();
     mapLeafAreas();
     mapHexEdge();
+    mapMargin();
     rds.clean();}
   
   void mapRootArea(){
@@ -123,6 +124,9 @@ public class Test0{
       if(p.hasTags("hex")){
         DPolygon d=p.getDPolygon();
         rds.mapPolygonEdge(d,compositionrdstransform,glowspan);}}}
+  
+  void mapMargin(){
+    rds.mapMarginCells(composition.getRootPolygon().getDPolygon(),compositionrdstransform,glowspan);}
   
   /*
    * ################################

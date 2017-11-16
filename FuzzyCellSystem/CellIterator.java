@@ -1,14 +1,14 @@
-package org.fleen.bread.RDSystem;
+package org.fleen.bread.FuzzyCellSystem;
 
 import java.util.Iterator;
 
 
 class CellIterator implements Iterator<Cell> {
   
-  CellIterator(RDSystem rastermap){
+  CellIterator(FuzzyCellSystem rastermap){
     this.rastermap=rastermap;}
   
-  RDSystem rastermap;
+  FuzzyCellSystem rastermap;
   int x=0,y=0;
   
   public boolean hasNext(){

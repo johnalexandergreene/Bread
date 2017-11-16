@@ -1,4 +1,4 @@
-package org.fleen.bread.RDSystem;
+package org.fleen.bread.FuzzyCellSystem;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,32 +22,13 @@ public class Cell{
   
   /*
    * ################################
-   * CONSTRUCTORS
+   * CONSTRUCTOR
    * ################################
    */
   
-  /*
-   * xcoor, ycoor, center x, center y, the cellarray that contains this cell
-   */
-  Cell(RDSystem rds,int x,int y){
-    this.rds=rds;
+  Cell(int x,int y){
     this.x=x;
     this.y=y;}
-  
-  Cell(RDSystem rds,int x,int y,boolean offmap){
-    this(rds,x,y);
-    this.offmap=offmap;}
-  
-  /*
-   * ################################
-   * RDS
-   * ################################
-   */
-  
-  RDSystem rds;
-  //the cell may be off the raster map. it happens when we're 
-  //rendering a polygon that's only partially within the viewport
-  boolean offmap=false;
   
   /*
    * ################################
@@ -59,65 +40,65 @@ public class Cell{
   //the cell center is also the cell coors
   public int x,y;
   
-  List<Cell> getNeighbors(){
-    List<Cell> n=new ArrayList<Cell>(8);
-    //N
-    Cell a=rds.getCell(x,y+1);
-    if(a!=null)n.add(a);
-    //NE
-    a=rds.getCell(x+1,y+1);
-    if(a!=null)n.add(a);
-    //E
-    a=rds.getCell(x+1,y);
-    if(a!=null)n.add(a);
-    //SE
-    a=rds.getCell(x+1,y-1);
-    if(a!=null)n.add(a);
-    //S
-    a=rds.getCell(x,y-1);
-    if(a!=null)n.add(a);
-    //SW
-    a=rds.getCell(x-1,y-1);
-    if(a!=null)n.add(a);
-    //W
-    a=rds.getCell(x-1,y);
-    if(a!=null)n.add(a);
-    //NW
-    a=rds.getCell(x-1,y+1);
-    if(a!=null)n.add(a);
-    //
-    return n;}
+//  List<Cell> getNeighbors(){
+//    List<Cell> n=new ArrayList<Cell>(8);
+//    //N
+//    Cell a=rds.getCell(x,y+1);
+//    if(a!=null)n.add(a);
+//    //NE
+//    a=rds.getCell(x+1,y+1);
+//    if(a!=null)n.add(a);
+//    //E
+//    a=rds.getCell(x+1,y);
+//    if(a!=null)n.add(a);
+//    //SE
+//    a=rds.getCell(x+1,y-1);
+//    if(a!=null)n.add(a);
+//    //S
+//    a=rds.getCell(x,y-1);
+//    if(a!=null)n.add(a);
+//    //SW
+//    a=rds.getCell(x-1,y-1);
+//    if(a!=null)n.add(a);
+//    //W
+//    a=rds.getCell(x-1,y);
+//    if(a!=null)n.add(a);
+//    //NW
+//    a=rds.getCell(x-1,y+1);
+//    if(a!=null)n.add(a);
+//    //
+//    return n;}
   
   /*
    * this is for getting neighbor cells in a polygoncellmap creation process
    * we sometimes want to refer to cells that are in the polygoncellmap.cellcache but not
    * in the rastermap. So we check the cache first.
    */
-  List<Cell> getNeighbors(CellMass pc){
+  List<Cell> getNeighbors(CellMass m){
     List<Cell> n=new ArrayList<Cell>(8);
     //N
-    Cell a=pc.getCell(x,y+1);
+    Cell a=m.getCell(x,y+1);
     if(a!=null)n.add(a);
     //NE
-    a=pc.getCell(x+1,y+1);
+    a=m.getCell(x+1,y+1);
     if(a!=null)n.add(a);
     //E
-    a=pc.getCell(x+1,y);
+    a=m.getCell(x+1,y);
     if(a!=null)n.add(a);
     //SE
-    a=pc.getCell(x+1,y-1);
+    a=m.getCell(x+1,y-1);
     if(a!=null)n.add(a);
     //S
-    a=pc.getCell(x,y-1);
+    a=m.getCell(x,y-1);
     if(a!=null)n.add(a);
     //SW
-    a=pc.getCell(x-1,y-1);
+    a=m.getCell(x-1,y-1);
     if(a!=null)n.add(a);
     //W
-    a=pc.getCell(x-1,y);
+    a=m.getCell(x-1,y);
     if(a!=null)n.add(a);
     //NW
-    a=pc.getCell(x-1,y+1);
+    a=m.getCell(x-1,y+1);
     if(a!=null)n.add(a);
     //
     return n;}

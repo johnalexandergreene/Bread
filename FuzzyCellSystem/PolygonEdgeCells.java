@@ -1,4 +1,4 @@
-package org.fleen.bread.RDSystem;
+package org.fleen.bread.FuzzyCellSystem;
 
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
@@ -28,20 +28,11 @@ public class PolygonEdgeCells implements CellMass{
    * ################################
    */
   
-  PolygonEdgeCells(RDSystem rds,DPolygon polygon,AffineTransform transform,double glowspan){
-    this.rds=rds;
+  PolygonEdgeCells(DPolygon polygon,AffineTransform transform,double glowspan){
     this.polygon=polygon;
     this.glowspan=glowspan;
     initTransformedPolygon(transform);
     doCells();}
-  
-  /*
-   * ################################
-   * RDS
-   * ################################
-   */
-  
-  RDSystem rds;
   
   /*
    * ################################
@@ -82,33 +73,35 @@ public class PolygonEdgeCells implements CellMass{
    * when we're getting cells we first look in the local cache
    * if the cell isn't there then we get it from the raster map (from the cells array or create it) and stick it in the local cache
    */
-  Map<CellKey,Cell> localcellcache=new HashMap<CellKey,Cell>();
-  
-  //the cells right on the edge-line of the polygon
-  Set<Cell> primaryedgecells=new HashSet<Cell>();
-  
-  List<Set<Cell>> otheredgecelllayers=new ArrayList<Set<Cell>>();
+  Map<CellKey,Cell> cells=new HashMap<CellKey,Cell>();
   
   /*
    * first check locally for the cell, then check the rds 
    */
   public Cell getCell(int x,int y){
     CellKey k=new CellKey(x,y);
-    Cell c=localcellcache.get(k);
+    Cell c=cells.get(k);
     if(c==null){
-      c=rds.getCell(x,y);
-      localcellcache.put(k,c);}
+      c=new Cell(x,y);
+      cells.put(k,c);}
     return c;}
   
   Cell getCellContainingPoint(double x,double y){
-    Cell c=rds.getCellContainingPoint(x,y);
-    return getCell(c.x,c.y);}
+    if(x-Math.floor(x)<0.5)
+      x=Math.floor(x);
+    else
+      x=Math.ceil(x);
+    if(y-Math.floor(y)<0.5)
+      y=Math.floor(y);
+    else
+      y=Math.ceil(y);
+    return getCell((int)x,(int)y);}
   
   public int getCellCount(){
-    int a=0;
-    for(Set<Cell> b:otheredgecelllayers)
-      a+=b.size();
-    return a;}
+    return cells.size();}
+  
+  public Collection<Cell> getCells(){
+    return cells.values();}
   
   /*
    * ################################
@@ -121,12 +114,15 @@ public class PolygonEdgeCells implements CellMass{
    * ################################
    */
   
+  Set<Cell> primaryedgecells=new HashSet<Cell>();
+  List<Set<Cell>> otheredgecelllayers=new ArrayList<Set<Cell>>();
+  
   private void doCells(){
     doPrimaryEdgeCells();
     doOtherCells();}
   
   private void doOtherCells(){
-    int count=(int)(glowspan/RDSystem.CELLSPAN)+1;
+    int count=(int)(glowspan/FuzzyCellSystem.CELLSPAN)+1;
     Set<Cell> layer=primaryedgecells;
     for(int i=0;i<count;i++){
       layer=getLayerOfUnmarkedCells(layer);
