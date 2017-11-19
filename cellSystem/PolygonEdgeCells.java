@@ -2,7 +2,6 @@ package org.fleen.bread.cellSystem;
 
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -27,10 +26,10 @@ public class PolygonEdgeCells implements CellMass{
    * ################################
    */
   
-  PolygonEdgeCells(DPolygon polygon,AffineTransform transform,double glowspan){
+  PolygonEdgeCells(DPolygon polygon,AffineTransform transform){
     this.polygon=polygon;
     initTransformedPolygon(transform);
-    mapPolygonEdge();}
+    mapPolygonArea();}
   
   /*
    * ################################
@@ -40,7 +39,7 @@ public class PolygonEdgeCells implements CellMass{
   
   DPolygon 
     polygon,
-    transformedpolygon;//x0,y0,x1,y1...
+    transformedpolygon;
   
   private void initTransformedPolygon(AffineTransform t){
     int s=polygon.size();
@@ -58,24 +57,67 @@ public class PolygonEdgeCells implements CellMass{
    * ################################
    */
   
-  private Set<Cell> cells;
+  private List<Cell> cells=new ArrayList<Cell>();
   
-  /*
-   * TODO faster
-   */
-  public Cell getCell(int x,int y){
-    for(Cell c:cells)
-      if(c.x==x&&c.y==y)
-        return c;
-    return null;}
+  public Iterator<Cell> iterator(){
+    return cells.iterator();}
   
   public int getCellCount(){
     return cells.size();}
   
-  public Collection<Cell> getCells(){
-    return cells;}
+  /*
+   * ################################
+   * MAP POLYGON EDGE
+   * create null cell array to enclose polygon, with offsets
+   * draw edge with bresenham
+   * keep those edge cells
+   * put all the keepers in our cells list
+   * ################################
+   */
   
-  Cell getCellContainingPoint(double x,double y){
+  private void mapPolygonArea(){
+    createEnclosingArray();
+    drawEdge();
+    storeEdgeCells();}
+  
+  private void storeEdgeCells(){
+    for(Cell c:edgecells){
+      cells.add(
+        new Cell(
+          c.x+eaoffsetx,
+          c.y+eaoffsety));}}
+  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * ENCLOSING ARRAY
+   * ++++++++++++++++++++++++++++++++
+   */
+  
+  Cell[][] enclosingarray;
+  int eaoffsetx,eaoffsety;
+  
+  private void createEnclosingArray(){
+    List<Cell> vertexcells=new ArrayList<Cell>(transformedpolygon.size());
+    for(DPoint p:transformedpolygon)
+      vertexcells.add(ceaGetCellAtPoint(p.x,p.y));
+    //
+    int xmin=Integer.MAX_VALUE,xmax=Integer.MIN_VALUE,ymin=Integer.MAX_VALUE,ymax=Integer.MIN_VALUE;
+    for(Cell c:vertexcells){
+      if(c.x<xmin)xmin=c.x;
+      if(c.x>xmax)xmax=c.x;
+      if(c.y<ymin)ymin=c.y;
+      if(c.y>ymax)ymax=c.y;}
+    //a little padding, so we don't have to worry about testing off-array cells
+    xmin--;
+    xmax++;
+    ymin--;
+    ymax++;
+    //
+    eaoffsetx=xmin;
+    eaoffsety=ymin;
+    enclosingarray=new Cell[xmax-xmin+1][ymax-ymin+1];}
+  
+  private Cell ceaGetCellAtPoint(double x,double y){
     if(x-Math.floor(x)<0.5)
       x=Math.floor(x);
     else
@@ -86,36 +128,17 @@ public class PolygonEdgeCells implements CellMass{
       y=Math.ceil(y);
     return new Cell((int)x,(int)y);}
   
-  public Cell[] getNeighbors(Cell c){
-    Cell[] n=new Cell[8];
-    n[0]=getCell(c.x,c.y+1);
-    n[1]=getCell(c.x+1,c.y+1);
-    n[2]=getCell(c.x+1,c.y);
-    n[3]=getCell(c.x+1,c.y-1);
-    n[4]=getCell(c.x,c.y-1);
-    n[5]=getCell(c.x-1,c.y-1);
-    n[6]=getCell(c.x-1,c.y);
-    n[7]=getCell(c.x-1,c.y+1);
-    return n;}
-  
-  public Iterator<Cell> iterator(){
-    return cells.iterator();}
-  
   /*
-   * ################################
-   * MAP POLYGON EDGE
-   * Get edge cells with supercover bresenham
-   * ################################
+   * ++++++++++++++++++++++++++++++++
+   * DRAW EDGE
+   * ++++++++++++++++++++++++++++++++
    */
   
-  private void mapPolygonEdge(){
-    cells=getEdgeCells();
-    for(Cell c:cells)
-      c.thing=polygon;}
+  Set<Cell> edgecells;
   
-  private Set<Cell> getEdgeCells(){
-    Set<Cell> cells=new HashSet<Cell>();
-    int s=polygon.size(),i1;
+  private void drawEdge(){
+    edgecells=new HashSet<Cell>();
+    int s=transformedpolygon.size(),i1;
     Cell c0,c1;
     DPoint p0,p1;
     for(int i0=0;i0<s;i0++){
@@ -124,80 +147,60 @@ public class PolygonEdgeCells implements CellMass{
       if(i1==s)i1=0;
       p0=transformedpolygon.get(i0);
       p1=transformedpolygon.get(i1);
-      c0=getCellContainingPoint(p0.x,p0.y);
-      c1=getCellContainingPoint(p1.x,p1.y);
-      cells.addAll(getSegCells(c0.x,c0.y,c1.x,c1.y));}
-    return cells;}
+      c0=deGetCellAtPoint(p0.x,p0.y);
+      c1=deGetCellAtPoint(p1.x,p1.y);
+      bresenhamSegDraw(c0.x,c0.y,c1.x,c1.y);}}
   
-  /*
-   * PSEUDOBRESENHAM SUPERCOVER LINE DRAW
-   * 
-   * use Bresenham-like algorithm to address a line of squares from (y1,x1) to (y2,x2) 
-   * The difference from Bresenham is that ALL the points of the line are 
-   * printed, not only one per x coordinate. 
-   * Principles of the Bresenham's algorithm (heavily modified) were taken from: 
-   * http://www.intranet.ca/~sshah/waste/art7.html 
-   */
-  List<Cell> getSegCells(int x0,int y0,int x1,int y1){
-    List<Cell> segcells=new ArrayList<Cell>();
-    int i;               // loop counter 
-    int ystep, xstep;    // the step on y and x axis 
-    int error;           // the error accumulated during the increment 
-    int errorprev;       // vision the previous value of the error variable 
-    int y = y0, x = x0;  // the line points 
-    double ddy, ddx;        // compulsory variables: the double values of dy and dx 
-    int dx = x1 - x0; 
-    int dy = y1 - y0;
-//    segcells.add(cells[x][y]); //skip the first cell, otherwise some cells get selected twice
-    // NB the last point can't be here, because of its previous point (which has to be verified) 
-    if (dy < 0){ 
-      ystep = -1; 
-      dy = -dy; 
-    }else 
-      ystep = 1; 
-    if (dx < 0){ 
-      xstep = -1; 
-      dx = -dx; 
-    }else 
-      xstep = 1; 
-    ddy = 2 * dy;  // work with double values for full precision 
-    ddx = 2 * dx; 
-    if (ddx >= ddy){  // first octant (0 <= slope <= 1) 
-      // compulsory initialization (even for errorprev, needed when dx==dy) 
-      errorprev = error = dx;  // start in the middle of the square 
-      for (i=0 ; i < dx ; i++){  // do not use the first point (already done) 
-        x += xstep; 
-        error += ddy; 
-        if (error > ddx){  // increment y if AFTER the middle ( > ) 
-          y += ystep; 
-          error -= ddx; 
-          // three cases (octant == right->right-top for directions below): 
-          if (error + errorprev < ddx){  // bottom square also
-            segcells.add(new Cell(x,y-ystep));
-          }else if(error + errorprev > ddx){  // left square also 
-            segcells.add(new Cell(x-xstep,y));
-          }else{  // corner: bottom and left squares also 
-            segcells.add(new Cell(x,y-ystep));
-            segcells.add(new Cell(x-xstep,y));}} 
-        segcells.add(new Cell(x,y));
-        errorprev = error;} 
-    }else{// the same as above 
-      errorprev = error = dy; 
-      for (i=0 ; i < dy ; i++){ 
-        y += ystep; 
-        error += ddx; 
-        if (error > ddy){ 
-          x += xstep; 
-          error -= ddy; 
-          if (error + errorprev < ddy){ 
-            segcells.add(new Cell(x-xstep,y));
-          }else if (error + errorprev > ddy){ 
-            segcells.add(new Cell(x,y-ystep));
-          }else{ 
-            segcells.add(new Cell(x-xstep,y));
-            segcells.add(new Cell(x,y-ystep));}}
-        segcells.add(new Cell(x,y));
-        errorprev = error;}}
-    return segcells;}
+  private Cell deGetCellAtPoint(double x,double y){
+    if(x-Math.floor(x)<0.5)
+      x=Math.floor(x);
+    else
+      x=Math.ceil(x);
+    if(y-Math.floor(y)<0.5)
+      y=Math.floor(y);
+    else
+      y=Math.ceil(y);
+    return new Cell((int)x-eaoffsetx,(int)y-eaoffsety);}
+  
+  private void bresenhamSegDraw(int x0,int y0,int x1,int y1){
+    Cell cell;
+    int w=x1-x0;
+    int h=y1-y0;
+    int dx1=0,dy1=0,dx2=0,dy2=0;
+    if(w<0)
+      dx1=-1; 
+    else if(w>0)
+      dx1=1;
+    if(h<0)
+      dy1=-1; 
+    else if(h>0) 
+      dy1=1;
+    if(w<0)
+      dx2=-1; 
+    else if(w>0) 
+      dx2=1;
+    int longest=Math.abs(w);
+    int shortest=Math.abs(h);
+    if(!(longest>shortest)){
+      longest=Math.abs(h);
+      shortest=Math.abs(w);
+      if(h<0)
+        dy2=-1; 
+      else if(h>0) 
+        dy2=1;
+        dx2=0;}
+    int numerator=longest>>1;
+    for(int i=0;i<=longest;i++){
+      cell=new Cell(x0,y0);
+      enclosingarray[x0][y0]=cell;
+      edgecells.add(cell);
+      numerator+=shortest;
+      if(!(numerator<longest)){
+        numerator-=longest;
+        x0+=dx1;
+        y0+=dy1;
+      }else{
+        x0+=dx2;
+        y0+=dy2;}}}
   
 }

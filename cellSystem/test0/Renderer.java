@@ -102,7 +102,7 @@ public class Renderer{
     Color c=colorbything.get(a);
     if(c==null){
       c=Palette.P_CRUDERAINBOW[colorindex%Palette.P_CRUDERAINBOW.length];
-      colorindex+=4;
+      colorindex+=1;
       colorbything.put(a,c);}
     return c;}
 

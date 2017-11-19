@@ -66,7 +66,7 @@ public class Test0{
   
   /*
    * ################################
-   * COMPOSITION FCS TRANSFORM
+   * COMPOSITION CS TRANSFORM
    * scale up the composition because, dimensionally, it's pretty small
    * translate it to put the left and top edges at 0, + margin 
    * ################################
@@ -88,12 +88,9 @@ public class Test0{
   
   /*
    * ################################
-   * FCS
-   * Our Reaction Diffusion System
+   * CELL SYSTEM
    * ################################
    */
-  
-  double glowspan=1.5;
   
   CellSystem cellsystem;
   
@@ -107,35 +104,36 @@ public class Test0{
   void mapCompositionToCS(){
 //    mapRootArea();
     mapLeafAreas();
-//    mapHexEdge();
-//    mapMargin();
+    mapHexEdge();
+    mapMargin();
 //    mapRandomLeafArea();
     cellsystem.clean();}
   
   void mapRootArea(){
     DPolygon d=composition.getRootPolygon().getDPolygon();
-    cellsystem.mapPolygonArea(d,compositionrdstransform,glowspan);}
+    cellsystem.mapPolygonArea(d,compositionrdstransform);}
   
   void mapLeafAreas(){
     DPolygon d;
     for(FPolygon p:composition.getLeafPolygons()){
       d=p.getDPolygon();
-      cellsystem.mapPolygonArea(d,compositionrdstransform,glowspan);}}
+      cellsystem.mapPolygonArea(d,compositionrdstransform);}}
   
   void mapRandomLeafArea(){
     List<FPolygon> a=composition.getLeafPolygons();
     Random r=new Random();
     DPolygon d=a.get(r.nextInt(a.size())).getDPolygon();
-    cellsystem.mapPolygonArea(d,compositionrdstransform,glowspan);}
+    cellsystem.mapPolygonArea(d,compositionrdstransform);}
   
   void mapHexEdge(){
     for(FPolygon p:composition.getLeafPolygons()){
       if(p.hasTags("hex")){
         DPolygon d=p.getDPolygon();
-        cellsystem.mapPolygonEdge(d,compositionrdstransform,glowspan);}}}
+        d=new DPolygon(d);
+        cellsystem.mapPolygonEdge(d,compositionrdstransform);}}}
   
   void mapMargin(){
-    cellsystem.mapMarginCells(composition.getRootPolygon().getDPolygon(),compositionrdstransform,glowspan);}
+    cellsystem.mapMarginCells(composition.getRootPolygon().getDPolygon(),compositionrdstransform);}
   
   /*
    * ################################

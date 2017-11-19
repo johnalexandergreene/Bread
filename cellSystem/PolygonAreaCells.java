@@ -24,7 +24,7 @@ public class PolygonAreaCells implements CellMass{
    * ################################
    */
   
-  PolygonAreaCells(DPolygon polygon,AffineTransform transform,double glowspan){
+  PolygonAreaCells(DPolygon polygon,AffineTransform transform){
     this.polygon=polygon;
     initTransformedPolygon(transform);
     mapPolygonArea();}

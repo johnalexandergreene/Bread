@@ -2,7 +2,8 @@ package org.fleen.bread.cellSystem;
 
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 import org.fleen.geom_2D.DPolygon;
 
@@ -19,12 +20,11 @@ public class MarginCells implements CellMass{
    * ################################
    */
   
-  public MarginCells(int w,int h,DPolygon rootpolygon,AffineTransform rootpolygontransform,double glowspan){
+  public MarginCells(int w,int h,DPolygon rootpolygon,AffineTransform rootpolygontransform){
     super();
     width=w;
     height=h;
     this.rootpolygon=rootpolygon;
-    this.glowspan=glowspan;
     this.rootpolygontransform=rootpolygontransform;
     doCells();}
   
@@ -54,46 +54,39 @@ public class MarginCells implements CellMass{
    * ################################
    */
   
-  Cell[][] cells;
-  //not a polygon, a yard
-  public static final DPolygon MARGINYARD=new DPolygon();
+  private List<Cell> cells=new ArrayList<Cell>();
+  
+  public Iterator<Cell> iterator(){
+    return cells.iterator();}
+  
+  public int getCellCount(){
+    return cells.size();}
+  
+  /*
+   * ################################
+   * MAP MARGIN
+   * make a big rectangle of cells
+   * subtract the root polygon cells
+   * ################################
+   */
+  
+  Cell[][] workingarray;
   
   private void doCells(){
-    //init the cells
-    cells=new Cell[width][height];
-    Cell c;
-    for(int x=0;x<cells.length;x++){
-      for(int y=0;y<cells[0].length;y++){
-        cells[x][y]=new Cell(x,y);}}
-    //map raw margin
-    for(int x=0;x<cells.length;x++){
-      for(int y=0;y<cells[0].length;y++){
-        c=getCell(x,y);
-        c.addPresence(new Presence(MARGINYARD,1.0));}}
-    //get the root polygon mass
-    PolygonAreaCells root=new PolygonAreaCells(rootpolygon,rootpolygontransform,glowspan);
+    workingarray=new Cell[width][height];
+    for(int x=0;x<width;x++){
+      for(int y=0;y<height;y++){
+        workingarray[x][y]=new Cell(x,y);}}
+    PolygonAreaCells root=new PolygonAreaCells(rootpolygon,rootpolygontransform);
     //subtract the root
-    Presence p0,p1;
-    Cell c1;
-    for(Cell c0:root.getCells()){
-      c1=getCell(c0.x,c0.y);
-      p0=c0.presences.get(0);
-      p1=c1.presences.get(0);
-      p1.intensity-=p0.intensity;}}
+    for(Cell c:root)
+      workingarray[c.x][c.y]=null;
+    //
+    for(int x=0;x<width;x++){
+      for(int y=0;y<height;y++){
+        if(workingarray[x][y]!=null)
+          cells.add(workingarray[x][y]);}}}
   
-  public Cell getCell(int x,int y){
-    if(x<0||x>=cells.length||y<0||y>=cells[0].length)
-      return null;
-    return cells[x][y];}
-
-  public int getCellCount(){
-    return cells.length*cells[0].length;}
   
-  public Collection<Cell> getCells(){
-    Collection<Cell> a=new ArrayList<Cell>();
-    for(int x=0;x<cells.length;x++){
-      for(int y=0;y<cells[0].length;y++){
-        a.add(cells[x][y]);}}
-    return a;}
 
 }

@@ -97,29 +97,31 @@ public class CellSystem implements CellMass{
    * ################################
    */
   
-  public PolygonAreaCells mapPolygonArea(DPolygon areapolygon,AffineTransform areapolygontransform,double glowspan){
-    PolygonAreaCells c=new PolygonAreaCells(areapolygon,areapolygontransform,glowspan);
+  public PolygonAreaCells mapPolygonArea(DPolygon areapolygon,AffineTransform areapolygontransform){
+    MappedThing thing=new MappedThing(areapolygon);
+    PolygonAreaCells c=new PolygonAreaCells(areapolygon,areapolygontransform);
     Cell b;
     for(Cell a:c){
-      if(a.x>-1&&a.x<getWidth()&&a.y>-1&&a.y<getHeight()){
         b=cells[a.x][a.y];
-        b.thing=areapolygon;}}
+        b.thing=thing;}
     return c;}
   
-  public PolygonEdgeCells mapPolygonEdge(DPolygon edgepolygon,AffineTransform edgepolygontransform,double glowspan){
-    PolygonEdgeCells c=new PolygonEdgeCells(edgepolygon,edgepolygontransform,glowspan);
+  public PolygonEdgeCells mapPolygonEdge(DPolygon edgepolygon,AffineTransform edgepolygontransform){
+    MappedThing thing=new MappedThing(edgepolygon);
+    PolygonEdgeCells c=new PolygonEdgeCells(edgepolygon,edgepolygontransform);
     Cell b;
-    for(Cell a:c.getCells()){
-      b=cells[a.x][a.y];
-      b.thing=a.thing;}
+    for(Cell a:c){
+        b=cells[a.x][a.y];
+        b.thing=thing;}
     return c;}
   
-  public MarginCells mapMarginCells(DPolygon rootpolygon,AffineTransform rootpolygontransform,double glowspan){
-    MarginCells c=new MarginCells(getWidth(),getHeight(),rootpolygon,rootpolygontransform,glowspan);
+  public MarginCells mapMarginCells(DPolygon rootpolygon,AffineTransform rootpolygontransform){
+    MappedThing thing=new MappedThing(rootpolygon);
+    MarginCells c=new MarginCells(getWidth(),getHeight(),rootpolygon,rootpolygontransform);
     Cell b;
-    for(Cell a:c.getCells()){
-      b=cells[a.x][a.y];
-      b.thing=a.thing;}
+    for(Cell a:c){
+        b=cells[a.x][a.y];
+        b.thing=thing;}
     return c;}
   
   /*
