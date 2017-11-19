@@ -3,9 +3,10 @@ package org.fleen.bread.cellSystem.test0;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.Random;
 
 import org.fleen.bread.cellSystem.CellSystem;
-import org.fleen.bread.fuzzyCellSystem.FuzzyCellSystem;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.geom_2D.DPolygon;
 
@@ -108,6 +109,7 @@ public class Test0{
     mapLeafAreas();
 //    mapHexEdge();
 //    mapMargin();
+//    mapRandomLeafArea();
     cellsystem.clean();}
   
   void mapRootArea(){
@@ -119,6 +121,12 @@ public class Test0{
     for(FPolygon p:composition.getLeafPolygons()){
       d=p.getDPolygon();
       cellsystem.mapPolygonArea(d,compositionrdstransform,glowspan);}}
+  
+  void mapRandomLeafArea(){
+    List<FPolygon> a=composition.getLeafPolygons();
+    Random r=new Random();
+    DPolygon d=a.get(r.nextInt(a.size())).getDPolygon();
+    cellsystem.mapPolygonArea(d,compositionrdstransform,glowspan);}
   
   void mapHexEdge(){
     for(FPolygon p:composition.getLeafPolygons()){

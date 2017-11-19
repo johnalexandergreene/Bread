@@ -83,15 +83,16 @@ public class PolygonAreaCells implements CellMass{
     gleanNullInteriorCell();
     floodFill(nicx,nicy);
     storeEdgeCells();
-    storeInteriorCells();
-    }
+    storeInteriorCells();}
   
-  //TODO filter for interiority
+  //only the cells that are actually interior
   private void storeEdgeCells(){
     for(Cell c:edgecells){
-      c.x+=eaoffsetx;
-      c.y+=eaoffsety;
-      cells.add(c);}}
+      if(isInterior(c)){
+        cells.add(
+          new Cell(
+            c.x+eaoffsetx,
+            c.y+eaoffsety));}}}
   
   private void storeInteriorCells(){
     Cell c;
@@ -99,9 +100,15 @@ public class PolygonAreaCells implements CellMass{
       for(int y=0;y<enclosingarray[0].length;y++){
         c=enclosingarray[x][y];
         if(c!=null){
-//          c.x+=eaoffsetx;
-//          c.y+=eaoffsety;
+          c=new Cell(
+            c.x+eaoffsetx,
+            c.y+eaoffsety);
           cells.add(c);}}}}
+  
+  private boolean isInterior(Cell c){
+    double x=c.x+eaoffsetx;
+    double y=c.y+eaoffsety;
+    return transformedpolygon.containsPoint(x,y);}
   
   /*
    * ++++++++++++++++++++++++++++++++
@@ -238,7 +245,7 @@ public class PolygonAreaCells implements CellMass{
     for(Cell c0:edgecells){
       n=getNICNeighbors(c0);
       for(Cell c1:n){
-        if(c1.gpobject==NULLTAG&&isInside(c1)){
+        if(c1.gpobject==NULLTAG&&isInterior(c1)){
           nicx=c1.x;
           nicy=c1.y;
           return;}}}
@@ -247,7 +254,7 @@ public class PolygonAreaCells implements CellMass{
   private Cell[] getNICNeighbors(Cell c){
     Cell[] n=new Cell[8];
     n[0]=enclosingarray[c.x][c.y+1];
-    if(n[0]==null)n[0]=new Cell(c.x,c.y,NULLTAG);
+    if(n[0]==null)n[0]=new Cell(c.x,c.y+1,NULLTAG);
     n[1]=enclosingarray[c.x+1][c.y+1];
     if(n[1]==null)n[1]=new Cell(c.x+1,c.y+1,NULLTAG);
     n[2]=enclosingarray[c.x+1][c.y];
@@ -263,11 +270,6 @@ public class PolygonAreaCells implements CellMass{
     n[7]=enclosingarray[c.x-1][c.y+1];
     if(n[7]==null)n[7]=new Cell(c.x-1,c.y+1,NULLTAG);
     return n;}
-  
-  private boolean isInside(Cell c){
-    double x=c.x+eaoffsetx;
-    double y=c.y+eaoffsety;
-    return transformedpolygon.containsPoint(x,y);}
   
   /*
    * ++++++++++++++++++++++++++++++++
