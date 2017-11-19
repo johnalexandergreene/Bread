@@ -1,4 +1,4 @@
-package org.fleen.bread.FuzzyCellSystem;
+package org.fleen.bread.fuzzyCellSystem;
 
 import java.util.ArrayList;
 import java.util.Iterator;

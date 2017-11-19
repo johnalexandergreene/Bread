@@ -1,23 +1,22 @@
-package org.fleen.bread.FuzzyCellSystem;
+package org.fleen.bread.cellSystem;
 
 import java.util.Iterator;
 
-
-class CellIterator implements Iterator<Cell> {
+class CellSystemCellIterator implements Iterator<Cell> {
   
-  CellIterator(FuzzyCellSystem rastermap){
+  CellSystemCellIterator(CellSystem rastermap){
     this.rastermap=rastermap;}
   
-  FuzzyCellSystem rastermap;
+  CellSystem rastermap;
   int x=0,y=0;
   
   public boolean hasNext(){
-    return y<rastermap.cellarrayheight;}
+    return y<rastermap.getHeight();}
 
   public Cell next(){
     Cell c=rastermap.cells[x][y];
     x++;
-    if(x==rastermap.cellarraywidth){
+    if(x==rastermap.getWidth()){
       x=0;
       y++;}
     return c;}

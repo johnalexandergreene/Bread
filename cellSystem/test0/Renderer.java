@@ -1,4 +1,4 @@
-package org.fleen.bread.FuzzyCellSystem.test0;
+package org.fleen.bread.cellSystem.test0;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -9,10 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.fleen.bread.FuzzyCellSystem.Cell;
-import org.fleen.bread.FuzzyCellSystem.Presence;
+import org.fleen.bread.cellSystem.Cell;
 import org.fleen.bread.palette.Palette;
-import org.fleen.geom_2D.DPolygon;
 
 /*
  * convert each cell to a pixel
@@ -53,11 +51,11 @@ public class Renderer{
     //TODO we should have a scale param here, and a final transform, 
     //then scale up the rendered image to a bigger image or whatever to fit the viewer
     int 
-      w=test.rds.getWidth(),
-      h=test.rds.getHeight();
+      w=test.cellsystem.getWidth(),
+      h=test.cellsystem.getHeight();
     //
     BufferedImage image0=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
-    for(Cell c:test.rds){
+    for(Cell c:test.cellsystem){
       image0.setRGB(c.x,c.y,getColor(c).getRGB());}
     //scale to center and fit in viewer
     int
@@ -93,30 +91,19 @@ public class Renderer{
    */
   
   private Color getColor(Cell c){
-    int r=0,g=0,b=0;
-    Color color;
-    for(Presence p:c.presences){
-      color=getPolygonColor(p.polygon);
-      r+=(int)(color.getRed()*p.intensity);
-      g+=(int)(color.getGreen()*p.intensity);
-      b+=(int)(color.getBlue()*p.intensity);}
-    if(r>255)r=255;
-    if(g>255)g=255;
-    if(b>255)b=255;
-    return new Color(r,g,b);}
+    return getThingColor(c.thing);}
   
   Random rnd=new Random();
   int colorindex=0;
   
-  Map<DPolygon,Color> colorbypolygon=new HashMap<DPolygon,Color>();
+  Map<Object,Color> colorbything=new HashMap<Object,Color>();
   
-  private Color getPolygonColor(DPolygon p){
-    Color c=colorbypolygon.get(p);
+  private Color getThingColor(Object a){
+    Color c=colorbything.get(a);
     if(c==null){
       c=Palette.P_CRUDERAINBOW[colorindex%Palette.P_CRUDERAINBOW.length];
-//      c=Palette.P_CRUDERAINBOW[rnd.nextInt(Palette.P_CRUDERAINBOW.length)];
       colorindex+=4;
-      colorbypolygon.put(p,c);}
+      colorbything.put(a,c);}
     return c;}
 
 }

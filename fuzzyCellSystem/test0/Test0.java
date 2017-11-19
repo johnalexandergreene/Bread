@@ -1,10 +1,10 @@
-package org.fleen.bread.FuzzyCellSystem.test0;
+package org.fleen.bread.fuzzyCellSystem.test0;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import org.fleen.bread.FuzzyCellSystem.FuzzyCellSystem;
+import org.fleen.bread.fuzzyCellSystem.FuzzyCellSystem;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.geom_2D.DPolygon;
 
@@ -21,7 +21,7 @@ public class Test0{
     initComposition();
     initFCS();
     initCompositionFCSTransform();
-    castCompositionToFCS();
+    mapCompositionToFCS();
     initRenderer();}
   
   /*
@@ -102,8 +102,8 @@ public class Test0{
       h=(int)(bounds.height*scale+margin+margin);
     rds=new FuzzyCellSystem(w,h);}
   
-  void castCompositionToFCS(){
-//    mapRootArea();
+  void mapCompositionToFCS(){
+    mapRootArea();
     mapLeafAreas();
     mapHexEdge();
     mapMargin();

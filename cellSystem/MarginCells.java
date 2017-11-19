@@ -1,4 +1,4 @@
-package org.fleen.bread.FuzzyCellSystem;
+package org.fleen.bread.cellSystem;
 
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;

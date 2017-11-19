@@ -1,4 +1,4 @@
-package org.fleen.bread.FuzzyCellSystem.test0;
+package org.fleen.bread.fuzzyCellSystem.test0;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

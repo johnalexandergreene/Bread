@@ -1,4 +1,4 @@
-package org.fleen.bread.FuzzyCellSystem;
+package org.fleen.bread.cellSystem;
 
 import java.awt.geom.AffineTransform;
 import java.util.Iterator;
@@ -6,32 +6,13 @@ import java.util.Iterator;
 import org.fleen.geom_2D.DPolygon;
 
 /* 
- * It's a reaction diffusion system
- * 
- * Map polygons and other things to cell array
- * 
- * It is assumed that all of the polygons are within the map bounds
- * 
- * We have a margin area
- * 
- * We do cell-ish stuff, to manipulate thing-areas
- * 
- * ---For example, a Presence may go like this for a polygon
- *   Closeness
- *     The Closeness of the Presence corrosponds roughly to the degree to which the polygon covers the cell-square.
- *     Total coverage means intensity of 1.0. Partial or near-the-edge means less than 1.0.
- *     Right on the edge is intensity=0.5  
- *   The Strength of the Presence is the Strength of the polygon * Closeness
- *   
- *   ----------------------
- *   
- *   Here in the 2D lib we need Point, Seg, Opencurve and Polygon
- *   we will have an interface : RasterMapVectorObject
- *   All 4 of those classes will implement RasterMapVectorObject
- *   Our constructors will be with a collection of those or without .
- *   
+ * A cellular automata system
+ * For a forsythia post-process
+ * For boiling, curve-smoothing, maybe some proportion tweaking
+ * It might get fancy. We might translate vertices into special cells, doing a vector-CA combo thing
+ * We prefer this to RD because CA is simpler
  */
-public class FuzzyCellSystem implements Iterable<Cell>{
+public class CellSystem implements CellMass{
   
   /*
    * ################################
@@ -39,8 +20,8 @@ public class FuzzyCellSystem implements Iterable<Cell>{
    * ################################
    */
   
-  public FuzzyCellSystem(int w,int h){
-    System.out.println("RD SYSTEM INIT");
+  public CellSystem(int w,int h){
+    System.out.println("CS SYSTEM INIT");
     System.out.println(w+"x"+h);
     System.out.println("cellcount="+(w*h));
     initCells(w,h);}
@@ -53,29 +34,52 @@ public class FuzzyCellSystem implements Iterable<Cell>{
    * ################################
    */
   
-  /*
-   * the height and width of a cell
-   */
+  //the height and width of a cell relative to any mapped geometry
   static final double CELLSPAN=1.0;
   
   Cell[][] cells;
   
-  int cellarraywidth,cellarrayheight;
+  public int getWidth(){
+    return cells.length;}
+  
+  public int getHeight(){
+    return cells[0].length;}
+  
+  public int getCellCount(){
+    return cells.length*cells[0].length;}
   
   private void initCells(int w,int h){
-    cellarraywidth=w;
-    cellarrayheight=h;
     cells=new Cell[w][h];
     for(int x=0;x<w;x++){
       for(int y=0;y<h;y++){
         cells[x][y]=new Cell(x,y);}}}
+  
+  public Cell getCell(int x,int y){
+    if(x<0||x>=cells.length||y<0||y>=cells[0].length)
+      return null;
+    return cells[x][y];}
+  
+  public Cell[] getNeighbors(Cell c){
+   Cell[] n=new Cell[8];
+   n[0]=getCell(c.x,c.y+1);
+   n[1]=getCell(c.x+1,c.y+1);
+   n[2]=getCell(c.x+1,c.y);
+   n[3]=getCell(c.x+1,c.y-1);
+   n[4]=getCell(c.x,c.y-1);
+   n[5]=getCell(c.x-1,c.y-1);
+   n[6]=getCell(c.x-1,c.y);
+   n[7]=getCell(c.x-1,c.y+1);
+   return n;}
+  
+  public Iterator<Cell> iterator(){
+    return new CellSystemCellIterator(this);}
   
   /*
    * return the cell that contains the specified point
    * the cell's coors are also the cell's center point
    * the cell's square spans cell.x-0.5 to cell.y+0.5 and cell.y-0.5 to cell.y+0.5
    */
-  Cell getCellContainingPoint(double x,double y){
+  public Cell getCellContainingPoint(double x,double y){
     if(x-Math.floor(x)<0.5)
       x=Math.floor(x);
     else
@@ -85,20 +89,6 @@ public class FuzzyCellSystem implements Iterable<Cell>{
     else
       y=Math.ceil(y);
     return getCell((int)x,(int)y);}
-  
-  Cell getCell(int x,int y){
-    if(x<0||x>=cellarraywidth||y<0||y>=cellarrayheight)
-      return null;
-    return cells[x][y];}
-  
-  public Iterator<Cell> iterator(){
-    return new CellIterator(this);}
-  
-  public int getWidth(){
-    return cellarraywidth;}
-  
-  public int getHeight(){
-    return cellarrayheight;}
   
   /*
    * ################################
@@ -110,9 +100,10 @@ public class FuzzyCellSystem implements Iterable<Cell>{
   public PolygonAreaCells mapPolygonArea(DPolygon areapolygon,AffineTransform areapolygontransform,double glowspan){
     PolygonAreaCells c=new PolygonAreaCells(areapolygon,areapolygontransform,glowspan);
     Cell b;
-    for(Cell a:c.getCells()){
-      b=cells[a.x][a.y];
-      b.presences.add(a.presences.get(0));}
+    for(Cell a:c){
+      if(a.x>-1&&a.x<getWidth()&&a.y>-1&&a.y<getHeight()){
+        b=cells[a.x][a.y];
+        b.thing=areapolygon;}}
     return c;}
   
   public PolygonEdgeCells mapPolygonEdge(DPolygon edgepolygon,AffineTransform edgepolygontransform,double glowspan){
@@ -120,26 +111,27 @@ public class FuzzyCellSystem implements Iterable<Cell>{
     Cell b;
     for(Cell a:c.getCells()){
       b=cells[a.x][a.y];
-      b.presences.add(a.presences.get(0));}
+      b.thing=a.thing;}
     return c;}
   
   public MarginCells mapMarginCells(DPolygon rootpolygon,AffineTransform rootpolygontransform,double glowspan){
-    MarginCells c=new MarginCells(cellarraywidth,cellarrayheight,rootpolygon,rootpolygontransform,glowspan);
+    MarginCells c=new MarginCells(getWidth(),getHeight(),rootpolygon,rootpolygontransform,glowspan);
     Cell b;
     for(Cell a:c.getCells()){
       b=cells[a.x][a.y];
-      b.presences.add(a.presences.get(0));}
+      b.thing=a.thing;}
     return c;}
   
   /*
    * ################################
    * CLEAN CELLS
    * Do this after all mapping is done
+   * resolve null cells. 
+   * TODO maybe some other stuff 
    * ################################
    */
   
   public void clean(){
-    for(Cell c:this)
-      c.clean();}
+    }
   
 }

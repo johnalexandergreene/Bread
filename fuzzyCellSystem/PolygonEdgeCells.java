@@ -1,4 +1,4 @@
-package org.fleen.bread.FuzzyCellSystem;
+package org.fleen.bread.fuzzyCellSystem;
 
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
@@ -12,12 +12,15 @@ import java.util.Set;
 import org.fleen.geom_2D.DPoint;
 import org.fleen.geom_2D.DPolygon;
 
-
 /*
- * A polygon's shadow upon the raster cell array
- * all of the cells in which the Polygon manifests as a non-zero intensity Presence
+ * get edge cells via bresenham : c0
+ * get cells neighboring c0 : c1
+ * and so on : c2, c3... a few times. 
+ *   Out to cell layers count = glow + 1 or something
+ * Mark all cells with presences according to distance from edge (inward or outward)
+ *  
  */
-public class PolygonAreaCells implements CellMass{
+public class PolygonEdgeCells implements CellMass{
   
   /*
    * ################################
@@ -25,19 +28,11 @@ public class PolygonAreaCells implements CellMass{
    * ################################
    */
   
-  PolygonAreaCells(DPolygon polygon,AffineTransform transform,double glowspan){
+  PolygonEdgeCells(DPolygon polygon,AffineTransform transform,double glowspan){
     this.polygon=polygon;
     this.glowspan=glowspan;
     initTransformedPolygon(transform);
     doCells();}
-  
-  /*
-   * ################################
-   * RDS
-   * ################################
-   */
-  
-  FuzzyCellSystem rds;
   
   /*
    * ################################
@@ -74,28 +69,14 @@ public class PolygonAreaCells implements CellMass{
    * ################################
    */
   
+  /*
+   * when we're getting cells we first look in the local cache
+   * if the cell isn't there then we get it from the raster map (from the cells array or create it) and stick it in the local cache
+   */
   Map<CellKey,Cell> cells=new HashMap<CellKey,Cell>();
   
-  //the cells on the edge-line of the polygon
-  Set<Cell> primaryedgecells=new HashSet<Cell>();
-  
-  List<Set<Cell>>
-    //the layers of cells near the edge of the polygon but inside
-    edgeinteriorlayers=new ArrayList<Set<Cell>>(),
-    //the layers of cells near the edge of the polygon but outside
-    edgeexteriorlayers=new ArrayList<Set<Cell>>(),
-    //the layers of cells starting just inside the innermost interior edge layer 
-    //and ending at the center of the polygon 
-    interiorlayers=new ArrayList<Set<Cell>>();
-
-  private void doCells(){
-    doPrimaryEdgeCells();
-    doOtherEdgeCells();
-    doInteriorCells();}
-  
   /*
-   * check the cell cache first
-   * if the cell isn't there then create it 
+   * first check locally for the cell, then check the rds 
    */
   public Cell getCell(int x,int y){
     CellKey k=new CellKey(x,y);
@@ -124,72 +105,55 @@ public class PolygonAreaCells implements CellMass{
   
   /*
    * ################################
-   * DO INTERIOR CELLS
+   * GATHER AND MARK CELLS FOR THE PRESENCE OF THE THING
+   * get the primaryedgecells : c0 
+   * mark them
+   * get all the unmarked neighbors of primaryedgecells : c1
+   * mark them.
+   * keep doing that out to a number of cell-layers
    * ################################
    */
   
-  private void doInteriorCells(){
-    Set<Cell> layer=edgeinteriorlayers.get(edgeinteriorlayers.size()-1);
-    while(!layer.isEmpty()){
+  Set<Cell> primaryedgecells=new HashSet<Cell>();
+  List<Set<Cell>> otheredgecelllayers=new ArrayList<Set<Cell>>();
+  
+  private void doCells(){
+    doPrimaryEdgeCells();
+    doOtherCells();}
+  
+  private void doOtherCells(){
+    int count=(int)(glowspan/FuzzyCellSystem.CELLSPAN)+1;
+    Set<Cell> layer=primaryedgecells;
+    for(int i=0;i<count;i++){
       layer=getLayerOfUnmarkedCells(layer);
-      markInteriorCells(layer);
-      interiorlayers.add(layer);}}
+      markCells(layer);
+      otheredgecelllayers.add(layer);}}
+  
+  private void markCells(Collection<Cell> cells){
+    double dis,presence;
+    for(Cell c:cells){
+      dis=transformedpolygon.getDistance(c.x,c.y);
+      if(dis>glowspan)
+        presence=0;
+      else
+        presence=0.5-(dis/glowspan)*0.5;
+      c.addPresence(polygon,presence);}}
   
   /*
-   * ################################
-   * DO OTHER EDGE CELLS
-   * consider the primaryedgecells. gathered into a list and marked with the polygon's presence.
-   * 
-   * get all the unmarked neighbors of primaryedgecells
-   * mark them, testing for interiorexterior and distance
-   * 
-   * separate them into interior and exterior
-   * 
-   * that's the first interior and exterior edge cells layers
-   * 
-   * Then use each of those layers to derive the next layer, and so on
-   * 
-   * ################################
+   * Given a collection of marked cells
+   * Get all neighbors of those cells that are unmarked with the polygon's presence
    */
-  
-  private void doOtherEdgeCells(){
-    //get the first inner and outer edge cell layers
-    Set<Cell> firstinnerouteredgelayer=getLayerOfUnmarkedCells(primaryedgecells);
-    markEdgeCells(firstinnerouteredgelayer);
-    Set<Cell> 
-      inlayer=new HashSet<Cell>(),
-      exlayer=new HashSet<Cell>();
-    for(Cell c:firstinnerouteredgelayer){
-      if(c.getPresenceIntensity(polygon)>0.5)
-        inlayer.add(c);
-      else
-        exlayer.add(c);}
-    edgeinteriorlayers.add(inlayer);
-    edgeexteriorlayers.add(exlayer);
-    //now the first interior and exterior edge layers are done
-    //get the number of additional edge layers to do
-    int additionaledgelayerscount=(int)(glowspan/FuzzyCellSystem.CELLSPAN)+1;
-    doAdditionalInteriorEdgeLayers(inlayer,additionaledgelayerscount);
-    doAdditionalExteriorEdgeLayers(exlayer,additionaledgelayerscount);}
-  
-  private void doAdditionalInteriorEdgeLayers(Set<Cell> inlayer,int count){
-    Set<Cell> layer=inlayer;
-    for(int i=0;i<count;i++){
-      layer=getLayerOfUnmarkedCells(layer);
-      markInteriorEdgeCells(layer);
-      edgeinteriorlayers.add(layer);}}
-  
-  private void doAdditionalExteriorEdgeLayers(Set<Cell> exlayer,int count){
-    Set<Cell> layer=exlayer;
-    for(int i=0;i<count;i++){
-      layer=getLayerOfUnmarkedCells(layer);
-      markExteriorEdgeCells(layer);
-      edgeexteriorlayers.add(layer);}}
+  Set<Cell> getLayerOfUnmarkedCells(Collection<Cell> cells){
+    Set<Cell> unmarkedcells=new HashSet<Cell>();
+    for(Cell c:cells)
+      for(Cell d:c.getNeighbors(this))
+        if(!d.hasPresence(polygon))
+          unmarkedcells.add(d);
+    return unmarkedcells;}
   
   /*
    * ################################
    * DO PRIMARY EDGE CELLS
-   * 
    * Given a polygon, draw the polygon onto the raster 
    * (using PSEUDOBRESENHAM SUPERCOVER LINE DRAW) 
    * and list the cells that get intersected.
@@ -212,7 +176,7 @@ public class PolygonAreaCells implements CellMass{
       c0=getCellContainingPoint(p0.x,p0.y);
       c1=getCellContainingPoint(p1.x,p1.y);
       primaryedgecells.addAll(getSegCells(c0.x,c0.y,c1.x,c1.y));}
-    markEdgeCells(primaryedgecells);}
+    markCells(primaryedgecells);}
   
   /*
    * PSEUDOBRESENHAM SUPERCOVER LINE DRAW
@@ -284,71 +248,5 @@ public class PolygonAreaCells implements CellMass{
         segcells.add(getCell(x,y));
         errorprev = error;}}
     return segcells;}
-  
-  /*
-   * ################################
-   * MARK CELLS
-   * ################################
-   */
-  
-  /*
-   * Given a collection of cells and a polygon and no other
-   * useful structure or clues, mark the presence of the polygon
-   * upon the cells 
-   */
-  private void markEdgeCells(Collection<Cell> cells){
-    boolean isinterior;
-    double dis,presence;
-    for(Cell c:cells){
-      isinterior=transformedpolygon.containsPoint(c.x,c.y);
-      dis=transformedpolygon.getDistance(c.x,c.y);
-      if(isinterior)
-        presence=0.5+(dis/glowspan)*0.5;
-      else
-        presence=0.5-(dis/glowspan)*0.5;
-      if(presence<0)presence=0;
-      if(presence>1)presence=1;
-      c.addPresence(polygon,presence);}}
-  
-  private void markInteriorEdgeCells(Collection<Cell> cells){
-    double dis,presence;
-    for(Cell c:cells){
-      dis=transformedpolygon.getDistance(c.x,c.y);
-      if(dis>glowspan)
-        presence=1.0;
-      else
-        presence=0.5+(dis/glowspan)*0.5;
-      c.addPresence(polygon,presence);}}
-  
-  private void markExteriorEdgeCells(Collection<Cell> cells){
-    double dis,presence;
-    for(Cell c:cells){
-      dis=transformedpolygon.getDistance(c.x,c.y);
-      if(dis>glowspan)
-        presence=0;
-      else
-        presence=0.5-(dis/glowspan)*0.5;
-      c.addPresence(polygon,presence);}}
-  
-  private void markInteriorCells(Collection<Cell> cells){
-    for(Cell c:cells)
-      c.addPresence(polygon);}
-  
-  /*
-   * ################################
-   * UNMARKED CELL LAYER ACCQUIREMENT
-   * 
-   * Given a collection of marked (with the presence of the polygon) cells
-   * Get all neighbors of those cells that are unmarked with the polygon's presence
-   * ################################
-   */
-  
-  Set<Cell> getLayerOfUnmarkedCells(Collection<Cell> cells){
-    Set<Cell> unmarkedcells=new HashSet<Cell>();
-    for(Cell c:cells)
-      for(Cell d:c.getNeighbors(this))
-        if(!d.hasPresence(polygon))
-          unmarkedcells.add(d);
-    return unmarkedcells;}
   
 }
