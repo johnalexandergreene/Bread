@@ -33,12 +33,26 @@ public class Test0{
    */
   
   public void run(){
-//    for(int i=0;i<3;i++){
-////      doRules();
-//      render();
-//    }
-
+    
     render();
+    
+    
+    
+    
+    for(int i=0;i<3;i++){
+      doRules();
+      render();}}
+  
+  /*
+   * use a 2 array system
+   * apply rules to array0 to get array1, then render array1
+   * apply rules to array1 to get array0, then render array0
+   * etc
+   * 
+   *  
+   *  
+   */
+  private void doRules(){
     
   }
   

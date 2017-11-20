@@ -29,14 +29,14 @@ public class Cell{
   
   /*
    * ################################
-   * THING
+   * MAPPED THING
    * The thing associated with this cell. It lends identity, and possibly form, to a mass of cells
    * probably a polygon, or a polygon-edge, but it could be other things too
    * the relationship between the thing and the cells is arbitrary, to be determined by specific case
    * ################################
    */
   
-  public Object thing=null;
+  public MappedThing thing=null;
   
   /*
    * ################################
