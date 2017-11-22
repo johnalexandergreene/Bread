@@ -8,11 +8,13 @@ organize this stuff
 -----
 
 create composition
+
 create list of mapped things 
   (in order of mapping I guess, for example the boiled edges should be mapped after the polygon areas)
   margin
   leaf polygons
   polygons with edges to be boiled
+  
 create cellsystem : cellsystem0
   new CellSystem(scale,margin,mappedthings)
   

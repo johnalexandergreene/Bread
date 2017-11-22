@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.fleen.bread.cellSystem.Cell;
+import org.fleen.bread.cellSystem.CellSystem;
 import org.fleen.bread.palette.Palette;
 
 /*
@@ -47,15 +48,15 @@ public class Renderer{
    * render rds to image, cells to pixels
    * then scale to whatever and return that.
    */
-  public void render(){
+  public void render(CellSystem cs){
     //TODO we should have a scale param here, and a final transform, 
     //then scale up the rendered image to a bigger image or whatever to fit the viewer
     int 
-      w=test.cellsystem.getWidth(),
-      h=test.cellsystem.getHeight();
+      w=test.cellsystem0.getWidth(),
+      h=test.cellsystem0.getHeight();
     //
     BufferedImage image0=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
-    for(Cell c:test.cellsystem){
+    for(Cell c:cs){
       image0.setRGB(c.x,c.y,getColor(c).getRGB());}
     //scale to center and fit in viewer
     int

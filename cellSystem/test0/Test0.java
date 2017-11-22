@@ -3,12 +3,13 @@ package org.fleen.bread.cellSystem.test0;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.fleen.bread.cellSystem.CellSystem;
+import org.fleen.bread.cellSystem.MappedThing;
+import org.fleen.bread.cellSystem.RuleSystem;
 import org.fleen.forsythia.core.composition.FPolygon;
-import org.fleen.geom_2D.DPolygon;
 
 public class Test0{
 
@@ -18,13 +19,68 @@ public class Test0{
    * ################################
    */
   
+  /*
+   *
+   * 
+create composition
+
+create list of mapped things 
+  (in order of mapping I guess, for example the boiled edges should be mapped after the polygon areas)
+  margin
+  leaf polygons
+  polygons with edges to be boiled
+  
+create cellsystem : cellsystem0
+  new CellSystem(w,h,mappedthings)
+  
+(maybe clean it. are there dead cells? if so then do something about them)
+   
+create second, empty cellsystem of same size but nothing mapped : cellsystem1
+  cellsystem1=cellsystem0.getBlankCopy();
+  
+create rulesystem
+  new RuleSystem() : rulesystem 
+
+boolean flipflop=true
+while(notdone){
+  if(flipflip){
+    rulesystem.doRules(cellsystem0,cellsystem1)
+    render(cellsystem1)
+  }else{
+    rulesystem.doRules(cellsystem1,cellsystem0)
+    render(cellsystem0)}
+  flipflop=!flipflop;
+   */
+  
   Test0(){
     initUI();
+    initRenderer();
+    //
     initComposition();
-    initFCS();
-    initCompositionCSTransform();
-    mapCompositionToCS();
-    initRenderer();}
+    initCompositionCellSystemTransform();
+    initMappedThingsList();
+    //
+    initCellSystem0();
+    initCellSystem1();
+    //
+    initRuleSystem();
+    
+    }
+  
+  
+//  Test0(){
+//    initUI();
+//    initRenderer();
+//    //
+//    initComposition();
+//    initMappedThingsList();
+//    //
+//    initCellSystem();
+//    initCompositionCellSystemTransform();
+//    mapCompositionToCellSystem();
+//    //
+//    
+//    }
   
   /*
    * ################################
@@ -33,28 +89,18 @@ public class Test0{
    */
   
   public void run(){
-    
-    render();
-    
-    
-    
-    
-    for(int i=0;i<3;i++){
-      doRules();
-      render();}}
-  
-  /*
-   * use a 2 array system
-   * apply rules to array0 to get array1, then render array1
-   * apply rules to array1 to get array0, then render array0
-   * etc
-   * 
-   *  
-   *  
-   */
-  private void doRules(){
-    
-  }
+    render(cellsystem0);
+    boolean flipflop=true;
+    for(int i=0;i<6;i++){
+      if(flipflop){
+        System.out.println("dorules flipflop="+flipflop);
+        rulesystem.doRules(cellsystem0,cellsystem1);
+        render(cellsystem1);
+      }else{
+        System.out.println("dorules flipflop="+flipflop);
+        rulesystem.doRules(cellsystem1,cellsystem0);
+        render(cellsystem0);}
+      flipflop=!flipflop;}}
   
   /*
    * ################################
@@ -80,7 +126,7 @@ public class Test0{
   
   /*
    * ################################
-   * COMPOSITION CS TRANSFORM
+   * COMPOSITION CELLSYSTEM TRANSFORM
    * scale up the composition because, dimensionally, it's pretty small
    * translate it to put the left and top edges at 0, + margin 
    * ################################
@@ -90,15 +136,42 @@ public class Test0{
   double scale=23;
   AffineTransform compositionrdstransform;
   
-  private void initCompositionCSTransform(){
+  private void initCompositionCellSystemTransform(){
     //note that we flip the y to convert cartesian coors to array coors
     compositionrdstransform=AffineTransform.getScaleInstance(scale,-scale);
     //
     Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
     double 
       tx=-bounds.x*scale+margin/scale,
-      ty=-bounds.y*scale+margin/scale-cellsystem.getHeight()/scale;
+      ty=-bounds.y*scale+margin/scale-getCellSystemHeight()/scale;
     compositionrdstransform.translate(tx,ty);}
+  
+  /*
+   * ################################
+   * MAPPED THINGS LIST
+   * ################################
+   */
+  
+  List<MappedThing> mappedthings;
+  
+  private void initMappedThingsList(){
+    mappedthings=new ArrayList<MappedThing>();
+    //
+    MappedThing margin=new MappedThing(composition.getRootPolygon(),compositionrdstransform,new String[]{"margin"});
+    mappedthings.add(margin);
+    //
+    MappedThing leaf;
+    for(FPolygon p:composition.getLeafPolygons()){
+      leaf=new MappedThing(p,compositionrdstransform,new String[]{"leaf"});
+      mappedthings.add(leaf);}
+    //
+    FPolygon hex=null;
+    for(FPolygon p:composition.getLeafPolygons())
+      if(p.hasTags("hex"))
+        hex=p;
+    if(hex==null)throw new IllegalArgumentException("couldn't find hex");
+    MappedThing boiledhex=new MappedThing(hex,compositionrdstransform,new String[]{"boiled"});
+    mappedthings.add(boiledhex);}
   
   /*
    * ################################
@@ -106,48 +179,32 @@ public class Test0{
    * ################################
    */
   
-  CellSystem cellsystem;
+  CellSystem cellsystem0,cellsystem1;
   
-  void initFCS(){
+  int getCellSystemWidth(){
     Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
-    int 
-      w=(int)(bounds.width*scale+margin+margin),
-      h=(int)(bounds.height*scale+margin+margin);
-    cellsystem=new CellSystem(w,h);}
+    return (int)(bounds.width*scale+margin+margin);}
   
-  void mapCompositionToCS(){
-//    mapRootArea();
-    mapLeafAreas();
-    mapHexEdge();
-    mapMargin();
-//    mapRandomLeafArea();
-    cellsystem.clean();}
+  int getCellSystemHeight(){
+    Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
+    return (int)(bounds.height*scale+margin+margin);}
   
-  void mapRootArea(){
-    DPolygon d=composition.getRootPolygon().getDPolygon();
-    cellsystem.mapPolygonArea(d,compositionrdstransform);}
+  void initCellSystem0(){
+    cellsystem0=new CellSystem(getCellSystemWidth(),getCellSystemHeight(),mappedthings);}
   
-  void mapLeafAreas(){
-    DPolygon d;
-    for(FPolygon p:composition.getLeafPolygons()){
-      d=p.getDPolygon();
-      cellsystem.mapPolygonArea(d,compositionrdstransform);}}
+  void initCellSystem1(){
+    cellsystem1=new CellSystem(getCellSystemWidth(),getCellSystemHeight());}
   
-  void mapRandomLeafArea(){
-    List<FPolygon> a=composition.getLeafPolygons();
-    Random r=new Random();
-    DPolygon d=a.get(r.nextInt(a.size())).getDPolygon();
-    cellsystem.mapPolygonArea(d,compositionrdstransform);}
+  /*
+   * ################################
+   * RULE SYSTEM
+   * ################################
+   */
   
-  void mapHexEdge(){
-    for(FPolygon p:composition.getLeafPolygons()){
-      if(p.hasTags("hex")){
-        DPolygon d=p.getDPolygon();
-        d=new DPolygon(d);
-        cellsystem.mapPolygonEdge(d,compositionrdstransform);}}}
+  RuleSystem rulesystem;
   
-  void mapMargin(){
-    cellsystem.mapMarginCells(composition.getRootPolygon().getDPolygon(),compositionrdstransform);}
+  private void initRuleSystem(){
+    rulesystem=new RuleSystem();}
   
   /*
    * ################################
@@ -161,8 +218,8 @@ public class Test0{
   private void initRenderer(){
     renderer=new Renderer(this);}
   
-  private void render(){
-    renderer.render();
+  private void render(CellSystem cs){
+    renderer.render(cs);
     ui.repaint();}
   
   /*

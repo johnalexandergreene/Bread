@@ -1,9 +1,9 @@
 package org.fleen.bread.cellSystem;
 
-import java.awt.geom.AffineTransform;
 import java.util.Iterator;
+import java.util.List;
 
-import org.fleen.geom_2D.DPolygon;
+import org.fleen.forsythia.core.composition.FPolygon;
 
 /* 
  * A cellular automata system
@@ -19,12 +19,17 @@ public class CellSystem implements CellMass{
    * CONSTRUCTOR
    * ################################
    */
-  
+
   public CellSystem(int w,int h){
     System.out.println("CS SYSTEM INIT");
     System.out.println(w+"x"+h);
     System.out.println("cellcount="+(w*h));
     initCells(w,h);}
+  
+  public CellSystem(int w,int h,List<MappedThing> mappedthings){
+    this(w,h);
+    doMappedThings(mappedthings);
+    clean();}
   
   /*
    * ################################
@@ -93,35 +98,42 @@ public class CellSystem implements CellMass{
   /*
    * ################################
    * MAP THINGS TO CELLS
-   * Cast the presence of the thing, like a shadow, on the cells
    * ################################
    */
   
-  public PolygonAreaCells mapPolygonArea(DPolygon areapolygon,AffineTransform areapolygontransform){
-    MappedThing thing=new MappedThing(areapolygon);
-    PolygonAreaCells c=new PolygonAreaCells(areapolygon,areapolygontransform);
+  private void doMappedThings(List<MappedThing> mappedthings){
+    for(MappedThing t:mappedthings){
+      if(t.hasTags("margin")){
+        mapMargin(t);
+      }else if(t.hasTags("leaf")){
+        mapPolygonArea(t);
+      }else if(t.hasTags("boiled")){
+        mapPolygonBoiledEdge(t);
+      }else{
+        throw new IllegalArgumentException("mapping thing failed");}}}
+  
+  private PolygonAreaCells mapPolygonArea(MappedThing t){
+    PolygonAreaCells c=new PolygonAreaCells(((FPolygon)t.thing).getDPolygon(),t.transform);
     Cell b;
     for(Cell a:c){
         b=cells[a.x][a.y];
-        b.thing=thing;}
+        b.thing=t;}
     return c;}
   
-  public PolygonEdgeCells mapPolygonEdge(DPolygon edgepolygon,AffineTransform edgepolygontransform){
-    MappedThing thing=new MappedThing(edgepolygon);
-    PolygonEdgeCells c=new PolygonEdgeCells(edgepolygon,edgepolygontransform);
+  private PolygonEdgeCells mapPolygonBoiledEdge(MappedThing t){
+    PolygonEdgeCells c=new PolygonEdgeCells(((FPolygon)t.thing).getDPolygon(),t.transform);
     Cell b;
     for(Cell a:c){
         b=cells[a.x][a.y];
-        b.thing=thing;}
+        b.thing=t;}
     return c;}
   
-  public MarginCells mapMarginCells(DPolygon rootpolygon,AffineTransform rootpolygontransform){
-    MappedThing thing=new MappedThing(rootpolygon);
-    MarginCells c=new MarginCells(getWidth(),getHeight(),rootpolygon,rootpolygontransform);
+  private MarginCells mapMargin(MappedThing t){
+    MarginCells c=new MarginCells(getWidth(),getHeight(),((FPolygon)t.thing).getDPolygon(),t.transform);
     Cell b;
     for(Cell a:c){
         b=cells[a.x][a.y];
-        b.thing=thing;}
+        b.thing=t;}
     return c;}
   
   /*
