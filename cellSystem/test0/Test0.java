@@ -8,7 +8,9 @@ import java.util.List;
 
 import org.fleen.bread.cellSystem.CellSystem;
 import org.fleen.bread.cellSystem.MappedThing;
-import org.fleen.bread.cellSystem.RuleSystem;
+import org.fleen.bread.cellSystem.R_FattenBoiledEdge;
+import org.fleen.bread.cellSystem.R_Smooth;
+import org.fleen.bread.cellSystem.Rule;
 import org.fleen.forsythia.core.composition.FPolygon;
 
 public class Test0{
@@ -61,26 +63,7 @@ while(notdone){
     initMappedThingsList();
     //
     initCellSystem0();
-    initCellSystem1();
-    //
-    initRuleSystem();
-    
-    }
-  
-  
-//  Test0(){
-//    initUI();
-//    initRenderer();
-//    //
-//    initComposition();
-//    initMappedThingsList();
-//    //
-//    initCellSystem();
-//    initCompositionCellSystemTransform();
-//    mapCompositionToCellSystem();
-//    //
-//    
-//    }
+    initCellSystem1();}
   
   /*
    * ################################
@@ -90,15 +73,49 @@ while(notdone){
   
   public void run(){
     render(cellsystem0);
-    boolean flipflop=true;
-    for(int i=0;i<6;i++){
+    doRule0(1);
+    doRule1(1);
+    doRule0(1);
+    doRule1(1);
+    doRule0(1);
+    doRule1(1);
+    doRule0(1);
+    doRule1(1);
+    
+    
+  }
+  
+  boolean flipflop=true;
+  
+  private void doRule0(int t){
+    Rule rule=new R_FattenBoiledEdge();
+    for(int i=0;i<t;i++){
+      //
+      try{
+        Thread.sleep(500);
+      }catch(Exception x){}
+      //
       if(flipflop){
-        System.out.println("dorules flipflop="+flipflop);
-        rulesystem.doRules(cellsystem0,cellsystem1);
+        rule.doRule(cellsystem0,cellsystem1);
         render(cellsystem1);
       }else{
-        System.out.println("dorules flipflop="+flipflop);
-        rulesystem.doRules(cellsystem1,cellsystem0);
+        rule.doRule(cellsystem1,cellsystem0);
+        render(cellsystem0);}
+      flipflop=!flipflop;}}
+  
+  private void doRule1(int t){
+    Rule rule=new R_Smooth();
+    for(int i=0;i<t;i++){
+      //
+      try{
+        Thread.sleep(500);
+      }catch(Exception x){}
+      //
+      if(flipflop){
+        rule.doRule(cellsystem0,cellsystem1);
+        render(cellsystem1);
+      }else{
+        rule.doRule(cellsystem1,cellsystem0);
         render(cellsystem0);}
       flipflop=!flipflop;}}
   
@@ -194,17 +211,6 @@ while(notdone){
   
   void initCellSystem1(){
     cellsystem1=new CellSystem(getCellSystemWidth(),getCellSystemHeight());}
-  
-  /*
-   * ################################
-   * RULE SYSTEM
-   * ################################
-   */
-  
-  RuleSystem rulesystem;
-  
-  private void initRuleSystem(){
-    rulesystem=new RuleSystem();}
   
   /*
    * ################################
