@@ -60,8 +60,8 @@ public class FCGenerator{
 //  String grammar_file_path="/home/john/Desktop/stripegrammar/s003.grammar";
 //  String grammar_file_path="/home/john/Desktop/ge/nuther003.grammar";
 //  String grammar_file_path="/home/john/Desktop/ge/aa004.grammar";
-//  String grammar_file_path="/home/john/Desktop/grammars/s008.grammar";
-  String grammar_file_path="/home/john/Desktop/grammars/hexmandala001.grammar";
+  String grammar_file_path="/home/john/Desktop/grammars/s008.grammar";
+//  String grammar_file_path="/home/john/Desktop/grammars/hexmandala001.grammar";
   
 //  Composer composer=new Composer002_SplitBoil_WithALittleNoiseNearTheRoot();
   Composer composer=new Composer001_SplitBoil();

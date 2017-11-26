@@ -486,7 +486,7 @@ public class FSLAFGenerator{
   
   private static final String 
 //    GRAMMARPATH="/home/john/Desktop/grammars/g008",
-  GRAMMARPATH="/home/john/Desktop/grammars/s008.grammar",
+  GRAMMARPATH="/home/john/projects/code/forsythiaGrammars/s008.grammar",
     EXPORTPATH="/home/john/Desktop/spinnerexport",
 //    INSERTPATH="/home/john/Desktop/foobert.png";
     INSERTPATH="/home/john/projects/graphics/spinner logo insert/i000_1280.png";
@@ -499,20 +499,24 @@ public class FSLAFGenerator{
 //        0.03,Palette.P_TOY_STORY_ADJUSTED,
 //        INSERTPATH,3,
 //        true);
-//    FSLAFGenerator g=new FSLAFGenerator(
-//      720,1280,54000,FLOWDIR_NORTH,32,GRAMMARPATH,
-//      EXPORTPATH,
-//      0.008,Palette.P_TOY_STORY_ADJUSTED2,
-//      INSERTPATH,3,
-//      true);
+    
+    /*
+     * a nice 720p loop
+     */
+    FSLAFGenerator g=new FSLAFGenerator(
+      720,1280,54000,FLOWDIR_NORTH,32,GRAMMARPATH,
+      EXPORTPATH,
+      0.008,Palette.P_TOY_STORY_ADJUSTED2,
+      INSERTPATH,3,
+      true);
     
     //for gug samples
-    FSLAFGenerator g=new FSLAFGenerator(
-        3000,900,54000,FLOWDIR_NORTH,32,GRAMMARPATH,
-        EXPORTPATH,
-        0.01,Palette.P_TOY_STORY_ADJUSTED2,
-        null,3,
-        true);
+//    FSLAFGenerator g=new FSLAFGenerator(
+//        3000,900,54000,FLOWDIR_NORTH,32,GRAMMARPATH,
+//        EXPORTPATH,
+//        0.01,Palette.P_TOY_STORY_ADJUSTED2,
+//        null,3,
+//        true);
     
     g.createFrames();
     
