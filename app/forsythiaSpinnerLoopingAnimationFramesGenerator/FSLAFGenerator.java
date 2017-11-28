@@ -374,7 +374,78 @@ public class FSLAFGenerator{
     frame=new BufferedImage(viewportwidth,viewportheight,BufferedImage.TYPE_INT_RGB);
     Graphics2D g=frame.createGraphics();
     g.drawImage(i0,t,null);
+//    addNoise0(frame);
+    addNoise1(frame);
     ui.viewer.repaint();}
+  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * A LITTLE NOISE V0
+   * noise the brightness in the hsb
+   * ++++++++++++++++++++++++++++++++
+   */
+  
+  private static final double 
+    NOISEPROBABILITY0=1.0,
+    NOISEMAGNITUDE0=0.5;
+  
+  Random rnd=new Random();
+  
+  private void addNoise0(BufferedImage image){
+    int rgb;
+    for(int x=0;x<image.getWidth();x++){
+      for(int y=0;y<image.getHeight();y++){
+        if(rnd.nextDouble()<NOISEPROBABILITY0){
+          rgb=image.getRGB(x,y);
+          rgb=getBrightnessRandomizedRGB0(rgb);
+          image.setRGB(x,y,rgb);}}}}
+  
+  private int getBrightnessRandomizedRGB0(int rgb){
+    int r=(rgb>>16)&0x000000FF;
+    int g=(rgb>>8)&0x000000FF;
+    int b=(rgb)&0x000000FF;
+    float[] hsb=new float[3];
+    Color.RGBtoHSB(r,g,b,hsb);
+    double a=rnd.nextDouble()*NOISEMAGNITUDE0-NOISEMAGNITUDE0/2+1.0;
+    hsb[2]=(float)(hsb[2]*a);
+    if(hsb[2]>1.0f)hsb[2]=1.0f;
+    rgb=Color.HSBtoRGB(hsb[0],hsb[1],hsb[2]);
+    return rgb;}
+  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * A LITTLE NOISE V1
+   * add white
+   * ++++++++++++++++++++++++++++++++
+   */
+  
+  private static final double 
+    NOISEPROBABILITY1=1.0,
+    MAXMAG=64;
+  
+  private void addNoise1(BufferedImage image){
+    int rgb;
+    for(int x=0;x<image.getWidth();x++){
+      for(int y=0;y<image.getHeight();y++){
+        if(rnd.nextDouble()<NOISEPROBABILITY1){
+          rgb=image.getRGB(x,y);
+          rgb=getWhiteRandomizedRGB1(rgb);
+          image.setRGB(x,y,rgb);}}}}
+  
+  private int getWhiteRandomizedRGB1(int rgb){
+    int r=(rgb>>16)&0x000000FF;
+    int g=(rgb>>8)&0x000000FF;
+    int b=(rgb)&0x000000FF;
+    int a=(int)(rnd.nextDouble()*MAXMAG);
+    r+=a;
+    if(r>255)r=255;
+    g+=a;
+    if(g>255)g=255;
+    b+=a;
+    if(b>255)b=255;
+    rgb=new Color(r,g,b).getRGB();
+    return rgb;}
+  
   
   /*
    * ################################

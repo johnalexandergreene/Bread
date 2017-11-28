@@ -30,3 +30,11 @@ make spinner configured by a text file
 kill the full-stripe bilateral symmetry situations. 
 Probably via the grammar. 
 Or maybe kill symmetry at level 1 and 2 programmatically 
+
+#############################
+
+1) make it infinite. no more video
+
+2) abstract out renderer. clean up code
+
+3) create zcell based renderer. we can do it faster than the default
