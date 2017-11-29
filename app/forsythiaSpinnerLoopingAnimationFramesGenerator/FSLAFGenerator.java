@@ -375,7 +375,7 @@ public class FSLAFGenerator{
     Graphics2D g=frame.createGraphics();
     g.drawImage(i0,t,null);
 //    addNoise0(frame);
-    addNoise1(frame);
+//    addNoise1(frame);
     ui.viewer.repaint();}
   
   /*
