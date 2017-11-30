@@ -4,14 +4,14 @@ package org.fleen.bread.zCellSystem;
 /*
  * cell coors wrapped in an object for use in a map
  */
-class CellKey{
+class ZCellKey{
   
-  CellKey(int x,int y){
+  ZCellKey(int x,int y){
     
     this.x=x;
     this.y=y;}
   
-  CellKey(Cell c){
+  ZCellKey(ZCell c){
     
     this.x=c.x;
     this.y=c.y;}
@@ -22,5 +22,5 @@ class CellKey{
     return x+y*19;}//TODO need bgger prime
   
   public boolean equals(Object a){
-    CellKey b=(CellKey)a;
+    ZCellKey b=(ZCellKey)a;
     return b.x==x&&b.y==y;}}

@@ -20,7 +20,7 @@ import org.fleen.geom_2D.DPolygon;
  * Mark all cells with presences according to distance from edge (inward or outward)
  *  
  */
-public class PolygonEdgeCells implements CellMass{
+public class PolygonEdgeCells implements ZCellMass{
   
   /*
    * ################################
@@ -73,20 +73,20 @@ public class PolygonEdgeCells implements CellMass{
    * when we're getting cells we first look in the local cache
    * if the cell isn't there then we get it from the raster map (from the cells array or create it) and stick it in the local cache
    */
-  Map<CellKey,Cell> cells=new HashMap<CellKey,Cell>();
+  Map<ZCellKey,ZCell> cells=new HashMap<ZCellKey,ZCell>();
   
   /*
    * first check locally for the cell, then check the rds 
    */
-  public Cell getCell(int x,int y){
-    CellKey k=new CellKey(x,y);
-    Cell c=cells.get(k);
+  public ZCell getCell(int x,int y){
+    ZCellKey k=new ZCellKey(x,y);
+    ZCell c=cells.get(k);
     if(c==null){
-      c=new Cell(x,y);
+      c=new ZCell(x,y);
       cells.put(k,c);}
     return c;}
   
-  Cell getCellContainingPoint(double x,double y){
+  ZCell getCellContainingPoint(double x,double y){
     if(x-Math.floor(x)<0.5)
       x=Math.floor(x);
     else
@@ -100,7 +100,7 @@ public class PolygonEdgeCells implements CellMass{
   public int getCellCount(){
     return cells.size();}
   
-  public Collection<Cell> getCells(){
+  public Collection<ZCell> getCells(){
     return cells.values();}
   
   /*
@@ -114,24 +114,24 @@ public class PolygonEdgeCells implements CellMass{
    * ################################
    */
   
-  Set<Cell> primaryedgecells=new HashSet<Cell>();
-  List<Set<Cell>> otheredgecelllayers=new ArrayList<Set<Cell>>();
+  Set<ZCell> primaryedgecells=new HashSet<ZCell>();
+  List<Set<ZCell>> otheredgecelllayers=new ArrayList<Set<ZCell>>();
   
   private void doCells(){
     doPrimaryEdgeCells();
     doOtherCells();}
   
   private void doOtherCells(){
-    int count=(int)(glowspan/FuzzyCellSystem.CELLSPAN)+1;
-    Set<Cell> layer=primaryedgecells;
+    int count=(int)(glowspan/ZCellSystem.CELLSPAN)+1;
+    Set<ZCell> layer=primaryedgecells;
     for(int i=0;i<count;i++){
       layer=getLayerOfUnmarkedCells(layer);
       markCells(layer);
       otheredgecelllayers.add(layer);}}
   
-  private void markCells(Collection<Cell> cells){
+  private void markCells(Collection<ZCell> cells){
     double dis,presence;
-    for(Cell c:cells){
+    for(ZCell c:cells){
       dis=transformedpolygon.getDistance(c.x,c.y);
       if(dis>glowspan)
         presence=0;
@@ -143,10 +143,10 @@ public class PolygonEdgeCells implements CellMass{
    * Given a collection of marked cells
    * Get all neighbors of those cells that are unmarked with the polygon's presence
    */
-  Set<Cell> getLayerOfUnmarkedCells(Collection<Cell> cells){
-    Set<Cell> unmarkedcells=new HashSet<Cell>();
-    for(Cell c:cells)
-      for(Cell d:c.getNeighbors(this))
+  Set<ZCell> getLayerOfUnmarkedCells(Collection<ZCell> cells){
+    Set<ZCell> unmarkedcells=new HashSet<ZCell>();
+    for(ZCell c:cells)
+      for(ZCell d:c.getNeighbors(this))
         if(!d.hasPresence(polygon))
           unmarkedcells.add(d);
     return unmarkedcells;}
@@ -165,7 +165,7 @@ public class PolygonEdgeCells implements CellMass{
    */
   private void doPrimaryEdgeCells(){
     int s=polygon.size(),i1;
-    Cell c0,c1;
+    ZCell c0,c1;
     DPoint p0,p1;
     for(int i0=0;i0<s;i0++){
       //get end points of a side seg of the polygon
@@ -187,8 +187,8 @@ public class PolygonEdgeCells implements CellMass{
    * Principles of the Bresenham's algorithm (heavily modified) were taken from: 
    * http://www.intranet.ca/~sshah/waste/art7.html 
    */
-  List<Cell> getSegCells(int x0,int y0,int x1,int y1){
-    List<Cell> segcells=new ArrayList<Cell>();
+  List<ZCell> getSegCells(int x0,int y0,int x1,int y1){
+    List<ZCell> segcells=new ArrayList<ZCell>();
     int i;               // loop counter 
     int ystep, xstep;    // the step on y and x axis 
     int error;           // the error accumulated during the increment 

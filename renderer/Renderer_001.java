@@ -42,7 +42,9 @@ public class Renderer_001 extends Renderer_Abstract{
         color=color0[colorindex];
       }else{
         colorindex=rnd.nextInt(color1.length);
-        color=color1[colorindex];}}
+        color=color1[colorindex];}
+      polygoncolors.put(sig,color);
+      }
     return color;}
   
   private void initColors(Color[] palette){

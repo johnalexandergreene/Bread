@@ -4,7 +4,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import org.fleen.bread.zCellSystem.FuzzyCellSystem;
+import org.fleen.bread.zCellSystem.ZCellSystem;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.geom_2D.DPolygon;
 
@@ -93,14 +93,14 @@ public class Test0{
   
   double glowspan=1.5;
   
-  FuzzyCellSystem rds;
+  ZCellSystem rds;
   
   void initFCS(){
     Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
     int 
       w=(int)(bounds.width*scale+margin+margin),
       h=(int)(bounds.height*scale+margin+margin);
-    rds=new FuzzyCellSystem(w,h);}
+    rds=new ZCellSystem(w,h);}
   
   void mapCompositionToFCS(){
     mapRootArea();

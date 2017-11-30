@@ -9,12 +9,14 @@ import java.io.ObjectInputStream;
 
 import javax.swing.JTextField;
 
+import org.fleen.bread.colorMap.CM_SymmetricChaosEggLevel;
+import org.fleen.bread.colorMap.ColorMap;
 import org.fleen.bread.composer.Composer;
-import org.fleen.bread.composer.Composer001_SplitBoil;
+import org.fleen.bread.composer.Composer002_SplitBoil_WithALittleNoiseNearTheRoot;
 import org.fleen.bread.export.RasterExporter;
 import org.fleen.bread.palette.Palette;
-import org.fleen.bread.renderer.Renderer;
-import org.fleen.bread.renderer.Renderer_001;
+import org.fleen.bread.renderer2.R_ZCell;
+import org.fleen.bread.renderer2.Renderer2;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
@@ -43,19 +45,6 @@ public class FCGenerator{
    */
   
   Color[] palette=Palette.P_TOY_STORY_ADJUSTED2;
-
-//  Color[][] palette=new Color[][]{
-//    {new Color(255,180,0),new Color(255,222,1),new Color(255,127,1)},
-//    {new Color(0,218,0),new Color(0,218,210),new Color(185,218,0)},
-//    {new Color(253,123,255),new Color(253,125,146),new Color(197,124,254)},
-//    {new Color(216,216,216),new Color(168,168,168),new Color(189,189,189)}
-//  };
-  
-//  Color[][] palette=new Color[][]{
-//    {new Color(255,180,0),new Color(255,222,1),new Color(255,127,1)},
-//    {new Color(0,218,0),new Color(0,218,210),new Color(185,218,0)},
-//    {new Color(253,123,255),new Color(253,125,146),new Color(197,124,254)}
-//  };
   
 //  String grammar_file_path="/home/john/Desktop/stripegrammar/s003.grammar";
 //  String grammar_file_path="/home/john/Desktop/ge/nuther003.grammar";
@@ -63,12 +52,15 @@ public class FCGenerator{
   String grammar_file_path="/home/john/Desktop/grammars/s008.grammar";
 //  String grammar_file_path="/home/john/Desktop/grammars/hexmandala001.grammar";
   
-//  Composer composer=new Composer002_SplitBoil_WithALittleNoiseNearTheRoot();
-  Composer composer=new Composer001_SplitBoil();
-  static final double DETAIL_LIMIT=0.05;
+  Composer composer=new Composer002_SplitBoil_WithALittleNoiseNearTheRoot();
+//  Composer composer=new Composer001_SplitBoil();
+  static final double DETAIL_LIMIT=0.02;
 //  Renderer renderer=new Renderer_Rasterizer005_TestRDSystem();
 //  Renderer renderer=new Renderer_002_ArbitrarySubPalettes();
-  Renderer renderer=new Renderer_001();
+//  Renderer renderer=new Renderer_001();
+//  Renderer renderer=new Renderer_Rasterizer004_ALittleSyntheticStroke();
+  Renderer2 renderer=new R_ZCell();
+  
   String exportdirpath="/home/john/Desktop/newstuff";
   
   /*
@@ -210,9 +202,12 @@ public class FCGenerator{
    * ++++++++++++++++++++++++++++++++
    */
   
+  ColorMap colormap;
+  
   private void doIntermittantCreation(){
     composition=composer.compose(getGrammar(),DETAIL_LIMIT);
-    image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight(),composition,palette,true);
+    colormap=new CM_SymmetricChaosEggLevel(composition,Palette.P_TOY_STORY_ADJUSTED2);
+    image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight(),composition,colormap);
     ui.panimage.repaint();
     //maybe export
     if(isExportModeAuto())
@@ -238,7 +233,8 @@ public class FCGenerator{
           starttime=System.currentTimeMillis();
           //compose and render
           composition=composer.compose(grammar,DETAIL_LIMIT);
-          image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight(),composition,palette,true);
+          colormap=new CM_SymmetricChaosEggLevel(composition,Palette.P_TOY_STORY_ADJUSTED2);
+          image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight(),composition,colormap);
           //pause if necessary
           elapsedtime=System.currentTimeMillis()-starttime;
           pausetime=creationinterval-elapsedtime;
@@ -312,7 +308,9 @@ public class FCGenerator{
   
   private void export(File exportdir,int w,int h){
     System.out.println(">>>EXPORT<<<");
-    BufferedImage exportimage=renderer.createImage(w,h,composition,palette,false);
+    if(colormap==null)
+      colormap=new CM_SymmetricChaosEggLevel(composition,Palette.P_TOY_STORY_ADJUSTED2);
+    BufferedImage exportimage=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight(),composition,colormap);
     rasterexporter.setExportDir(exportdir);
     rasterexporter.export(exportimage);}
   

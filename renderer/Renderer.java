@@ -2,7 +2,9 @@ package org.fleen.bread.renderer;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.Map;
 
+import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 
 /*
@@ -27,5 +29,14 @@ public interface Renderer{
 //      ForsythiaComposition composition,
 //      Color[][] palette,
 //      boolean rebuildcolormap);
+  
+//  BufferedImage createImage(
+//      int width,int height,
+//      ForsythiaComposition composition,
+//      Map<FPolygon,Color> colormap);
+  
+  
+  
+  
 
 }

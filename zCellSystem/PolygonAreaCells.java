@@ -17,7 +17,7 @@ import org.fleen.geom_2D.DPolygon;
  * A polygon's shadow upon the raster cell array
  * all of the cells in which the Polygon manifests as a non-zero intensity Presence
  */
-public class PolygonAreaCells implements CellMass{
+public class PolygonAreaCells implements ZCellMass{
   
   /*
    * ################################
@@ -37,7 +37,7 @@ public class PolygonAreaCells implements CellMass{
    * ################################
    */
   
-  FuzzyCellSystem rds;
+  ZCellSystem rds;
   
   /*
    * ################################
@@ -74,19 +74,19 @@ public class PolygonAreaCells implements CellMass{
    * ################################
    */
   
-  Map<CellKey,Cell> cells=new HashMap<CellKey,Cell>();
+  Map<ZCellKey,ZCell> cells=new HashMap<ZCellKey,ZCell>();
   
   //the cells on the edge-line of the polygon
-  Set<Cell> primaryedgecells=new HashSet<Cell>();
+  Set<ZCell> primaryedgecells=new HashSet<ZCell>();
   
-  List<Set<Cell>>
+  List<Set<ZCell>>
     //the layers of cells near the edge of the polygon but inside
-    edgeinteriorlayers=new ArrayList<Set<Cell>>(),
+    edgeinteriorlayers=new ArrayList<Set<ZCell>>(),
     //the layers of cells near the edge of the polygon but outside
-    edgeexteriorlayers=new ArrayList<Set<Cell>>(),
+    edgeexteriorlayers=new ArrayList<Set<ZCell>>(),
     //the layers of cells starting just inside the innermost interior edge layer 
     //and ending at the center of the polygon 
-    interiorlayers=new ArrayList<Set<Cell>>();
+    interiorlayers=new ArrayList<Set<ZCell>>();
 
   private void doCells(){
     doPrimaryEdgeCells();
@@ -97,15 +97,15 @@ public class PolygonAreaCells implements CellMass{
    * check the cell cache first
    * if the cell isn't there then create it 
    */
-  public Cell getCell(int x,int y){
-    CellKey k=new CellKey(x,y);
-    Cell c=cells.get(k);
+  public ZCell getCell(int x,int y){
+    ZCellKey k=new ZCellKey(x,y);
+    ZCell c=cells.get(k);
     if(c==null){
-      c=new Cell(x,y);
+      c=new ZCell(x,y);
       cells.put(k,c);}
     return c;}
   
-  Cell getCellContainingPoint(double x,double y){
+  ZCell getCellContainingPoint(double x,double y){
     if(x-Math.floor(x)<0.5)
       x=Math.floor(x);
     else
@@ -119,7 +119,7 @@ public class PolygonAreaCells implements CellMass{
   public int getCellCount(){
     return cells.size();}
   
-  public Collection<Cell> getCells(){
+  public Collection<ZCell> getCells(){
     return cells.values();}
   
   /*
@@ -129,7 +129,7 @@ public class PolygonAreaCells implements CellMass{
    */
   
   private void doInteriorCells(){
-    Set<Cell> layer=edgeinteriorlayers.get(edgeinteriorlayers.size()-1);
+    Set<ZCell> layer=edgeinteriorlayers.get(edgeinteriorlayers.size()-1);
     while(!layer.isEmpty()){
       layer=getLayerOfUnmarkedCells(layer);
       markInteriorCells(layer);
@@ -154,12 +154,12 @@ public class PolygonAreaCells implements CellMass{
   
   private void doOtherEdgeCells(){
     //get the first inner and outer edge cell layers
-    Set<Cell> firstinnerouteredgelayer=getLayerOfUnmarkedCells(primaryedgecells);
+    Set<ZCell> firstinnerouteredgelayer=getLayerOfUnmarkedCells(primaryedgecells);
     markEdgeCells(firstinnerouteredgelayer);
-    Set<Cell> 
-      inlayer=new HashSet<Cell>(),
-      exlayer=new HashSet<Cell>();
-    for(Cell c:firstinnerouteredgelayer){
+    Set<ZCell> 
+      inlayer=new HashSet<ZCell>(),
+      exlayer=new HashSet<ZCell>();
+    for(ZCell c:firstinnerouteredgelayer){
       if(c.getPresenceIntensity(polygon)>0.5)
         inlayer.add(c);
       else
@@ -168,19 +168,19 @@ public class PolygonAreaCells implements CellMass{
     edgeexteriorlayers.add(exlayer);
     //now the first interior and exterior edge layers are done
     //get the number of additional edge layers to do
-    int additionaledgelayerscount=(int)(glowspan/FuzzyCellSystem.CELLSPAN)+1;
+    int additionaledgelayerscount=(int)(glowspan/ZCellSystem.CELLSPAN)+1;
     doAdditionalInteriorEdgeLayers(inlayer,additionaledgelayerscount);
     doAdditionalExteriorEdgeLayers(exlayer,additionaledgelayerscount);}
   
-  private void doAdditionalInteriorEdgeLayers(Set<Cell> inlayer,int count){
-    Set<Cell> layer=inlayer;
+  private void doAdditionalInteriorEdgeLayers(Set<ZCell> inlayer,int count){
+    Set<ZCell> layer=inlayer;
     for(int i=0;i<count;i++){
       layer=getLayerOfUnmarkedCells(layer);
       markInteriorEdgeCells(layer);
       edgeinteriorlayers.add(layer);}}
   
-  private void doAdditionalExteriorEdgeLayers(Set<Cell> exlayer,int count){
-    Set<Cell> layer=exlayer;
+  private void doAdditionalExteriorEdgeLayers(Set<ZCell> exlayer,int count){
+    Set<ZCell> layer=exlayer;
     for(int i=0;i<count;i++){
       layer=getLayerOfUnmarkedCells(layer);
       markExteriorEdgeCells(layer);
@@ -201,7 +201,7 @@ public class PolygonAreaCells implements CellMass{
    */
   private void doPrimaryEdgeCells(){
     int s=polygon.size(),i1;
-    Cell c0,c1;
+    ZCell c0,c1;
     DPoint p0,p1;
     for(int i0=0;i0<s;i0++){
       //get end points of a side seg of the polygon
@@ -223,8 +223,8 @@ public class PolygonAreaCells implements CellMass{
    * Principles of the Bresenham's algorithm (heavily modified) were taken from: 
    * http://www.intranet.ca/~sshah/waste/art7.html 
    */
-  List<Cell> getSegCells(int x0,int y0,int x1,int y1){
-    List<Cell> segcells=new ArrayList<Cell>();
+  List<ZCell> getSegCells(int x0,int y0,int x1,int y1){
+    List<ZCell> segcells=new ArrayList<ZCell>();
     int i;               // loop counter 
     int ystep, xstep;    // the step on y and x axis 
     int error;           // the error accumulated during the increment 
@@ -296,10 +296,10 @@ public class PolygonAreaCells implements CellMass{
    * useful structure or clues, mark the presence of the polygon
    * upon the cells 
    */
-  private void markEdgeCells(Collection<Cell> cells){
+  private void markEdgeCells(Collection<ZCell> cells){
     boolean isinterior;
     double dis,presence;
-    for(Cell c:cells){
+    for(ZCell c:cells){
       isinterior=transformedpolygon.containsPoint(c.x,c.y);
       dis=transformedpolygon.getDistance(c.x,c.y);
       if(isinterior)
@@ -310,9 +310,9 @@ public class PolygonAreaCells implements CellMass{
       if(presence>1)presence=1;
       c.addPresence(polygon,presence);}}
   
-  private void markInteriorEdgeCells(Collection<Cell> cells){
+  private void markInteriorEdgeCells(Collection<ZCell> cells){
     double dis,presence;
-    for(Cell c:cells){
+    for(ZCell c:cells){
       dis=transformedpolygon.getDistance(c.x,c.y);
       if(dis>glowspan)
         presence=1.0;
@@ -320,9 +320,9 @@ public class PolygonAreaCells implements CellMass{
         presence=0.5+(dis/glowspan)*0.5;
       c.addPresence(polygon,presence);}}
   
-  private void markExteriorEdgeCells(Collection<Cell> cells){
+  private void markExteriorEdgeCells(Collection<ZCell> cells){
     double dis,presence;
-    for(Cell c:cells){
+    for(ZCell c:cells){
       dis=transformedpolygon.getDistance(c.x,c.y);
       if(dis>glowspan)
         presence=0;
@@ -330,8 +330,8 @@ public class PolygonAreaCells implements CellMass{
         presence=0.5-(dis/glowspan)*0.5;
       c.addPresence(polygon,presence);}}
   
-  private void markInteriorCells(Collection<Cell> cells){
-    for(Cell c:cells)
+  private void markInteriorCells(Collection<ZCell> cells){
+    for(ZCell c:cells)
       c.addPresence(polygon);}
   
   /*
@@ -343,10 +343,10 @@ public class PolygonAreaCells implements CellMass{
    * ################################
    */
   
-  Set<Cell> getLayerOfUnmarkedCells(Collection<Cell> cells){
-    Set<Cell> unmarkedcells=new HashSet<Cell>();
-    for(Cell c:cells)
-      for(Cell d:c.getNeighbors(this))
+  Set<ZCell> getLayerOfUnmarkedCells(Collection<ZCell> cells){
+    Set<ZCell> unmarkedcells=new HashSet<ZCell>();
+    for(ZCell c:cells)
+      for(ZCell d:c.getNeighbors(this))
         if(!d.hasPresence(polygon))
           unmarkedcells.add(d);
     return unmarkedcells;}

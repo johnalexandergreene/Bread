@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.FSLAFGenerator;
 import org.fleen.forsythia.core.composition.FPolygon;
@@ -224,7 +223,7 @@ public class StripeChain extends LinkedList<Stripe>{
     Color color;
     while(i.hasNext()){
       p=(FPolygon)i.next();
-      color=((Stripe_ForsythiaComposition)stripe).colormap.get(p);
+      color=((Stripe_ForsythiaComposition)stripe).colormap.getColor(p);
       g.setPaint(color);
       g.fill(p.getDPolygon().getPath2D());}
     g.setTransform(told);}

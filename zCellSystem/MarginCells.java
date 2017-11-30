@@ -11,7 +11,7 @@ import org.fleen.geom_2D.DPolygon;
  * then subtract the root mass
  * simple
  */
-public class MarginCells implements CellMass{
+public class MarginCells implements ZCellMass{
   
   /*
    * ################################
@@ -54,17 +54,17 @@ public class MarginCells implements CellMass{
    * ################################
    */
   
-  Cell[][] cells;
+  ZCell[][] cells;
   //not a polygon, a yard
   public static final DPolygon MARGINYARD=new DPolygon();
   
   private void doCells(){
     //init the cells
-    cells=new Cell[width][height];
-    Cell c;
+    cells=new ZCell[width][height];
+    ZCell c;
     for(int x=0;x<cells.length;x++){
       for(int y=0;y<cells[0].length;y++){
-        cells[x][y]=new Cell(x,y);}}
+        cells[x][y]=new ZCell(x,y);}}
     //map raw margin
     for(int x=0;x<cells.length;x++){
       for(int y=0;y<cells[0].length;y++){
@@ -74,14 +74,14 @@ public class MarginCells implements CellMass{
     PolygonAreaCells root=new PolygonAreaCells(rootpolygon,rootpolygontransform,glowspan);
     //subtract the root
     Presence p0,p1;
-    Cell c1;
-    for(Cell c0:root.getCells()){
+    ZCell c1;
+    for(ZCell c0:root.getCells()){
       c1=getCell(c0.x,c0.y);
       p0=c0.presences.get(0);
       p1=c1.presences.get(0);
       p1.intensity-=p0.intensity;}}
   
-  public Cell getCell(int x,int y){
+  public ZCell getCell(int x,int y){
     if(x<0||x>=cells.length||y<0||y>=cells[0].length)
       return null;
     return cells[x][y];}
@@ -89,8 +89,8 @@ public class MarginCells implements CellMass{
   public int getCellCount(){
     return cells.length*cells[0].length;}
   
-  public Collection<Cell> getCells(){
-    Collection<Cell> a=new ArrayList<Cell>();
+  public Collection<ZCell> getCells(){
+    Collection<ZCell> a=new ArrayList<ZCell>();
     for(int x=0;x<cells.length;x++){
       for(int y=0;y<cells[0].length;y++){
         a.add(cells[x][y]);}}

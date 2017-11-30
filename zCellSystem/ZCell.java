@@ -18,7 +18,7 @@ import org.fleen.geom_2D.DPolygon;
  *   Move outward and the presence decreases to 0.0 
  * 
  */
-public class Cell{
+public class ZCell{
   
   /*
    * ################################
@@ -26,7 +26,7 @@ public class Cell{
    * ################################
    */
   
-  Cell(int x,int y){
+  ZCell(int x,int y){
     this.x=x;
     this.y=y;}
   
@@ -74,10 +74,10 @@ public class Cell{
    * we sometimes want to refer to cells that are in the polygoncellmap.cellcache but not
    * in the rastermap. So we check the cache first.
    */
-  List<Cell> getNeighbors(CellMass m){
-    List<Cell> n=new ArrayList<Cell>(8);
+  List<ZCell> getNeighbors(ZCellMass m){
+    List<ZCell> n=new ArrayList<ZCell>(8);
     //N
-    Cell a=m.getCell(x,y+1);
+    ZCell a=m.getCell(x,y+1);
     if(a!=null)n.add(a);
     //NE
     a=m.getCell(x+1,y+1);
@@ -198,7 +198,7 @@ public class Cell{
     return x+y*PRIME;}
   
   public boolean equals(Object a){
-    Cell b=(Cell)a;
+    ZCell b=(ZCell)a;
     return b.x==x&&b.y==y;}
 
 }

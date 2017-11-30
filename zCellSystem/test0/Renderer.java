@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.fleen.bread.palette.Palette;
-import org.fleen.bread.zCellSystem.Cell;
+import org.fleen.bread.zCellSystem.ZCell;
 import org.fleen.bread.zCellSystem.Presence;
 import org.fleen.geom_2D.DPolygon;
 
@@ -57,7 +57,7 @@ public class Renderer{
       h=test.rds.getHeight();
     //
     BufferedImage image0=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
-    for(Cell c:test.rds){
+    for(ZCell c:test.rds){
       image0.setRGB(c.x,c.y,getColor(c).getRGB());}
     //scale to center and fit in viewer
     int
@@ -92,7 +92,7 @@ public class Renderer{
    * ################################
    */
   
-  private Color getColor(Cell c){
+  private Color getColor(ZCell c){
     int r=0,g=0,b=0;
     Color color;
     for(Presence p:c.presences){

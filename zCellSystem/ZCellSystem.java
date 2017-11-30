@@ -31,7 +31,7 @@ import org.fleen.geom_2D.DPolygon;
  *   Our constructors will be with a collection of those or without .
  *   
  */
-public class FuzzyCellSystem implements Iterable<Cell>{
+public class ZCellSystem implements Iterable<ZCell>{
   
   /*
    * ################################
@@ -39,8 +39,8 @@ public class FuzzyCellSystem implements Iterable<Cell>{
    * ################################
    */
   
-  public FuzzyCellSystem(int w,int h){
-    System.out.println("RD SYSTEM INIT");
+  public ZCellSystem(int w,int h){
+    System.out.println("ZCELL SYSTEM INIT");
     System.out.println(w+"x"+h);
     System.out.println("cellcount="+(w*h));
     initCells(w,h);}
@@ -58,24 +58,24 @@ public class FuzzyCellSystem implements Iterable<Cell>{
    */
   static final double CELLSPAN=1.0;
   
-  Cell[][] cells;
+  ZCell[][] cells;
   
   int cellarraywidth,cellarrayheight;
   
   private void initCells(int w,int h){
     cellarraywidth=w;
     cellarrayheight=h;
-    cells=new Cell[w][h];
+    cells=new ZCell[w][h];
     for(int x=0;x<w;x++){
       for(int y=0;y<h;y++){
-        cells[x][y]=new Cell(x,y);}}}
+        cells[x][y]=new ZCell(x,y);}}}
   
   /*
    * return the cell that contains the specified point
    * the cell's coors are also the cell's center point
    * the cell's square spans cell.x-0.5 to cell.y+0.5 and cell.y-0.5 to cell.y+0.5
    */
-  Cell getCellContainingPoint(double x,double y){
+  ZCell getCellContainingPoint(double x,double y){
     if(x-Math.floor(x)<0.5)
       x=Math.floor(x);
     else
@@ -86,13 +86,13 @@ public class FuzzyCellSystem implements Iterable<Cell>{
       y=Math.ceil(y);
     return getCell((int)x,(int)y);}
   
-  Cell getCell(int x,int y){
+  public ZCell getCell(int x,int y){
     if(x<0||x>=cellarraywidth||y<0||y>=cellarrayheight)
       return null;
     return cells[x][y];}
   
-  public Iterator<Cell> iterator(){
-    return new CellIterator(this);}
+  public Iterator<ZCell> iterator(){
+    return new ZCellIterator(this);}
   
   public int getWidth(){
     return cellarraywidth;}
@@ -109,24 +109,25 @@ public class FuzzyCellSystem implements Iterable<Cell>{
   
   public PolygonAreaCells mapPolygonArea(DPolygon areapolygon,AffineTransform areapolygontransform,double glowspan){
     PolygonAreaCells c=new PolygonAreaCells(areapolygon,areapolygontransform,glowspan);
-    Cell b;
-    for(Cell a:c.getCells()){
-      b=cells[a.x][a.y];
-      b.presences.add(a.presences.get(0));}
+    ZCell b;
+    for(ZCell a:c.getCells()){
+      b=getCell(a.x,a.y);
+      if(b!=null)
+        b.presences.add(a.presences.get(0));}
     return c;}
   
   public PolygonEdgeCells mapPolygonEdge(DPolygon edgepolygon,AffineTransform edgepolygontransform,double glowspan){
     PolygonEdgeCells c=new PolygonEdgeCells(edgepolygon,edgepolygontransform,glowspan);
-    Cell b;
-    for(Cell a:c.getCells()){
+    ZCell b;
+    for(ZCell a:c.getCells()){
       b=cells[a.x][a.y];
       b.presences.add(a.presences.get(0));}
     return c;}
   
   public MarginCells mapMarginCells(DPolygon rootpolygon,AffineTransform rootpolygontransform,double glowspan){
     MarginCells c=new MarginCells(cellarraywidth,cellarrayheight,rootpolygon,rootpolygontransform,glowspan);
-    Cell b;
-    for(Cell a:c.getCells()){
+    ZCell b;
+    for(ZCell a:c.getCells()){
       b=cells[a.x][a.y];
       b.presences.add(a.presences.get(0));}
     return c;}
@@ -139,7 +140,7 @@ public class FuzzyCellSystem implements Iterable<Cell>{
    */
   
   public void clean(){
-    for(Cell c:this)
+    for(ZCell c:this)
       c.clean();}
   
 }
