@@ -16,7 +16,7 @@ import org.fleen.forsythia.core.composition.ForsythiaComposition;
  * map composition to zcellsystem
  * render zcellsystem in terms of colormap
  */
-public class R_ZCell implements Renderer2{
+public class R_ZCell_DarkStrokes implements Renderer2{
 
   static final double GLOWSPAN=1.5;
   
@@ -82,6 +82,8 @@ public class R_ZCell implements Renderer2{
           d=getColor(c,colormap);
           i.setRGB(x,y,d.getRGB());}}}
     return i;}
+  
+  static final double INTENSITYLIMIT=0.8;
   
   private Color getColor(ZCell c,ColorMap colormap){
     int r=0,g=0,b=0;
