@@ -27,13 +27,13 @@ public class Composer002_SplitBoil_WithALittleNoiseNearTheRoot extends Composer_
    * ################################
    */
   
-//  static final double 
-//    ENTROPYPROBABILITY1=0.98,
-//    ENTROPYPROBABILITY2=0.91;
-  
   static final double 
-  ENTROPYPROBABILITY1=0.98,
-  ENTROPYPROBABILITY2=0.01;
+    ENTROPYPROBABILITY1=1.0,
+    ENTROPYPROBABILITY2=1.0;
+  
+//  static final double 
+//  ENTROPYPROBABILITY1=0.98,
+//  ENTROPYPROBABILITY2=0.01;
   
   //handy reference
   protected int buildcycleindex;

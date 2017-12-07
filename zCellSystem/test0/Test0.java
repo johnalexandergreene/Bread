@@ -57,10 +57,10 @@ public class Test0{
    * ################################
    */
   
-  Composition composition;
+  TestComposition001 composition;
   
   private void initComposition(){
-    composition=new Composition();}
+    composition=new TestComposition001();}
   
   /*
    * ################################
@@ -70,8 +70,8 @@ public class Test0{
    * ################################
    */
   
-  int margin=16;
-  double scale=25;
+  int margin=8;
+  double scale=222;
   AffineTransform compositionrdstransform;
   
   private void initCompositionFCSTransform(){
