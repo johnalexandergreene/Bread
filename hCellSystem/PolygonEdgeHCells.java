@@ -18,7 +18,7 @@ import org.fleen.geom_2D.DPolygon;
  * Mark all cells with presences according to distance from edge (inward or outward)
  *  
  */
-public class PolygonEdgeCells implements CellMass{
+public class PolygonEdgeHCells implements HCellMass{
   
   /*
    * ################################
@@ -26,7 +26,7 @@ public class PolygonEdgeCells implements CellMass{
    * ################################
    */
   
-  PolygonEdgeCells(DPolygon polygon,AffineTransform transform){
+  PolygonEdgeHCells(DPolygon polygon,AffineTransform transform){
     this.polygon=polygon;
     initTransformedPolygon(transform);
     mapPolygonArea();}
@@ -57,9 +57,9 @@ public class PolygonEdgeCells implements CellMass{
    * ################################
    */
   
-  private List<Cell> cells=new ArrayList<Cell>();
+  private List<HCell> cells=new ArrayList<HCell>();
   
-  public Iterator<Cell> iterator(){
+  public Iterator<HCell> iterator(){
     return cells.iterator();}
   
   public int getCellCount(){
@@ -81,9 +81,9 @@ public class PolygonEdgeCells implements CellMass{
     storeEdgeCells();}
   
   private void storeEdgeCells(){
-    for(Cell c:edgecells){
+    for(HCell c:edgecells){
       cells.add(
-        new Cell(
+        new HCell(
           c.x+eaoffsetx,
           c.y+eaoffsety));}}
   
@@ -93,16 +93,16 @@ public class PolygonEdgeCells implements CellMass{
    * ++++++++++++++++++++++++++++++++
    */
   
-  Cell[][] enclosingarray;
+  HCell[][] enclosingarray;
   int eaoffsetx,eaoffsety;
   
   private void createEnclosingArray(){
-    List<Cell> vertexcells=new ArrayList<Cell>(transformedpolygon.size());
+    List<HCell> vertexcells=new ArrayList<HCell>(transformedpolygon.size());
     for(DPoint p:transformedpolygon)
       vertexcells.add(ceaGetCellAtPoint(p.x,p.y));
     //
     int xmin=Integer.MAX_VALUE,xmax=Integer.MIN_VALUE,ymin=Integer.MAX_VALUE,ymax=Integer.MIN_VALUE;
-    for(Cell c:vertexcells){
+    for(HCell c:vertexcells){
       if(c.x<xmin)xmin=c.x;
       if(c.x>xmax)xmax=c.x;
       if(c.y<ymin)ymin=c.y;
@@ -115,9 +115,9 @@ public class PolygonEdgeCells implements CellMass{
     //
     eaoffsetx=xmin;
     eaoffsety=ymin;
-    enclosingarray=new Cell[xmax-xmin+1][ymax-ymin+1];}
+    enclosingarray=new HCell[xmax-xmin+1][ymax-ymin+1];}
   
-  private Cell ceaGetCellAtPoint(double x,double y){
+  private HCell ceaGetCellAtPoint(double x,double y){
     if(x-Math.floor(x)<0.5)
       x=Math.floor(x);
     else
@@ -126,7 +126,7 @@ public class PolygonEdgeCells implements CellMass{
       y=Math.floor(y);
     else
       y=Math.ceil(y);
-    return new Cell((int)x,(int)y);}
+    return new HCell((int)x,(int)y);}
   
   /*
    * ++++++++++++++++++++++++++++++++
@@ -134,12 +134,12 @@ public class PolygonEdgeCells implements CellMass{
    * ++++++++++++++++++++++++++++++++
    */
   
-  Set<Cell> edgecells;
+  Set<HCell> edgecells;
   
   private void drawEdge(){
-    edgecells=new HashSet<Cell>();
+    edgecells=new HashSet<HCell>();
     int s=transformedpolygon.size(),i1;
-    Cell c0,c1;
+    HCell c0,c1;
     DPoint p0,p1;
     for(int i0=0;i0<s;i0++){
       //get end points of a side seg of the polygon
@@ -151,7 +151,7 @@ public class PolygonEdgeCells implements CellMass{
       c1=deGetCellAtPoint(p1.x,p1.y);
       bresenhamSegDraw(c0.x,c0.y,c1.x,c1.y);}}
   
-  private Cell deGetCellAtPoint(double x,double y){
+  private HCell deGetCellAtPoint(double x,double y){
     if(x-Math.floor(x)<0.5)
       x=Math.floor(x);
     else
@@ -160,10 +160,10 @@ public class PolygonEdgeCells implements CellMass{
       y=Math.floor(y);
     else
       y=Math.ceil(y);
-    return new Cell((int)x-eaoffsetx,(int)y-eaoffsety);}
+    return new HCell((int)x-eaoffsetx,(int)y-eaoffsety);}
   
   private void bresenhamSegDraw(int x0,int y0,int x1,int y1){
-    Cell cell;
+    HCell cell;
     int w=x1-x0;
     int h=y1-y0;
     int dx1=0,dy1=0,dx2=0,dy2=0;
@@ -191,7 +191,7 @@ public class PolygonEdgeCells implements CellMass{
         dx2=0;}
     int numerator=longest>>1;
     for(int i=0;i<=longest;i++){
-      cell=new Cell(x0,y0);
+      cell=new HCell(x0,y0);
       enclosingarray[x0][y0]=cell;
       edgecells.add(cell);
       numerator+=shortest;

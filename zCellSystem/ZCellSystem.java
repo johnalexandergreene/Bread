@@ -2,7 +2,14 @@ package org.fleen.bread.zCellSystem;
 
 import java.awt.geom.AffineTransform;
 import java.util.Iterator;
+import java.util.List;
 
+import org.fleen.bread.hCellSystem.HCell;
+import org.fleen.bread.hCellSystem.MappedThing;
+import org.fleen.bread.hCellSystem.MarginHCells;
+import org.fleen.bread.hCellSystem.PolygonAreaHCells;
+import org.fleen.bread.hCellSystem.PolygonEdgeHCells;
+import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.geom_2D.DPolygon;
 
 /* 
@@ -35,7 +42,7 @@ public class ZCellSystem implements Iterable<ZCell>{
   
   /*
    * ################################
-   * CONSTRUCTOR
+   * CONSTRUCTORS
    * ################################
    */
   
@@ -44,6 +51,11 @@ public class ZCellSystem implements Iterable<ZCell>{
     System.out.println(w+"x"+h);
     System.out.println("cellcount="+(w*h));
     initCells(w,h);}
+  
+  public ZCellSystem(int w,int h,List<MappedThing> mappedthings){
+    this(w,h);
+    doMappedThings(mappedthings);
+    clean();}
   
   /*
    * ################################
@@ -103,33 +115,71 @@ public class ZCellSystem implements Iterable<ZCell>{
   /*
    * ################################
    * MAP THINGS TO CELLS
-   * Cast the presence of the thing, like a shadow, on the cells
+   * Cast the presence of the thing, like a shadow, onto the cells
    * ################################
    */
   
-  public PolygonAreaCells mapPolygonArea(DPolygon areapolygon,AffineTransform areapolygontransform,double glowspan){
-    PolygonAreaCells c=new PolygonAreaCells(areapolygon,areapolygontransform,glowspan);
+  private void doMappedThings(List<MappedThing> mappedthings){
+    for(MappedThing t:mappedthings){
+      if(t.hasTags("margin")){
+        mapMargin(t);
+      }else if(t.hasTags("leaf")){
+        mapPolygonArea(t);
+      }else if(t.hasTags("boiled")){
+        mapPolygonBoiledEdge(t);
+      }else{
+        throw new IllegalArgumentException("mapping thing failed");}}}
+  
+  
+//  public PolygonAreaCells mapPolygonArea(DPolygon areapolygon,AffineTransform areapolygontransform,double glowspan){
+//    PolygonAreaCells c=new PolygonAreaCells(areapolygon,areapolygontransform,glowspan);
+//    ZCell b;
+//    for(ZCell a:c.getCells()){
+//      b=getCell(a.x,a.y);
+//      if(b!=null)
+//        b.presences.add(a.presences.get(0));}
+//    return c;}
+//  
+//  public PolygonEdgeCells mapPolygonEdge(DPolygon edgepolygon,AffineTransform edgepolygontransform,double glowspan){
+//    PolygonEdgeCells c=new PolygonEdgeCells(edgepolygon,edgepolygontransform,glowspan);
+//    ZCell b;
+//    for(ZCell a:c.getCells()){
+//      b=cells[a.x][a.y];
+//      b.presences.add(a.presences.get(0));}
+//    return c;}
+//  
+//  public MarginCells mapMargin(DPolygon rootpolygon,AffineTransform rootpolygontransform,double glowspan){
+//    MarginCells c=new MarginCells(cellarraywidth,cellarrayheight,rootpolygon,rootpolygontransform,glowspan);
+//    ZCell b;
+//    for(ZCell a:c.getCells()){
+//      b=cells[a.x][a.y];
+//      b.presences.add(a.presences.get(0));}
+//    return c;}
+  
+  static final double GLOWSPAN=1.5;
+  
+  private PolygonAreaHCells mapPolygonArea(MappedThing t){
+    PolygonAreaZCells c=new PolygonAreaZCells(((FPolygon)t.thing).getDPolygon(),t.transform,GLOWSPAN);
     ZCell b;
-    for(ZCell a:c.getCells()){
-      b=getCell(a.x,a.y);
-      if(b!=null)
-        b.presences.add(a.presences.get(0));}
+    for(ZCell a:c){
+        b=cells[a.x][a.y];
+        b.thing=t;}
     return c;}
   
-  public PolygonEdgeCells mapPolygonEdge(DPolygon edgepolygon,AffineTransform edgepolygontransform,double glowspan){
-    PolygonEdgeCells c=new PolygonEdgeCells(edgepolygon,edgepolygontransform,glowspan);
+  private PolygonEdgeHCells mapPolygonBoiledEdge(MappedThing t){
+    PolygonEdgeZCells c=new PolygonEdgeZCells(((FPolygon)t.thing).getDPolygon(),t.transform);
     ZCell b;
-    for(ZCell a:c.getCells()){
-      b=cells[a.x][a.y];
-      b.presences.add(a.presences.get(0));}
+    for(ZCell a:c){
+        b=cells[a.x][a.y];
+        b.thing=t;}
     return c;}
   
-  public MarginCells mapMarginCells(DPolygon rootpolygon,AffineTransform rootpolygontransform,double glowspan){
-    MarginCells c=new MarginCells(cellarraywidth,cellarrayheight,rootpolygon,rootpolygontransform,glowspan);
+  private MarginHCells mapMargin(MappedThing t){
+    MarginZCells c=new MarginZCells(getWidth(),getHeight(),((FPolygon)t.thing).getDPolygon(),t.transform);
     ZCell b;
-    for(ZCell a:c.getCells()){
-      b=cells[a.x][a.y];
-      b.presences.add(a.presences.get(0));}
+    for(ZCell a:c){
+        b=cells[a.x][a.y];
+        b.thing=t;}
     return c;}
   
   /*

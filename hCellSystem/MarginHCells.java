@@ -12,7 +12,7 @@ import org.fleen.geom_2D.DPolygon;
  * then subtract the root mass
  * simple
  */
-public class MarginCells implements CellMass{
+public class MarginHCells implements HCellMass{
   
   /*
    * ################################
@@ -20,7 +20,7 @@ public class MarginCells implements CellMass{
    * ################################
    */
   
-  public MarginCells(int w,int h,DPolygon rootpolygon,AffineTransform rootpolygontransform){
+  public MarginHCells(int w,int h,DPolygon rootpolygon,AffineTransform rootpolygontransform){
     super();
     width=w;
     height=h;
@@ -54,9 +54,9 @@ public class MarginCells implements CellMass{
    * ################################
    */
   
-  private List<Cell> cells=new ArrayList<Cell>();
+  private List<HCell> cells=new ArrayList<HCell>();
   
-  public Iterator<Cell> iterator(){
+  public Iterator<HCell> iterator(){
     return cells.iterator();}
   
   public int getCellCount(){
@@ -70,16 +70,16 @@ public class MarginCells implements CellMass{
    * ################################
    */
   
-  Cell[][] workingarray;
+  HCell[][] workingarray;
   
   private void doCells(){
-    workingarray=new Cell[width][height];
+    workingarray=new HCell[width][height];
     for(int x=0;x<width;x++){
       for(int y=0;y<height;y++){
-        workingarray[x][y]=new Cell(x,y);}}
-    PolygonAreaCells root=new PolygonAreaCells(rootpolygon,rootpolygontransform);
+        workingarray[x][y]=new HCell(x,y);}}
+    PolygonAreaHCells root=new PolygonAreaHCells(rootpolygon,rootpolygontransform);
     //subtract the root
-    for(Cell c:root)
+    for(HCell c:root)
       workingarray[c.x][c.y]=null;
     //
     for(int x=0;x<width;x++){

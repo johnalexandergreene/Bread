@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.fleen.bread.hCellSystem.CellSystem;
+import org.fleen.bread.hCellSystem.HCellSystem;
 import org.fleen.bread.hCellSystem.MappedThing;
 import org.fleen.bread.hCellSystem.R_FattenBoiledEdge;
 import org.fleen.bread.hCellSystem.R_Smooth;
@@ -15,7 +15,7 @@ import org.fleen.bread.hCellSystem.Rule;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 
-public class Test0{
+public class HCellTest{
 
   /*
    * ################################
@@ -56,7 +56,7 @@ while(notdone){
   flipflop=!flipflop;
    */
   
-  Test0(){
+  HCellTest(){
     initUI();
     initRenderer();
     //
@@ -155,17 +155,17 @@ while(notdone){
   
   int margin=16;
   double scale=99;
-  AffineTransform compositionrdstransform;
+  AffineTransform compositioncellsystemtransform;
   
   private void initCompositionCellSystemTransform(){
     //note that we flip the y to convert cartesian coors to array coors
-    compositionrdstransform=AffineTransform.getScaleInstance(scale,-scale);
+    compositioncellsystemtransform=AffineTransform.getScaleInstance(scale,-scale);
     //
     Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
     double 
       tx=-bounds.x*scale+margin/scale,
       ty=-bounds.y*scale+margin/scale-getCellSystemHeight()/scale;
-    compositionrdstransform.translate(tx,ty);}
+    compositioncellsystemtransform.translate(tx,ty);}
   
   /*
    * ################################
@@ -178,16 +178,15 @@ while(notdone){
   private void initMappedThingsList(){
     mappedthings=new ArrayList<MappedThing>();
     //
-    MappedThing margin=new MappedThing(composition.getRootPolygon(),compositionrdstransform,new String[]{"margin"});
+    MappedThing margin=new MappedThing(composition.getRootPolygon(),compositioncellsystemtransform,new String[]{"margin"});
     mappedthings.add(margin);
     //
     MappedThing leaf;
     for(FPolygon p:composition.getLeafPolygons()){
-      leaf=new MappedThing(p,compositionrdstransform,new String[]{"leaf"});
+      leaf=new MappedThing(p,compositioncellsystemtransform,new String[]{"leaf"});
       mappedthings.add(leaf);}
     //
-    mappedthings.addAll(getBoiledPolygonEdgeThings());
-    }
+    mappedthings.addAll(getBoiledPolygonEdgeThings());}
   
   /*
    * TODO
@@ -198,11 +197,8 @@ while(notdone){
     List<MappedThing> a=new ArrayList<MappedThing>();
     for(FPolygon p:composition.getPolygons())
       if(r.nextDouble()>0.95)
-        a.add(new MappedThing(p,compositionrdstransform,new String[]{"boiled"}));
-    return a;
-    
-  
-  }
+        a.add(new MappedThing(p,compositioncellsystemtransform,new String[]{"boiled"}));
+    return a;}
   
   /*
    * ################################
@@ -210,7 +206,7 @@ while(notdone){
    * ################################
    */
   
-  CellSystem cellsystem0,cellsystem1;
+  HCellSystem cellsystem0,cellsystem1;
   
   int getCellSystemWidth(){
     Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
@@ -221,10 +217,10 @@ while(notdone){
     return (int)(bounds.height*scale+margin+margin);}
   
   void initCellSystem0(){
-    cellsystem0=new CellSystem(getCellSystemWidth(),getCellSystemHeight(),mappedthings);}
+    cellsystem0=new HCellSystem(getCellSystemWidth(),getCellSystemHeight(),mappedthings);}
   
   void initCellSystem1(){
-    cellsystem1=new CellSystem(getCellSystemWidth(),getCellSystemHeight());}
+    cellsystem1=new HCellSystem(getCellSystemWidth(),getCellSystemHeight());}
   
   /*
    * ################################
@@ -238,7 +234,7 @@ while(notdone){
   private void initRenderer(){
     renderer=new Renderer(this);}
   
-  private void render(CellSystem cs){
+  private void render(HCellSystem cs){
     renderer.render(cs);
     ui.repaint();}
   
@@ -249,7 +245,7 @@ while(notdone){
    */
   
   public static final void main(String[] a){
-    Test0 t=new Test0();
+    HCellTest t=new HCellTest();
     t.run();}
   
 }

@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.fleen.bread.hCellSystem.HCell;
 import org.fleen.geom_2D.DPoint;
 import org.fleen.geom_2D.DPolygon;
 
@@ -17,7 +19,7 @@ import org.fleen.geom_2D.DPolygon;
  * A polygon's shadow upon the raster cell array
  * all of the cells in which the Polygon manifests as a non-zero intensity Presence
  */
-public class PolygonAreaCells implements ZCellMass{
+public class PolygonAreaZCells implements ZCellMass{
   
   /*
    * ################################
@@ -25,7 +27,7 @@ public class PolygonAreaCells implements ZCellMass{
    * ################################
    */
   
-  PolygonAreaCells(DPolygon polygon,AffineTransform transform,double glowspan){
+  PolygonAreaZCells(DPolygon polygon,AffineTransform transform,double glowspan){
     this.polygon=polygon;
     this.glowspan=glowspan;
     initTransformedPolygon(transform);
@@ -121,6 +123,9 @@ public class PolygonAreaCells implements ZCellMass{
   
   public Collection<ZCell> getCells(){
     return cells.values();}
+  
+  public Iterator<ZCell> iterator(){
+    return cells.values().iterator();}
   
   /*
    * ################################
@@ -346,9 +351,29 @@ public class PolygonAreaCells implements ZCellMass{
   Set<ZCell> getLayerOfUnmarkedCells(Collection<ZCell> cells){
     Set<ZCell> unmarkedcells=new HashSet<ZCell>();
     for(ZCell c:cells)
-      for(ZCell d:c.getNeighbors(this))
+      for(ZCell d:getNeighbors(c))
         if(!d.hasPresence(polygon))
           unmarkedcells.add(d);
     return unmarkedcells;}
+  
+  private ZCell[] getNeighbors(ZCell c){
+    HCell[] n=new HCell[8];
+    n[0]=enclosingarray[c.x][c.y+1];
+    if(n[0]==null)n[0]=new HCell(c.x,c.y+1,NULLTAG);
+    n[1]=enclosingarray[c.x+1][c.y+1];
+    if(n[1]==null)n[1]=new HCell(c.x+1,c.y+1,NULLTAG);
+    n[2]=enclosingarray[c.x+1][c.y];
+    if(n[2]==null)n[2]=new HCell(c.x+1,c.y,NULLTAG);
+    n[3]=enclosingarray[c.x+1][c.y-1];
+    if(n[3]==null)n[3]=new HCell(c.x+1,c.y-1,NULLTAG);
+    n[4]=enclosingarray[c.x][c.y-1];
+    if(n[4]==null)n[4]=new HCell(c.x,c.y-1,NULLTAG);
+    n[5]=enclosingarray[c.x-1][c.y-1];
+    if(n[5]==null)n[5]=new HCell(c.x-1,c.y-1,NULLTAG);
+    n[6]=enclosingarray[c.x-1][c.y];
+    if(n[6]==null)n[6]=new HCell(c.x-1,c.y,NULLTAG);
+    n[7]=enclosingarray[c.x-1][c.y+1];
+    if(n[7]==null)n[7]=new HCell(c.x-1,c.y+1,NULLTAG);
+    return n;}
   
 }

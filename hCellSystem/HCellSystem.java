@@ -12,21 +12,21 @@ import org.fleen.forsythia.core.composition.FPolygon;
  * It might get fancy. We might translate vertices into special cells, doing a vector-CA combo thing
  * We prefer this to RD because CA is simpler
  */
-public class CellSystem implements CellMass{
+public class HCellSystem implements HCellMass{
   
   /*
    * ################################
-   * CONSTRUCTOR
+   * CONSTRUCTORS
    * ################################
    */
 
-  public CellSystem(int w,int h){
+  public HCellSystem(int w,int h){
     System.out.println("CS SYSTEM INIT");
     System.out.println(w+"x"+h);
     System.out.println("cellcount="+(w*h));
     initCells(w,h);}
   
-  public CellSystem(int w,int h,List<MappedThing> mappedthings){
+  public HCellSystem(int w,int h,List<MappedThing> mappedthings){
     this(w,h);
     doMappedThings(mappedthings);
     clean();}
@@ -42,7 +42,7 @@ public class CellSystem implements CellMass{
   //the height and width of a cell relative to any mapped geometry
   static final double CELLSPAN=1.0;
   
-  Cell[][] cells;
+  HCell[][] cells;
   
   public int getWidth(){
     return cells.length;}
@@ -54,18 +54,18 @@ public class CellSystem implements CellMass{
     return cells.length*cells[0].length;}
   
   private void initCells(int w,int h){
-    cells=new Cell[w][h];
+    cells=new HCell[w][h];
     for(int x=0;x<w;x++){
       for(int y=0;y<h;y++){
-        cells[x][y]=new Cell(x,y);}}}
+        cells[x][y]=new HCell(x,y);}}}
   
-  public Cell getCell(int x,int y){
+  public HCell getCell(int x,int y){
     if(x<0||x>=cells.length||y<0||y>=cells[0].length)
       return null;
     return cells[x][y];}
   
-  public Cell[] getNeighbors(Cell c){
-   Cell[] n=new Cell[8];
+  public HCell[] getNeighbors(HCell c){
+   HCell[] n=new HCell[8];
    n[0]=getCell(c.x,c.y+1);
    n[1]=getCell(c.x+1,c.y+1);
    n[2]=getCell(c.x+1,c.y);
@@ -76,15 +76,15 @@ public class CellSystem implements CellMass{
    n[7]=getCell(c.x-1,c.y+1);
    return n;}
   
-  public Iterator<Cell> iterator(){
-    return new CellSystemCellIterator(this);}
+  public Iterator<HCell> iterator(){
+    return new HCellSystemCellIterator(this);}
   
   /*
    * return the cell that contains the specified point
    * the cell's coors are also the cell's center point
    * the cell's square spans cell.x-0.5 to cell.y+0.5 and cell.y-0.5 to cell.y+0.5
    */
-  public Cell getCellContainingPoint(double x,double y){
+  public HCell getCellContainingPoint(double x,double y){
     if(x-Math.floor(x)<0.5)
       x=Math.floor(x);
     else
@@ -112,26 +112,26 @@ public class CellSystem implements CellMass{
       }else{
         throw new IllegalArgumentException("mapping thing failed");}}}
   
-  private PolygonAreaCells mapPolygonArea(MappedThing t){
-    PolygonAreaCells c=new PolygonAreaCells(((FPolygon)t.thing).getDPolygon(),t.transform);
-    Cell b;
-    for(Cell a:c){
+  private PolygonAreaHCells mapPolygonArea(MappedThing t){
+    PolygonAreaHCells c=new PolygonAreaHCells(((FPolygon)t.thing).getDPolygon(),t.transform);
+    HCell b;
+    for(HCell a:c){
         b=cells[a.x][a.y];
         b.thing=t;}
     return c;}
   
-  private PolygonEdgeCells mapPolygonBoiledEdge(MappedThing t){
-    PolygonEdgeCells c=new PolygonEdgeCells(((FPolygon)t.thing).getDPolygon(),t.transform);
-    Cell b;
-    for(Cell a:c){
+  private PolygonEdgeHCells mapPolygonBoiledEdge(MappedThing t){
+    PolygonEdgeHCells c=new PolygonEdgeHCells(((FPolygon)t.thing).getDPolygon(),t.transform);
+    HCell b;
+    for(HCell a:c){
         b=cells[a.x][a.y];
         b.thing=t;}
     return c;}
   
-  private MarginCells mapMargin(MappedThing t){
-    MarginCells c=new MarginCells(getWidth(),getHeight(),((FPolygon)t.thing).getDPolygon(),t.transform);
-    Cell b;
-    for(Cell a:c){
+  private MarginHCells mapMargin(MappedThing t){
+    MarginHCells c=new MarginHCells(getWidth(),getHeight(),((FPolygon)t.thing).getDPolygon(),t.transform);
+    HCell b;
+    for(HCell a:c){
         b=cells[a.x][a.y];
         b.thing=t;}
     return c;}

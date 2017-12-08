@@ -69,39 +69,39 @@ public class ZCell{
 //    //
 //    return n;}
   
-  /*
-   * this is for getting neighbor cells in a polygoncellmap creation process
-   * we sometimes want to refer to cells that are in the polygoncellmap.cellcache but not
-   * in the rastermap. So we check the cache first.
-   */
-  List<ZCell> getNeighbors(ZCellMass m){
-    List<ZCell> n=new ArrayList<ZCell>(8);
-    //N
-    ZCell a=m.getCell(x,y+1);
-    if(a!=null)n.add(a);
-    //NE
-    a=m.getCell(x+1,y+1);
-    if(a!=null)n.add(a);
-    //E
-    a=m.getCell(x+1,y);
-    if(a!=null)n.add(a);
-    //SE
-    a=m.getCell(x+1,y-1);
-    if(a!=null)n.add(a);
-    //S
-    a=m.getCell(x,y-1);
-    if(a!=null)n.add(a);
-    //SW
-    a=m.getCell(x-1,y-1);
-    if(a!=null)n.add(a);
-    //W
-    a=m.getCell(x-1,y);
-    if(a!=null)n.add(a);
-    //NW
-    a=m.getCell(x-1,y+1);
-    if(a!=null)n.add(a);
-    //
-    return n;}
+//  /*
+//   * this is for getting neighbor cells in a polygoncellmap creation process
+//   * we sometimes want to refer to cells that are in the polygoncellmap.cellcache but not
+//   * in the rastermap. So we check the cache first.
+//   */
+//  List<ZCell> getNeighbors(ZCellMass m){
+//    List<ZCell> n=new ArrayList<ZCell>(8);
+//    //N
+//    ZCell a=m.getCell(x,y+1);
+//    if(a!=null)n.add(a);
+//    //NE
+//    a=m.getCell(x+1,y+1);
+//    if(a!=null)n.add(a);
+//    //E
+//    a=m.getCell(x+1,y);
+//    if(a!=null)n.add(a);
+//    //SE
+//    a=m.getCell(x+1,y-1);
+//    if(a!=null)n.add(a);
+//    //S
+//    a=m.getCell(x,y-1);
+//    if(a!=null)n.add(a);
+//    //SW
+//    a=m.getCell(x-1,y-1);
+//    if(a!=null)n.add(a);
+//    //W
+//    a=m.getCell(x-1,y);
+//    if(a!=null)n.add(a);
+//    //NW
+//    a=m.getCell(x-1,y+1);
+//    if(a!=null)n.add(a);
+//    //
+//    return n;}
   
   /*
    * ################################
@@ -185,6 +185,17 @@ public class ZCell{
     for(Presence p:presences)
       s+=p.intensity;
     return s;}
+  
+  /*
+   * ################################
+   * MAPPED THING
+   * The thing associated with this cell. It lends identity, and possibly form, to a mass of cells
+   * probably a polygon, or a polygon-edge, but it could be other things too
+   * the relationship between the thing and the cells is arbitrary, to be determined by specific case
+   * ################################
+   */
+  
+  public MappedZCellSystemThing thing=null;
   
   /*
    * ################################

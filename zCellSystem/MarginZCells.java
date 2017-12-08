@@ -11,7 +11,7 @@ import org.fleen.geom_2D.DPolygon;
  * then subtract the root mass
  * simple
  */
-public class MarginCells implements ZCellMass{
+public class MarginZCells implements ZCellMass{
   
   /*
    * ################################
@@ -19,7 +19,7 @@ public class MarginCells implements ZCellMass{
    * ################################
    */
   
-  public MarginCells(int w,int h,DPolygon rootpolygon,AffineTransform rootpolygontransform,double glowspan){
+  public MarginZCells(int w,int h,DPolygon rootpolygon,AffineTransform rootpolygontransform,double glowspan){
     super();
     width=w;
     height=h;
@@ -71,7 +71,7 @@ public class MarginCells implements ZCellMass{
         c=getCell(x,y);
         c.addPresence(new Presence(MARGINYARD,1.0));}}
     //get the root polygon mass
-    PolygonAreaCells root=new PolygonAreaCells(rootpolygon,rootpolygontransform,glowspan);
+    PolygonAreaZCells root=new PolygonAreaZCells(rootpolygon,rootpolygontransform,glowspan);
     //subtract the root
     Presence p0,p1;
     ZCell c1;

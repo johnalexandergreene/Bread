@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.fleen.bread.hCellSystem.Cell;
-import org.fleen.bread.hCellSystem.CellSystem;
+import org.fleen.bread.hCellSystem.HCell;
+import org.fleen.bread.hCellSystem.HCellSystem;
 import org.fleen.bread.palette.Palette;
 
 /*
@@ -39,16 +39,16 @@ public class Renderer{
     RENDERING_HINTS.put(
       RenderingHints.KEY_STROKE_CONTROL,RenderingHints.VALUE_STROKE_PURE);}
   
-  Test0 test;
+  HCellTest test;
   
-  public Renderer(Test0 test){
+  public Renderer(HCellTest test){
     this.test=test;}
   
   /*
    * render rds to image, cells to pixels
    * then scale to whatever and return that.
    */
-  public void render(CellSystem cs){
+  public void render(HCellSystem cs){
     //TODO we should have a scale param here, and a final transform, 
     //then scale up the rendered image to a bigger image or whatever to fit the viewer
     int 
@@ -56,7 +56,7 @@ public class Renderer{
       h=test.cellsystem0.getHeight();
     //
     BufferedImage image0=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
-    for(Cell c:cs){
+    for(HCell c:cs){
       image0.setRGB(c.x,c.y,getColor(c).getRGB());}
     //scale to center and fit in viewer
     int
@@ -91,7 +91,7 @@ public class Renderer{
    * ################################
    */
   
-  private Color getColor(Cell c){
+  private Color getColor(HCell c){
     return getThingColor(c.thing);}
   
   Random rnd=new Random();

@@ -6,10 +6,10 @@ import java.util.Iterator;
  * basic cell ops
  * implemented by CellSystem, PolygonAreaCells and PolygonEdgeCells
  */
-public interface CellMass extends Iterable<Cell>{
+public interface HCellMass extends Iterable<HCell>{
   
   int getCellCount();
   
-  Iterator<Cell> iterator();
+  Iterator<HCell> iterator();
   
 }

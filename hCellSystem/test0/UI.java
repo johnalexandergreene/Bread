@@ -6,10 +6,10 @@ public class UI extends JFrame {
 
 	private static final long serialVersionUID = -2749846443106819716L;
 	
-	Test0 test;
+	HCellTest test;
   public Viewer viewer;
 
-	public UI(Test0 test){
+	public UI(HCellTest test){
 	  this.test=test;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(50,50,1600,800);

@@ -40,19 +40,19 @@ public class R_Smooth implements Rule{
    * get sum for each thing
    * set c1 cell to thing with greatest sum 
    */
-  public void doRule(CellSystem cs0,CellSystem cs1){
-    Cell c1;
+  public void doRule(HCellSystem cs0,HCellSystem cs1){
+    HCell c1;
     MappedThing majority;
-    for(Cell c0: cs0){
+    for(HCell c0: cs0){
       majority=getGreatestSumThing(c0,cs0);
       c1=cs1.getCell(c0.x,c0.y);
       c1.thing=majority;}}
   
-  private MappedThing getGreatestSumThing(Cell c,CellSystem cs){
+  private MappedThing getGreatestSumThing(HCell c,HCellSystem cs){
     Map<MappedThing,MappedThingSum> sumsbythings=new HashMap<MappedThing,MappedThingSum>();
     MappedThingSum sum;
-    List<Cell> n=getNeighbors(c,cs);
-    for(Cell d:n){
+    List<HCell> n=getNeighbors(c,cs);
+    for(HCell d:n){
       if(d==null)continue;
       sum=sumsbythings.get(d.thing);
       if(sum==null){
@@ -63,8 +63,8 @@ public class R_Smooth implements Rule{
     Collections.sort(sums,new MTSComparator());
     return sums.get(0).t;}
   
-  private List<Cell> getNeighbors(Cell c,CellSystem cs){
-    List<Cell> n=new ArrayList<Cell>(VIEWRANGEOFFSETS.length);
+  private List<HCell> getNeighbors(HCell c,HCellSystem cs){
+    List<HCell> n=new ArrayList<HCell>(VIEWRANGEOFFSETS.length);
     for(int[] a:VIEWRANGEOFFSETS)
       n.add(cs.getCell(c.x+a[0],c.y+a[1]));
     return n;}

@@ -23,24 +23,24 @@ public class R_FattenBoiledEdge implements Rule{
    * if any of them has a boiled thing then the new cell gets that boiled thing
    * otherwise the new cell gets whatever c0 had 
    */
-  public void doRule(CellSystem cs0,CellSystem cs1){
-    Cell d;
-    for(Cell c: cs0){
+  public void doRule(HCellSystem cs0,HCellSystem cs1){
+    HCell d;
+    for(HCell c: cs0){
       d=getBoiledNeighbor(c,cs0);
       if(d!=null){
         cs1.getCell(c.x,c.y).thing=d.thing;
       }else{
         cs1.getCell(c.x,c.y).thing=c.thing;}}}
   
-  private Cell getBoiledNeighbor(Cell c,CellSystem cs){
-    List<Cell> n=getNeighbors(c,cs);
-    for(Cell d:n){
+  private HCell getBoiledNeighbor(HCell c,HCellSystem cs){
+    List<HCell> n=getNeighbors(c,cs);
+    for(HCell d:n){
       if(d!=null&&d.thing!=null&&d.thing.hasTags("boiled")){
         return d;}}
     return null;}
   
-  private List<Cell> getNeighbors(Cell c,CellSystem cs){
-    List<Cell> n=new ArrayList<Cell>(NOFF_RANGE3.length);
+  private List<HCell> getNeighbors(HCell c,HCellSystem cs){
+    List<HCell> n=new ArrayList<HCell>(NOFF_RANGE3.length);
     for(int[] a:NOFF_RANGE3)
       n.add(cs.getCell(c.x+a[0],c.y+a[1]));
     return n;}

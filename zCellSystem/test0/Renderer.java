@@ -40,9 +40,9 @@ public class Renderer{
     RENDERING_HINTS.put(
       RenderingHints.KEY_STROKE_CONTROL,RenderingHints.VALUE_STROKE_PURE);}
   
-  Test0 test;
+  ZCellTest test;
   
-  public Renderer(Test0 test){
+  public Renderer(ZCellTest test){
     this.test=test;}
   
   /*
@@ -53,11 +53,11 @@ public class Renderer{
     //TODO we should have a scale param here, and a final transform, 
     //then scale up the rendered image to a bigger image or whatever to fit the viewer
     int 
-      w=test.rds.getWidth(),
-      h=test.rds.getHeight();
+      w=test.zcellsystem.getWidth(),
+      h=test.zcellsystem.getHeight();
     //
     BufferedImage image0=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
-    for(ZCell c:test.rds){
+    for(ZCell c:test.zcellsystem){
       image0.setRGB(c.x,c.y,getColor(c).getRGB());}
     //scale to center and fit in viewer
     int

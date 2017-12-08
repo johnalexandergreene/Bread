@@ -1,6 +1,6 @@
 package org.fleen.bread.hCellSystem;
 
-public class Cell{
+public class HCell{
   
   /*
    * ################################
@@ -8,11 +8,11 @@ public class Cell{
    * ################################
    */
   
-  Cell(int x,int y){
+  HCell(int x,int y){
     this.x=x;
     this.y=y;}
   
-  Cell(int x,int y,Object gpobject){
+  HCell(int x,int y,Object gpobject){
     this.x=x;
     this.y=y;
     this.gpobject=gpobject;}
@@ -59,7 +59,7 @@ public class Cell{
     return x+y*PRIME;}
   
   public boolean equals(Object a){
-    Cell b=(Cell)a;
+    HCell b=(HCell)a;
     return b.x==x&&b.y==y;}
 
 }

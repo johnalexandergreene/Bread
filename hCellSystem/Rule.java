@@ -7,6 +7,6 @@ public interface Rule{
    *   apply rule to get new cell contents
    *   set contents of corresponding cell in cs1 appropriately
    */
-  void doRule(CellSystem cs0,CellSystem cs1);
+  void doRule(HCellSystem cs0,HCellSystem cs1);
   
 }
