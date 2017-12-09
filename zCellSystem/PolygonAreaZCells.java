@@ -111,10 +111,22 @@ public class PolygonAreaZCells implements ZCellMass{
     doEdgeCells();
     
     //test
-//    for(ZCell c:edgecells)
-//      c.addPresence(thing);
+    for(ZCell c:edgecells)
+      c.addPresence(mappedthing,1.0);
+    
+    copyNonnullArrayCellsToList();
     
   }
+  
+  private void copyNonnullArrayCellsToList(){
+    ZCell c;
+    for(int x=0;x<enclosingarray.length;x++){
+      for(int y=0;y<enclosingarray[0].length;y++){
+        if(enclosingarray[x][y]!=null){
+          c=enclosingarray[x][y];
+          c.x+=eaoffsetx;
+          c.y+=eaoffsety;
+          cells.add(c);}}}}
   
   /*
    * ++++++++++++++++++++++++++++++++

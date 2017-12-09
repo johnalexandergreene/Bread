@@ -18,7 +18,7 @@ import org.fleen.bread.palette.Palette;
  * render to image
  * scale image to fit viewer
  */
-public class Renderer{
+public class HCellTestRenderer{
   
   public static final HashMap<RenderingHints.Key,Object> RENDERING_HINTS=
       new HashMap<RenderingHints.Key,Object>();
@@ -41,7 +41,7 @@ public class Renderer{
   
   HCellTest test;
   
-  public Renderer(HCellTest test){
+  public HCellTestRenderer(HCellTest test){
     this.test=test;}
   
   /*

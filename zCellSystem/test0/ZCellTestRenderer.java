@@ -9,55 +9,59 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import org.fleen.bread.hCellSystem.HCell;
 import org.fleen.bread.palette.Palette;
-import org.fleen.bread.zCellSystem.ZCell;
+import org.fleen.bread.zCellSystem.ZCSMappedThing;
 import org.fleen.bread.zCellSystem.ZCSMappedThingPresence;
-import org.fleen.geom_2D.DPolygon;
+import org.fleen.bread.zCellSystem.ZCell;
+import org.fleen.bread.zCellSystem.ZCellSystem;
+import org.fleen.forsythia.core.composition.FPolygon;
+import org.fleen.forsythia.core.composition.FPolygonSignature;
 
 /*
  * convert each cell to a pixel
  * render to image
  * scale image to fit viewer
  */
-public class Renderer{
+public class ZCellTestRenderer{
   
   public static final HashMap<RenderingHints.Key,Object> RENDERING_HINTS=
       new HashMap<RenderingHints.Key,Object>();
     
   static{
     RENDERING_HINTS.put(
-      RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_OFF);
+      RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_DEFAULT);
     RENDERING_HINTS.put(
-      RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_SPEED);
+      RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
     RENDERING_HINTS.put(
-      RenderingHints.KEY_DITHERING,RenderingHints.VALUE_DITHER_DISABLE);
+      RenderingHints.KEY_DITHERING,RenderingHints.VALUE_DITHER_DEFAULT);
     RENDERING_HINTS.put(
-      RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+      RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BICUBIC);
     RENDERING_HINTS.put(
-      RenderingHints.KEY_ALPHA_INTERPOLATION,RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
+      RenderingHints.KEY_ALPHA_INTERPOLATION,RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
     RENDERING_HINTS.put(
-      RenderingHints.KEY_COLOR_RENDERING,RenderingHints.VALUE_COLOR_RENDER_SPEED); 
+      RenderingHints.KEY_COLOR_RENDERING,RenderingHints.VALUE_COLOR_RENDER_QUALITY); 
     RENDERING_HINTS.put(
-      RenderingHints.KEY_STROKE_CONTROL,RenderingHints.VALUE_STROKE_PURE);}
+      RenderingHints.KEY_STROKE_CONTROL,RenderingHints.VALUE_STROKE_NORMALIZE);}
   
   ZCellTest test;
   
-  public Renderer(ZCellTest test){
+  public ZCellTestRenderer(ZCellTest test){
     this.test=test;}
   
   /*
    * render rds to image, cells to pixels
    * then scale to whatever and return that.
    */
-  public void render(){
+  public BufferedImage render(ZCellSystem zcellsystem){
     //TODO we should have a scale param here, and a final transform, 
     //then scale up the rendered image to a bigger image or whatever to fit the viewer
     int 
-      w=test.zcellsystem.getWidth(),
-      h=test.zcellsystem.getHeight();
+      w=test.cellsystem0.getWidth(),
+      h=test.cellsystem0.getHeight();
     //
     BufferedImage image0=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
-    for(ZCell c:test.zcellsystem){
+    for(ZCell c:zcellsystem){
       image0.setRGB(c.x,c.y,getColor(c).getRGB());}
     //scale to center and fit in viewer
     int
@@ -84,7 +88,7 @@ public class Renderer{
     g.setRenderingHints(RENDERING_HINTS);
     g.drawImage(image0,t,null);
     //
-    test.image=image1;}
+    return image1;}
   
   /*
    * ################################
@@ -96,7 +100,7 @@ public class Renderer{
     int r=0,g=0,b=0;
     Color color;
     for(ZCSMappedThingPresence p:c.presences){
-      color=getPolygonColor(p.polygon);
+      color=getPolygonColor(p.thing);
       r+=(int)(color.getRed()*p.intensity);
       g+=(int)(color.getGreen()*p.intensity);
       b+=(int)(color.getBlue()*p.intensity);}
@@ -105,18 +109,32 @@ public class Renderer{
     if(b>255)b=255;
     return new Color(r,g,b);}
   
+  //COLOR
+  
   Random rnd=new Random();
-  int colorindex=0;
+  Map<FPolygonSignature,Color> colorbypolygonsignature=new HashMap<FPolygonSignature,Color>();
   
-  Map<DPolygon,Color> colorbypolygon=new HashMap<DPolygon,Color>();
-  
-  private Color getPolygonColor(DPolygon p){
-    Color c=colorbypolygon.get(p);
-    if(c==null){
-      c=Palette.P_CRUDERAINBOW[colorindex%Palette.P_CRUDERAINBOW.length];
-//      c=Palette.P_CRUDERAINBOW[rnd.nextInt(Palette.P_CRUDERAINBOW.length)];
-      colorindex+=4;
-      colorbypolygon.put(p,c);}
+  private Color getPolygonColor(ZCSMappedThing thing){
+    Color c;
+    if(thing.hasTags("leaf")||thing.hasTags("boiled")){
+      FPolygon p=(FPolygon)thing.thing;
+      FPolygonSignature s=p.getSignature();
+      c=colorbypolygonsignature.get(s);
+      if(c==null){
+        c=getColorForPolygon((FPolygon)thing.thing);
+        colorbypolygonsignature.put(s,c);}
+    }else{
+      c=getColorForMargin();}
     return c;}
+  
+  private Color getColorForPolygon(FPolygon p){
+    int i=rnd.nextInt(Palette.P_CRUDERAINBOW.length);
+    Color c=Palette.P_CRUDERAINBOW[i];
+    return c;}
+  
+  private Color getColorForMargin(){
+    return Color.GRAY;}
+  
+  
 
 }

@@ -44,7 +44,7 @@ public class ZCellTest{
 //      render();
 //    }
 
-    render();
+    render(cellsystem0);
     
   }
   
@@ -155,57 +155,21 @@ public class ZCellTest{
   
   void initCellSystem1(){
     cellsystem1=new ZCellSystem(getCellSystemWidth(),getCellSystemHeight());}
- 
-//  
-////  ZCellSystem zcellsystem;
-//  
-//  void initFCS(){
-//    Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
-//    int 
-//      w=(int)(bounds.width*scale+margin+margin),
-//      h=(int)(bounds.height*scale+margin+margin);
-//    zcellsystem=new ZCellSystem(w,h);}
-//  
-//  void mapCompositionToFCS(){
-//    mapRootArea();
-//    mapLeafAreas();
-//    mapHexEdge();
-//    mapMargin();
-//    zcellsystem.clean();}
-//  
-//  void mapRootArea(){
-//    DPolygon d=composition.getRootPolygon().getDPolygon();
-//    zcellsystem.mapPolygonArea(d,compositioncellsystemtransform,glowspan);}
-//  
-//  void mapLeafAreas(){
-//    DPolygon d;
-//    for(FPolygon p:composition.getLeafPolygons()){
-//      d=p.getDPolygon();
-//      zcellsystem.mapPolygonArea(d,compositioncellsystemtransform,glowspan);}}
-//  
-//  void mapHexEdge(){
-//    for(FPolygon p:composition.getLeafPolygons()){
-//      if(p.hasTags("hex")){
-//        DPolygon d=p.getDPolygon();
-//        zcellsystem.mapPolygonEdge(d,compositioncellsystemtransform,glowspan);}}}
-//  
-//  void mapMargin(){
-//    zcellsystem.mapMarginCells(composition.getRootPolygon().getDPolygon(),compositioncellsystemtransform,glowspan);}
-  
+
   /*
    * ################################
    * IMAGE
    * ################################
    */
   
-  Renderer renderer;
+  ZCellTestRenderer renderer;
   BufferedImage image=null;
   
   private void initRenderer(){
-    renderer=new Renderer(this);}
+    renderer=new ZCellTestRenderer(this);}
   
-  private void render(){
-    renderer.render();
+  private void render(ZCellSystem zcs){
+    image=renderer.render(zcs);
     ui.repaint();}
   
   /*

@@ -228,11 +228,11 @@ while(notdone){
    * ################################
    */
   
-  Renderer renderer;
+  HCellTestRenderer renderer;
   BufferedImage image=null;
   
   private void initRenderer(){
-    renderer=new Renderer(this);}
+    renderer=new HCellTestRenderer(this);}
   
   private void render(HCellSystem cs){
     renderer.render(cs);
