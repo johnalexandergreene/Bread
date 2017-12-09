@@ -69,11 +69,11 @@ public class MarginZCells implements ZCellMass{
     for(int x=0;x<cells.length;x++){
       for(int y=0;y<cells[0].length;y++){
         c=getCell(x,y);
-        c.addPresence(new Presence(MARGINYARD,1.0));}}
+        c.addPresence(new ZCSMappedThingPresence(MARGINYARD,1.0));}}
     //get the root polygon mass
     PolygonAreaZCells root=new PolygonAreaZCells(rootpolygon,rootpolygontransform,glowspan);
     //subtract the root
-    Presence p0,p1;
+    ZCSMappedThingPresence p0,p1;
     ZCell c1;
     for(ZCell c0:root.getCells()){
       c1=getCell(c0.x,c0.y);

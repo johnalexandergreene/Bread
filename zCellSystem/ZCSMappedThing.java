@@ -10,7 +10,7 @@ import org.fleen.util.tag.Tagged;
  * a thing that is mapped to a cellsystem
  * the thing and some associated tags
  */
-public class MappedZCellSystemThing implements Tagged{
+public class ZCSMappedThing implements Tagged{
 
   /*
    * ################################
@@ -18,12 +18,12 @@ public class MappedZCellSystemThing implements Tagged{
    * ################################
    */
   
-  public MappedZCellSystemThing(){}
+  public ZCSMappedThing(){}
   
-  public MappedZCellSystemThing(Object thing){
+  public ZCSMappedThing(Object thing){
     this.thing=thing;}
   
-  public MappedZCellSystemThing(Object thing,AffineTransform transform,double glowspan,String[] tags){
+  public ZCSMappedThing(Object thing,AffineTransform transform,double glowspan,String[] tags){
     this(thing);
     this.transform=transform;
     this.glowspan=glowspan;
@@ -32,7 +32,8 @@ public class MappedZCellSystemThing implements Tagged{
   /*
    * ################################
    * THING
-   * The thing that got mapped
+   * The thing that got mapped, or enough of it to get a handle on what we're talking about
+   * See tags for more clues if necessary
    * ################################
    */
   
@@ -50,6 +51,7 @@ public class MappedZCellSystemThing implements Tagged{
   /*
    * ################################
    * GLOWSPAN
+   * Mapped things often have a presence that spreads a bit from their actual location
    * ################################
    */
   

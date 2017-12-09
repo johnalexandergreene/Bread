@@ -42,14 +42,14 @@ public class R_Smooth implements Rule{
    */
   public void doRule(HCellSystem cs0,HCellSystem cs1){
     HCell c1;
-    MappedThing majority;
+    HCSMappedThing majority;
     for(HCell c0: cs0){
       majority=getGreatestSumThing(c0,cs0);
       c1=cs1.getCell(c0.x,c0.y);
       c1.thing=majority;}}
   
-  private MappedThing getGreatestSumThing(HCell c,HCellSystem cs){
-    Map<MappedThing,MappedThingSum> sumsbythings=new HashMap<MappedThing,MappedThingSum>();
+  private HCSMappedThing getGreatestSumThing(HCell c,HCellSystem cs){
+    Map<HCSMappedThing,MappedThingSum> sumsbythings=new HashMap<HCSMappedThing,MappedThingSum>();
     MappedThingSum sum;
     List<HCell> n=getNeighbors(c,cs);
     for(HCell d:n){
@@ -80,10 +80,10 @@ public class R_Smooth implements Rule{
   
   class MappedThingSum{
     
-    MappedThingSum(MappedThing t){
+    MappedThingSum(HCSMappedThing t){
       this.t=t;}
     
-    MappedThing t;
+    HCSMappedThing t;
     int sum=0;
   }
   

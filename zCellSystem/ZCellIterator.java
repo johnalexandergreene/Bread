@@ -5,19 +5,19 @@ import java.util.Iterator;
 
 class ZCellIterator implements Iterator<ZCell> {
   
-  ZCellIterator(ZCellSystem rastermap){
-    this.rastermap=rastermap;}
+  ZCellIterator(ZCellSystem zcellsystem){
+    this.zcellsystem=zcellsystem;}
   
-  ZCellSystem rastermap;
+  ZCellSystem zcellsystem;
   int x=0,y=0;
   
   public boolean hasNext(){
-    return y<rastermap.cellarrayheight;}
+    return y<zcellsystem.getHeight();}
 
   public ZCell next(){
-    ZCell c=rastermap.cells[x][y];
+    ZCell c=zcellsystem.cells[x][y];
     x++;
-    if(x==rastermap.cellarraywidth){
+    if(x==zcellsystem.getWidth()){
       x=0;
       y++;}
     return c;}

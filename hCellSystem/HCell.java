@@ -36,7 +36,7 @@ public class HCell{
    * ################################
    */
   
-  public MappedThing thing=null;
+  public HCSMappedThing thing=null;
   
   /*
    * ################################

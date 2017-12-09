@@ -21,12 +21,12 @@ public class HCellSystem implements HCellMass{
    */
 
   public HCellSystem(int w,int h){
-    System.out.println("CS SYSTEM INIT");
+    System.out.println("HCELL SYSTEM INIT");
     System.out.println(w+"x"+h);
     System.out.println("cellcount="+(w*h));
     initCells(w,h);}
   
-  public HCellSystem(int w,int h,List<MappedThing> mappedthings){
+  public HCellSystem(int w,int h,List<HCSMappedThing> mappedthings){
     this(w,h);
     doMappedThings(mappedthings);
     clean();}
@@ -101,8 +101,8 @@ public class HCellSystem implements HCellMass{
    * ################################
    */
   
-  private void doMappedThings(List<MappedThing> mappedthings){
-    for(MappedThing t:mappedthings){
+  private void doMappedThings(List<HCSMappedThing> mappedthings){
+    for(HCSMappedThing t:mappedthings){
       if(t.hasTags("margin")){
         mapMargin(t);
       }else if(t.hasTags("leaf")){
@@ -112,7 +112,7 @@ public class HCellSystem implements HCellMass{
       }else{
         throw new IllegalArgumentException("mapping thing failed");}}}
   
-  private PolygonAreaHCells mapPolygonArea(MappedThing t){
+  private PolygonAreaHCells mapPolygonArea(HCSMappedThing t){
     PolygonAreaHCells c=new PolygonAreaHCells(((FPolygon)t.thing).getDPolygon(),t.transform);
     HCell b;
     for(HCell a:c){
@@ -120,7 +120,7 @@ public class HCellSystem implements HCellMass{
         b.thing=t;}
     return c;}
   
-  private PolygonEdgeHCells mapPolygonBoiledEdge(MappedThing t){
+  private PolygonEdgeHCells mapPolygonBoiledEdge(HCSMappedThing t){
     PolygonEdgeHCells c=new PolygonEdgeHCells(((FPolygon)t.thing).getDPolygon(),t.transform);
     HCell b;
     for(HCell a:c){
@@ -128,7 +128,7 @@ public class HCellSystem implements HCellMass{
         b.thing=t;}
     return c;}
   
-  private MarginHCells mapMargin(MappedThing t){
+  private MarginHCells mapMargin(HCSMappedThing t){
     MarginHCells c=new MarginHCells(getWidth(),getHeight(),((FPolygon)t.thing).getDPolygon(),t.transform);
     HCell b;
     for(HCell a:c){

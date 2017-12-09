@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.fleen.geom_2D.DPolygon;
-
 /*
  * A cell has a location in the array (x,y) and a number of polygon presences
  * A polygon presence is the presence of a polygon. 
@@ -40,69 +38,6 @@ public class ZCell{
   //the cell center is also the cell coors
   public int x,y;
   
-//  List<Cell> getNeighbors(){
-//    List<Cell> n=new ArrayList<Cell>(8);
-//    //N
-//    Cell a=rds.getCell(x,y+1);
-//    if(a!=null)n.add(a);
-//    //NE
-//    a=rds.getCell(x+1,y+1);
-//    if(a!=null)n.add(a);
-//    //E
-//    a=rds.getCell(x+1,y);
-//    if(a!=null)n.add(a);
-//    //SE
-//    a=rds.getCell(x+1,y-1);
-//    if(a!=null)n.add(a);
-//    //S
-//    a=rds.getCell(x,y-1);
-//    if(a!=null)n.add(a);
-//    //SW
-//    a=rds.getCell(x-1,y-1);
-//    if(a!=null)n.add(a);
-//    //W
-//    a=rds.getCell(x-1,y);
-//    if(a!=null)n.add(a);
-//    //NW
-//    a=rds.getCell(x-1,y+1);
-//    if(a!=null)n.add(a);
-//    //
-//    return n;}
-  
-//  /*
-//   * this is for getting neighbor cells in a polygoncellmap creation process
-//   * we sometimes want to refer to cells that are in the polygoncellmap.cellcache but not
-//   * in the rastermap. So we check the cache first.
-//   */
-//  List<ZCell> getNeighbors(ZCellMass m){
-//    List<ZCell> n=new ArrayList<ZCell>(8);
-//    //N
-//    ZCell a=m.getCell(x,y+1);
-//    if(a!=null)n.add(a);
-//    //NE
-//    a=m.getCell(x+1,y+1);
-//    if(a!=null)n.add(a);
-//    //E
-//    a=m.getCell(x+1,y);
-//    if(a!=null)n.add(a);
-//    //SE
-//    a=m.getCell(x+1,y-1);
-//    if(a!=null)n.add(a);
-//    //S
-//    a=m.getCell(x,y-1);
-//    if(a!=null)n.add(a);
-//    //SW
-//    a=m.getCell(x-1,y-1);
-//    if(a!=null)n.add(a);
-//    //W
-//    a=m.getCell(x-1,y);
-//    if(a!=null)n.add(a);
-//    //NW
-//    a=m.getCell(x-1,y+1);
-//    if(a!=null)n.add(a);
-//    //
-//    return n;}
-  
   /*
    * ################################
    * PRESENCES
@@ -111,39 +46,61 @@ public class ZCell{
    * ################################
    */
   
-  //we make it just bigger than the biggest size we expect
-  private static final int INITPRESENCELISTSIZE=9;
+  //98% of cells will have just 1 presence
+  //1% will have 2
+  //1% will have 2..6
+  //right?
+  private static final int INITPRESENCELISTSIZE=6;
   
-  public List<Presence> presences=new ArrayList<Presence>(INITPRESENCELISTSIZE);
+  public List<ZCSMappedThingPresence> presences=new ArrayList<ZCSMappedThingPresence>(INITPRESENCELISTSIZE);
   
-  void addPresence(Presence p){
-    presences.add(p);}
+  void addPresence(ZCSMappedThingPresence p){
+    ZCSMappedThingPresence a=getPresence(p.thing);
+    if(a!=null){
+      a.intensity+=p.intensity;
+    }else{
+      presences.add(p);}}
   
-  void addPresence(DPolygon polygon,double intensity){
-    addPresence(new Presence(polygon,intensity));}
+  void addPresence(ZCSMappedThing thing,double intensity){
+    addPresence(new ZCSMappedThingPresence(thing,intensity));}
   
   /*
    * intensity is assumed to be 1.0
-   * we use it for polygon interiors.
+   * we use this for polygon interiors.
    */
-  void addPresence(DPolygon polygon){
-    addPresence(polygon,1.0);}
+  void addPresence(ZCSMappedThing thing){
+    addPresence(thing,1.0);}
+  
+  void addPresences(List<ZCSMappedThingPresence> presences){
+    for(ZCSMappedThingPresence p:presences)
+      addPresence(p);}
   
   /*
-   * returns true if the specified polygon has nonzero presence at this cell
+   * returns true if the specified thing has nonzero presence at this cell
    */
-  boolean hasPresence(DPolygon polygon){
-    for(Presence p:presences)
-      if(p.polygon==polygon)
+  boolean hasPresence(ZCSMappedThing thing){
+    for(ZCSMappedThingPresence p:presences)
+      if(p.thing==thing)
         return true;
     return false;}
   
   /*
-   * return the intensity of the specified polygon's presence at this cell
+   * get the presence of the thing at this cell
+   * if the thing has no presence at this cell then return null
    */
-  double getPresenceIntensity(DPolygon polygon){
-    for(Presence p:presences)
-      if(p.polygon==polygon)
+  ZCSMappedThingPresence getPresence(ZCSMappedThing thing){
+    for(ZCSMappedThingPresence p:presences)
+      if(p.thing==thing)
+        return p;
+    return null;}
+  
+  /*
+   * return the intensity of the specified thing's presence at this cell
+   * if the thing has no presence at this cell then return 0
+   */
+  double getPresenceIntensity(ZCSMappedThing thing){
+    for(ZCSMappedThingPresence p:presences)
+      if(p.thing==thing)
         return p.intensity;
     return 0;}
   
@@ -162,8 +119,8 @@ public class ZCell{
     normalizePresenceIntensities();}
   
   private void cullZeroIntensityPresences(){
-    Iterator<Presence> i=presences.iterator();
-    Presence p;
+    Iterator<ZCSMappedThingPresence> i=presences.iterator();
+    ZCSMappedThingPresence p;
     while(i.hasNext()){
       p=i.next();
       if(p.intensity<ZEROISHINTENSITY){
@@ -173,7 +130,7 @@ public class ZCell{
     double s=getPresenceIntensitySum();
     if(s>0){
       double n=1.0/s;
-      for(Presence p:presences)
+      for(ZCSMappedThingPresence p:presences)
         p.intensity*=n;}}
   
   /*
@@ -182,20 +139,9 @@ public class ZCell{
    */
   public double getPresenceIntensitySum(){
     double s=0;
-    for(Presence p:presences)
+    for(ZCSMappedThingPresence p:presences)
       s+=p.intensity;
     return s;}
-  
-  /*
-   * ################################
-   * MAPPED THING
-   * The thing associated with this cell. It lends identity, and possibly form, to a mass of cells
-   * probably a polygon, or a polygon-edge, but it could be other things too
-   * the relationship between the thing and the cells is arbitrary, to be determined by specific case
-   * ################################
-   */
-  
-  public MappedZCellSystemThing thing=null;
   
   /*
    * ################################

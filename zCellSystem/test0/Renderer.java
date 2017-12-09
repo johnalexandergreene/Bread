@@ -11,7 +11,7 @@ import java.util.Random;
 
 import org.fleen.bread.palette.Palette;
 import org.fleen.bread.zCellSystem.ZCell;
-import org.fleen.bread.zCellSystem.Presence;
+import org.fleen.bread.zCellSystem.ZCSMappedThingPresence;
 import org.fleen.geom_2D.DPolygon;
 
 /*
@@ -95,7 +95,7 @@ public class Renderer{
   private Color getColor(ZCell c){
     int r=0,g=0,b=0;
     Color color;
-    for(Presence p:c.presences){
+    for(ZCSMappedThingPresence p:c.presences){
       color=getPolygonColor(p.polygon);
       r+=(int)(color.getRed()*p.intensity);
       g+=(int)(color.getGreen()*p.intensity);

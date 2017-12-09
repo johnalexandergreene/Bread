@@ -1,16 +1,11 @@
 package org.fleen.bread.zCellSystem;
 
-import java.awt.geom.AffineTransform;
 import java.util.Iterator;
 import java.util.List;
 
-import org.fleen.bread.hCellSystem.HCell;
-import org.fleen.bread.hCellSystem.MappedThing;
 import org.fleen.bread.hCellSystem.MarginHCells;
-import org.fleen.bread.hCellSystem.PolygonAreaHCells;
 import org.fleen.bread.hCellSystem.PolygonEdgeHCells;
 import org.fleen.forsythia.core.composition.FPolygon;
-import org.fleen.geom_2D.DPolygon;
 
 /* 
  * It's a reaction diffusion system
@@ -52,7 +47,7 @@ public class ZCellSystem implements Iterable<ZCell>{
     System.out.println("cellcount="+(w*h));
     initCells(w,h);}
   
-  public ZCellSystem(int w,int h,List<MappedThing> mappedthings){
+  public ZCellSystem(int w,int h,List<ZCSMappedThing> mappedthings){
     this(w,h);
     doMappedThings(mappedthings);
     clean();}
@@ -65,22 +60,45 @@ public class ZCellSystem implements Iterable<ZCell>{
    * ################################
    */
   
-  /*
-   * the height and width of a cell
-   */
+  //the height and width of a cell
   static final double CELLSPAN=1.0;
   
   ZCell[][] cells;
   
-  int cellarraywidth,cellarrayheight;
+  public int getWidth(){
+    return cells.length;}
+  
+  public int getHeight(){
+    return cells[0].length;}
+  
+  public int getCellCount(){
+    return cells.length*cells[0].length;}
   
   private void initCells(int w,int h){
-    cellarraywidth=w;
-    cellarrayheight=h;
     cells=new ZCell[w][h];
     for(int x=0;x<w;x++){
       for(int y=0;y<h;y++){
         cells[x][y]=new ZCell(x,y);}}}
+  
+  public ZCell getCell(int x,int y){
+    if(x<0||x>=cells.length||y<0||y>=cells[0].length)
+      return null;
+    return cells[x][y];}
+  
+  public ZCell[] getNeighbors(ZCell c){
+    ZCell[] n=new ZCell[8];
+    n[0]=getCell(c.x,c.y+1);
+    n[1]=getCell(c.x+1,c.y+1);
+    n[2]=getCell(c.x+1,c.y);
+    n[3]=getCell(c.x+1,c.y-1);
+    n[4]=getCell(c.x,c.y-1);
+    n[5]=getCell(c.x-1,c.y-1);
+    n[6]=getCell(c.x-1,c.y);
+    n[7]=getCell(c.x-1,c.y+1);
+    return n;}
+  
+  public Iterator<ZCell> iterator(){
+    return new ZCellIterator(this);}
   
   /*
    * return the cell that contains the specified point
@@ -98,29 +116,16 @@ public class ZCellSystem implements Iterable<ZCell>{
       y=Math.ceil(y);
     return getCell((int)x,(int)y);}
   
-  public ZCell getCell(int x,int y){
-    if(x<0||x>=cellarraywidth||y<0||y>=cellarrayheight)
-      return null;
-    return cells[x][y];}
-  
-  public Iterator<ZCell> iterator(){
-    return new ZCellIterator(this);}
-  
-  public int getWidth(){
-    return cellarraywidth;}
-  
-  public int getHeight(){
-    return cellarrayheight;}
-  
   /*
    * ################################
    * MAP THINGS TO CELLS
    * Cast the presence of the thing, like a shadow, onto the cells
+   * At the moment we can map margin, leaf polygon and polygon edge
    * ################################
    */
   
-  private void doMappedThings(List<MappedThing> mappedthings){
-    for(MappedThing t:mappedthings){
+  private void doMappedThings(List<ZCSMappedThing> mappedthings){
+    for(ZCSMappedThing t:mappedthings){
       if(t.hasTags("margin")){
         mapMargin(t);
       }else if(t.hasTags("leaf")){
@@ -130,57 +135,31 @@ public class ZCellSystem implements Iterable<ZCell>{
       }else{
         throw new IllegalArgumentException("mapping thing failed");}}}
   
+  private PolygonAreaZCells mapPolygonArea(ZCSMappedThing t){
+    PolygonAreaZCells pac=new PolygonAreaZCells(((FPolygon)t.thing).getDPolygon(),t.transform,t.glowspan);
+    ZCell c1;
+    for(ZCell c0:pac){
+        c1=getCell(c0.x,c0.y);
+        c1.addPresences(c0.presences);}
+    return pac;}
   
-//  public PolygonAreaCells mapPolygonArea(DPolygon areapolygon,AffineTransform areapolygontransform,double glowspan){
-//    PolygonAreaCells c=new PolygonAreaCells(areapolygon,areapolygontransform,glowspan);
+  private PolygonEdgeHCells mapPolygonBoiledEdge(ZCSMappedThing t){
+    return null;}
+//    PolygonEdgeZCells c=new PolygonEdgeZCells(((FPolygon)t.thing).getDPolygon(),t.transform);
 //    ZCell b;
-//    for(ZCell a:c.getCells()){
-//      b=getCell(a.x,a.y);
-//      if(b!=null)
-//        b.presences.add(a.presences.get(0));}
-//    return c;}
-//  
-//  public PolygonEdgeCells mapPolygonEdge(DPolygon edgepolygon,AffineTransform edgepolygontransform,double glowspan){
-//    PolygonEdgeCells c=new PolygonEdgeCells(edgepolygon,edgepolygontransform,glowspan);
-//    ZCell b;
-//    for(ZCell a:c.getCells()){
-//      b=cells[a.x][a.y];
-//      b.presences.add(a.presences.get(0));}
-//    return c;}
-//  
-//  public MarginCells mapMargin(DPolygon rootpolygon,AffineTransform rootpolygontransform,double glowspan){
-//    MarginCells c=new MarginCells(cellarraywidth,cellarrayheight,rootpolygon,rootpolygontransform,glowspan);
-//    ZCell b;
-//    for(ZCell a:c.getCells()){
-//      b=cells[a.x][a.y];
-//      b.presences.add(a.presences.get(0));}
+//    for(ZCell a:c){
+//        b=cells[a.x][a.y];
+//        b.thing=t;}
 //    return c;}
   
-  static final double GLOWSPAN=1.5;
-  
-  private PolygonAreaHCells mapPolygonArea(MappedThing t){
-    PolygonAreaZCells c=new PolygonAreaZCells(((FPolygon)t.thing).getDPolygon(),t.transform,GLOWSPAN);
-    ZCell b;
-    for(ZCell a:c){
-        b=cells[a.x][a.y];
-        b.thing=t;}
-    return c;}
-  
-  private PolygonEdgeHCells mapPolygonBoiledEdge(MappedThing t){
-    PolygonEdgeZCells c=new PolygonEdgeZCells(((FPolygon)t.thing).getDPolygon(),t.transform);
-    ZCell b;
-    for(ZCell a:c){
-        b=cells[a.x][a.y];
-        b.thing=t;}
-    return c;}
-  
-  private MarginHCells mapMargin(MappedThing t){
-    MarginZCells c=new MarginZCells(getWidth(),getHeight(),((FPolygon)t.thing).getDPolygon(),t.transform);
-    ZCell b;
-    for(ZCell a:c){
-        b=cells[a.x][a.y];
-        b.thing=t;}
-    return c;}
+  private MarginHCells mapMargin(ZCSMappedThing t){
+    return null;}
+//    MarginZCells c=new MarginZCells(getWidth(),getHeight(),((FPolygon)t.thing).getDPolygon(),t.transform);
+//    ZCell b;
+//    for(ZCell a:c){
+//        b=cells[a.x][a.y];
+//        b.thing=t;}
+//    return c;}
   
   /*
    * ################################

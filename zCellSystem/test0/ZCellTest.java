@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.fleen.bread.hCellSystem.HCellSystem;
-import org.fleen.bread.zCellSystem.MappedZCellSystemThing;
+import org.fleen.bread.zCellSystem.ZCSMappedThing;
 import org.fleen.bread.zCellSystem.ZCellSystem;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.geom_2D.DPolygon;
@@ -30,10 +30,7 @@ public class ZCellTest{
     initMappedThingsList();
     //
     initCellSystem0();
-    initCellSystem1();
-//    initCompositionFCSTransform();
-//    mapCompositionToFCS();
-    }
+    initCellSystem1();}
   
   /*
    * ################################
@@ -92,40 +89,47 @@ public class ZCellTest{
     Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
     double 
       tx=-bounds.x*scale+margin/scale,
-      ty=-bounds.y*scale+margin/scale-zcellsystem.getHeight()/scale;
+      ty=-bounds.y*scale+margin/scale-getCellSystemHeight()/scale;
     compositioncellsystemtransform.translate(tx,ty);}
   
   /*
    * ################################
-   * MAPPED THINGS LIST
+   * MAPPED THINGS
    * ################################
    */
   
-  List<MappedZCellSystemThing> mappedthings;
+  //this is a nice glowspan, makes for nice transitions
+  //we use this value for all mappings in the test
+  //we could, of course, use different glowspans for all the mappings if we so chose.
+  static final double GLOWSPAN=1.5;
+  
+  List<ZCSMappedThing> mappedthings;
   
   private void initMappedThingsList(){
-    mappedthings=new ArrayList<MappedZCellSystemThing>();
+    mappedthings=new ArrayList<ZCSMappedThing>();
     //
-    MappedZCellSystemThing margin=new MappedZCellSystemThing(composition.getRootPolygon(),compositioncellsystemtransform,new String[]{"margin"});
-    mappedthings.add(margin);
+//    MappedZCellSystemThing margin=
+//      new MappedZCellSystemThing(composition.getRootPolygon(),compositioncellsystemtransform,GLOWSPAN,new String[]{"margin"});
+//    mappedthings.add(margin);
     //
-    MappedZCellSystemThing leaf;
+    ZCSMappedThing leaf;
     for(FPolygon p:composition.getLeafPolygons()){
-      leaf=new MappedZCellSystemThing(p,compositioncellsystemtransform,new String[]{"leaf"});
+      leaf=new ZCSMappedThing(p,compositioncellsystemtransform,GLOWSPAN,new String[]{"leaf"});
       mappedthings.add(leaf);}
     //
-    mappedthings.addAll(getBoiledPolygonEdgeThings());}
+//    mappedthings.addAll(getBoiledPolygonEdgeThings());
+    }
   
   /*
    * TODO
    * a nice symmetricrandom type selection
    */
-  private List<MappedZCellSystemThing> getBoiledPolygonEdgeThings(){
+  private List<ZCSMappedThing> getBoiledPolygonEdgeThings(){
     Random r=new Random();
-    List<MappedZCellSystemThing> a=new ArrayList<MappedZCellSystemThing>();
+    List<ZCSMappedThing> a=new ArrayList<ZCSMappedThing>();
     for(FPolygon p:composition.getPolygons())
       if(r.nextDouble()>0.95)
-        a.add(new MappedZCellSystemThing(p,compositioncellsystemtransform,new String[]{"boiled"}));
+        a.add(new ZCSMappedThing(p,compositioncellsystemtransform,GLOWSPAN,new String[]{"boiled"}));
     return a;}
   
   /*
@@ -134,18 +138,10 @@ public class ZCellTest{
    * ################################
    */
   
-  double glowspan=1.5;
-  
   ZCellSystem 
     cellsystem0,
     cellsystem1;
-  
-  void initCellSystem0(){
-    cellsystem0=new ZCellSystem(getCellSystemWidth(),getCellSystemHeight(),mappedthings);}
-  
-  void initCellSystem1(){
-    cellsystem1=new ZCellSystem(getCellSystemWidth(),getCellSystemHeight());}
-  
+ 
   int getCellSystemWidth(){
     Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
     return (int)(bounds.width*scale+margin+margin);}
@@ -153,6 +149,13 @@ public class ZCellTest{
   int getCellSystemHeight(){
     Rectangle2D.Double bounds=composition.getRootPolygon().getDPolygon().getBounds();
     return (int)(bounds.height*scale+margin+margin);}
+  
+  void initCellSystem0(){
+    cellsystem0=new ZCellSystem(getCellSystemWidth(),getCellSystemHeight(),mappedthings);}
+  
+  void initCellSystem1(){
+    cellsystem1=new ZCellSystem(getCellSystemWidth(),getCellSystemHeight());}
+ 
 //  
 ////  ZCellSystem zcellsystem;
 //  

@@ -6,7 +6,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import org.fleen.bread.colorMap.ColorMap;
-import org.fleen.bread.zCellSystem.Presence;
+import org.fleen.bread.zCellSystem.ZCSMappedThingPresence;
 import org.fleen.bread.zCellSystem.ZCell;
 import org.fleen.bread.zCellSystem.ZCellSystem;
 import org.fleen.forsythia.core.composition.FPolygon;
@@ -88,7 +88,7 @@ public class R_ZCell_DarkStrokes implements Renderer2{
   private Color getColor(ZCell c,ColorMap colormap){
     int r=0,g=0,b=0;
     Color color;
-    for(Presence p:c.presences){
+    for(ZCSMappedThingPresence p:c.presences){
       color=colormap.getColor((FPolygon)p.polygon.object);//so ya, we put the fpolygon in the dpolygon's gp object when we created that dpolygon
       r+=(int)(color.getRed()*p.intensity);
       g+=(int)(color.getGreen()*p.intensity);

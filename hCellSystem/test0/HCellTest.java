@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.fleen.bread.hCellSystem.HCellSystem;
-import org.fleen.bread.hCellSystem.MappedThing;
+import org.fleen.bread.hCellSystem.HCSMappedThing;
 import org.fleen.bread.hCellSystem.R_FattenBoiledEdge;
 import org.fleen.bread.hCellSystem.R_Smooth;
 import org.fleen.bread.hCellSystem.Rule;
@@ -173,17 +173,17 @@ while(notdone){
    * ################################
    */
   
-  List<MappedThing> mappedthings;
+  List<HCSMappedThing> mappedthings;
   
   private void initMappedThingsList(){
-    mappedthings=new ArrayList<MappedThing>();
+    mappedthings=new ArrayList<HCSMappedThing>();
     //
-    MappedThing margin=new MappedThing(composition.getRootPolygon(),compositioncellsystemtransform,new String[]{"margin"});
+    HCSMappedThing margin=new HCSMappedThing(composition.getRootPolygon(),compositioncellsystemtransform,new String[]{"margin"});
     mappedthings.add(margin);
     //
-    MappedThing leaf;
+    HCSMappedThing leaf;
     for(FPolygon p:composition.getLeafPolygons()){
-      leaf=new MappedThing(p,compositioncellsystemtransform,new String[]{"leaf"});
+      leaf=new HCSMappedThing(p,compositioncellsystemtransform,new String[]{"leaf"});
       mappedthings.add(leaf);}
     //
     mappedthings.addAll(getBoiledPolygonEdgeThings());}
@@ -192,12 +192,12 @@ while(notdone){
    * TODO
    * a nice symmetricrandom type selection
    */
-  private List<MappedThing> getBoiledPolygonEdgeThings(){
+  private List<HCSMappedThing> getBoiledPolygonEdgeThings(){
     Random r=new Random();
-    List<MappedThing> a=new ArrayList<MappedThing>();
+    List<HCSMappedThing> a=new ArrayList<HCSMappedThing>();
     for(FPolygon p:composition.getPolygons())
       if(r.nextDouble()>0.95)
-        a.add(new MappedThing(p,compositioncellsystemtransform,new String[]{"boiled"}));
+        a.add(new HCSMappedThing(p,compositioncellsystemtransform,new String[]{"boiled"}));
     return a;}
   
   /*

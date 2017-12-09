@@ -10,7 +10,7 @@ import org.fleen.util.tag.Tagged;
  * a thing that is mapped to a cellsystem
  * the thing and some associated tags
  */
-public class MappedThing implements Tagged{
+public class HCSMappedThing implements Tagged{
 
   /*
    * ################################
@@ -18,12 +18,12 @@ public class MappedThing implements Tagged{
    * ################################
    */
   
-  public MappedThing(){}
+  public HCSMappedThing(){}
   
-  public MappedThing(Object thing){
+  public HCSMappedThing(Object thing){
     this.thing=thing;}
   
-  public MappedThing(Object thing,AffineTransform transform,String[] tags){
+  public HCSMappedThing(Object thing,AffineTransform transform,String[] tags){
     this(thing);
     this.transform=transform;
     tagmanager.addTags(tags);}
