@@ -136,7 +136,7 @@ public class ZCellSystem implements Iterable<ZCell>{
         throw new IllegalArgumentException("mapping thing failed");}}}
   
   private PolygonAreaZCells mapPolygonArea(ZCSMappedThing t){
-    PolygonAreaZCells pac=new PolygonAreaZCells(((FPolygon)t.thing).getDPolygon(),t.transform,t.glowspan);
+    PolygonAreaZCells pac=new PolygonAreaZCells(t);
     ZCell c1;
     for(ZCell c0:pac){
         c1=getCell(c0.x,c0.y);
