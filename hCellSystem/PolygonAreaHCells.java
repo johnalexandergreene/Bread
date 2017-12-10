@@ -289,7 +289,6 @@ public class PolygonAreaHCells implements HCellMass{
         queue.add(new HCell(c.x+1,c.y));}}}
 
   private boolean floodFill_(int x,int y){
-//    if(x<0||x>=enclosingarray.length||y<0||y>=enclosingarray[0].length)return false;
     if(enclosingarray[x][y]!=null)return false;
     enclosingarray[x][y]=new HCell(x,y);
     return true;}

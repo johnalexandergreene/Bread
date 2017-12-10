@@ -1,13 +1,12 @@
 package org.fleen.bread.zCellSystem;
 
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 import org.fleen.bread.hCellSystem.HCell;
@@ -106,19 +105,41 @@ public class PolygonAreaZCells implements ZCellMass{
    * ################################
    */
   
+  static final int SAFETYOFFSET=3;//a bit of padding so we don't have to test for off-array cell queries
+  ZCell[][] enclosingarray;
+  int eaoffsetx,eaoffsety;
+  Set<ZCell> 
+    edgecells=new HashSet<ZCell>(),
+    inneredge=new HashSet<ZCell>(),
+    outeredge=new HashSet<ZCell>(),
+    interior=new HashSet<ZCell>();
+  
+  
   private void mapPolygonArea(){
     createEnclosingArray();
-    doEdgeCells();
+    initEdge();
+    doEdgeAdjacents();
+    mapCellsToEnclosingArray(edgecells);
+    initInnerAndOuterEdge();
+    expand(inneredge);
+    expand(outeredge);
+    doInterior();
+    
+    //set presence for outeredge
+    // " for inner edge
+    // " for interior
+    
+    copyCellsToList();
     
     //test
-    for(ZCell c:edgecells)
-      c.addPresence(mappedthing,1.0);
-    
-    copyNonnullArrayCellsToList();
-    
-  }
+    for(ZCell c:cells)
+      c.addPresence(mappedthing,1.0);}
   
-  private void copyNonnullArrayCellsToList(){
+  /*
+   * copy the nonnull cells from the enclosing array to the cells list
+   * apply offsets too
+   */
+  private void copyCellsToList(){
     ZCell c;
     for(int x=0;x<enclosingarray.length;x++){
       for(int y=0;y<enclosingarray[0].length;y++){
@@ -128,15 +149,144 @@ public class PolygonAreaZCells implements ZCellMass{
           c.y+=eaoffsety;
           cells.add(c);}}}}
   
+  private void mapCellsToEnclosingArray(Collection<ZCell> c){
+    for(ZCell a:c)
+      enclosingarray[a.x][a.y]=a;}
+  
   /*
    * ++++++++++++++++++++++++++++++++
-   * EDGE CELLS
+   * DO INTERIOR
+   * Do a floodfill for every interior cell
    * ++++++++++++++++++++++++++++++++
    */
   
-  private Set<ZCell> edgecells=new HashSet<ZCell>();
+  private void doInterior(){
+    for(ZCell c:inneredge){
+//      floodFill(c.x-1,c.y-1);
+      floodFill(c.x,c.y-1);
+//      floodFill(c.x+1,c.y-1);
+      floodFill(c.x+1,c.y);
+//      floodFill(c.x+1,c.y+1);
+      floodFill(c.x,c.y+1);
+//      floodFill(c.x-1,c.y+1);
+      floodFill(c.x-1,c.y);
+      }
+    
+    System.out.println("interior = "+interior.size());
+    
+  }
   
-  private void doEdgeCells(){
+  private void floodFill(int x,int y){
+    if(enclosingarray[x][y]!=null)return;
+    Queue<ZCell> queue=new LinkedList<ZCell>();
+    ZCell c;
+    queue.add(new ZCell(x,y));
+    while(!queue.isEmpty()) {
+      c=queue.remove();
+      if(floodFill_(c.x,c.y)){     
+        queue.add(new ZCell(c.x,c.y-1)); 
+        queue.add(new ZCell(c.x,c.y+1)); 
+        queue.add(new ZCell(c.x-1,c.y)); 
+        queue.add(new ZCell(c.x+1,c.y));}}}
+
+  private boolean floodFill_(int x,int y){
+    if(x<0||x>=enclosingarray.length||y<0||y>=enclosingarray[0].length||enclosingarray[x][y]!=null)return false;
+//    if(enclosingarray[x][y]!=null)return false;
+    enclosingarray[x][y]=new ZCell(x,y);
+    interior.add(enclosingarray[x][y]);
+    return true;}
+  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * EXPAND INNER AND OUTER EDGE
+   * get all the cells adjacent to the edge cells
+   * then get all the cells adjacent to those cells
+   * and so on
+   * for a number of cycles to encompass glow
+   * ++++++++++++++++++++++++++++++++
+   */
+  
+  private void expand(Set<ZCell> edgecells){
+    Set<ZCell> 
+      active=new HashSet<ZCell>(edgecells),
+      newactive=new HashSet<ZCell>();
+    int expandcyclescount=getExpandCyclesCount();
+    for(int i=0;i<expandcyclescount;i++){
+      for(ZCell c:active){
+        newactive.addAll(getNullNeighbors(c));}
+      mapCellsToEnclosingArray(newactive);
+      edgecells.addAll(newactive);
+      active.clear();
+      active.addAll(newactive);
+      newactive.clear();}}
+  
+  private int getExpandCyclesCount(){
+    int a=(int)(Math.ceil(getGlowSpan())+1);
+    return a;}
+  
+  private List<ZCell> getNullNeighbors(ZCell c){
+    List<ZCell> n=new ArrayList<ZCell>(8);
+    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x-1,c.y-1));
+    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x,c.y-1));
+    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x+1,c.y-1));
+    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x+1,c.y));
+    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x+1,c.y+1));
+    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x,c.y+1));
+    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x-1,c.y+1));
+    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x-1,c.y));
+    return n;}
+  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * INIT INNER AND OUTER EDGE
+   * for all the cells in edgecells
+   * test for polygon.contained
+   * ++++++++++++++++++++++++++++++++
+   */
+  
+  private void initInnerAndOuterEdge(){
+    for(ZCell c:edgecells){
+      if(transformedpolygon.containsPoint(c.x+eaoffsetx,c.y+eaoffsety))
+        inneredge.add(c);
+      else
+        outeredge.add(c);}}
+  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * DO EDGE ADJACENTS
+   * get the cells adjacent to the edge cells
+   * add them to the edge cells set
+   * don't even test them or anything
+   * ++++++++++++++++++++++++++++++++
+   */
+  
+  private void doEdgeAdjacents(){
+    List<ZCell> a=new ArrayList<ZCell>();
+    for(ZCell b:edgecells)
+      a.addAll(getAdjacents(b));
+    edgecells.addAll(a);}
+  
+  private List<ZCell> getAdjacents(ZCell c){
+    List<ZCell> a=new ArrayList<ZCell>(8);
+    a.add(new ZCell(c.x-1,c.y-1));
+    a.add(new ZCell(c.x,c.y-1));
+    a.add(new ZCell(c.x+1,c.y-1));
+    a.add(new ZCell(c.x+1,c.y));
+    a.add(new ZCell(c.x+1,c.y+1));
+    a.add(new ZCell(c.x,c.y+1));
+    a.add(new ZCell(c.x-1,c.y+1));
+    a.add(new ZCell(c.x-1,c.y));
+    return a;}
+  
+  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * INIT EDGE CELLS
+   * get the edge cells with bresenhams
+   * ++++++++++++++++++++++++++++++++
+   */
+  
+  private void initEdge(){
     int s=transformedpolygon.size(),i1;
     ZCell c0,c1;
     DPoint p0,p1;
@@ -162,7 +312,6 @@ public class PolygonAreaZCells implements ZCellMass{
     return new ZCell((int)x-eaoffsetx,(int)y-eaoffsety);}
   
   private void bresenhamSegDraw(int x0,int y0,int x1,int y1){
-    ZCell cell;
     int w=x1-x0;
     int h=y1-y0;
     int dx1=0,dy1=0,dx2=0,dy2=0;
@@ -190,9 +339,7 @@ public class PolygonAreaZCells implements ZCellMass{
         dx2=0;}
     int numerator=longest>>1;
     for(int i=0;i<=longest;i++){
-      cell=new ZCell(x0,y0);
-      enclosingarray[x0][y0]=cell;
-      edgecells.add(cell);
+      edgecells.add(new ZCell(x0,y0));
       numerator+=shortest;
       if(!(numerator<longest)){
         numerator-=longest;
@@ -207,10 +354,6 @@ public class PolygonAreaZCells implements ZCellMass{
    * ENCLOSING ARRAY
    * ++++++++++++++++++++++++++++++++
    */
-  
-  static final int SAFETYOFFSET=3;//so we don't have to test for off-array cell queries
-  ZCell[][] enclosingarray;
-  int eaoffsetx,eaoffsety;
   
   private void createEnclosingArray(){
     List<ZCell> vertexcells=new ArrayList<ZCell>(transformedpolygon.size());
