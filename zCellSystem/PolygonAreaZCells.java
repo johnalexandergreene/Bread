@@ -89,19 +89,17 @@ public class PolygonAreaZCells implements ZCellMass{
    * MAP POLYGON AREA
    * create cell array to enclose polygon, with offsets : enclosingarray 
    *   And margins to allow for glow and safety
-   * draw edge of polygon using bresenhams : edgecells
-   * get cells adjacent to edgecells, add them to edgecells
-   * test centerpoint of each of edgecells for inside polygon
-   * cells outside polygon : outsideedge
-   * cells inside polygon : insideedge
-   * gather outside layers to outsideedge. layercount=glowspan*C
-   * gather inside layers to insideedge  
-   * get a cell inside insideedge. use that as start for floodfill
-   * do floodfill to get the rest of the area cells : inside 
-   * set presences for inside cells to 1.0
-   * set presences for outsideedge cells to inverse of polygondistance
-   * set presences for insideedge cells to polygondistance
-   * put all nonnull enclosingarray cells into the cells list.
+   * get edge of polygon using bresenhams : edgecells
+   * 
+   * get interior of polygon using floodfill
+   *   
+   * 
+   * get outer edge using floodfill constrained to glowdistance
+   * 
+   * get inner edge using floodfill constrained to glowdistance
+   *   
+   * 
+   * 
    * ################################
    */
   
@@ -114,16 +112,19 @@ public class PolygonAreaZCells implements ZCellMass{
     outeredge=new HashSet<ZCell>(),
     interior=new HashSet<ZCell>();
   
+  int testthing;
   
   private void mapPolygonArea(){
     createEnclosingArray();
     initEdge();
-    doEdgeAdjacents();
     mapCellsToEnclosingArray(edgecells);
-    initInnerAndOuterEdge();
-    expand(inneredge);
-    expand(outeredge);
     doInterior();
+//    initInnerAndOuterEdge();
+//    testthing=2;
+//    expand(inneredge);
+//    testthing=3;
+//    expand(outeredge);
+//    doInterior();
     
     //set presence for outeredge
     // " for inner edge
@@ -134,6 +135,11 @@ public class PolygonAreaZCells implements ZCellMass{
     //test
     for(ZCell c:cells)
       c.addPresence(mappedthing,1.0);}
+  
+
+  
+  
+  
   
   /*
    * copy the nonnull cells from the enclosing array to the cells list
@@ -150,37 +156,44 @@ public class PolygonAreaZCells implements ZCellMass{
           cells.add(c);}}}}
   
   private void mapCellsToEnclosingArray(Collection<ZCell> c){
-    for(ZCell a:c)
-      enclosingarray[a.x][a.y]=a;}
+    for(ZCell a:c){
+      enclosingarray[a.x][a.y]=a;}}
   
   /*
    * ++++++++++++++++++++++++++++++++
    * DO INTERIOR
-   * Do a floodfill for every interior cell
+   * get a null interior cell
+   * floodfill everything inside the edge
    * ++++++++++++++++++++++++++++++++
    */
   
   private void doInterior(){
-    for(ZCell c:inneredge){
-//      floodFill(c.x-1,c.y-1);
-      floodFill(c.x,c.y-1);
-//      floodFill(c.x+1,c.y-1);
-      floodFill(c.x+1,c.y);
-//      floodFill(c.x+1,c.y+1);
-      floodFill(c.x,c.y+1);
-//      floodFill(c.x-1,c.y+1);
-      floodFill(c.x-1,c.y);
-      }
-    
-    System.out.println("interior = "+interior.size());
-    
-  }
+    ZCell a=getNullInteriorCell();
+    floodFill(a);}
   
-  private void floodFill(int x,int y){
-    if(enclosingarray[x][y]!=null)return;
+  private ZCell getNullInteriorCell(){
+    ZCell c0=new ZCell();
+    for(ZCell c:edgecells){
+      c0.x=c.x;
+      c0.y=c.y-1;
+      if(isNullInteriorCell(c0))return c0;
+      c0.y=c.y+1;
+      if(isNullInteriorCell(c0))return c0;
+      c0.x=c.x-1;
+      c0.y=c.y;
+      if(isNullInteriorCell(c0))return c0;
+      c0.x=c.x+1;
+      if(isNullInteriorCell(c0))return c0;}
+    throw new IllegalArgumentException("couldn't get a null interior cell");}
+  
+  private boolean isNullInteriorCell(ZCell c){
+    if(enclosingarray[c.x][c.y]!=null)return false;
+    return transformedpolygon.containsPoint(c.x+eaoffsetx,c.y+eaoffsety);}
+  
+  private void floodFill(ZCell a){
     Queue<ZCell> queue=new LinkedList<ZCell>();
     ZCell c;
-    queue.add(new ZCell(x,y));
+    queue.add(a);
     while(!queue.isEmpty()) {
       c=queue.remove();
       if(floodFill_(c.x,c.y)){     
@@ -190,10 +203,13 @@ public class PolygonAreaZCells implements ZCellMass{
         queue.add(new ZCell(c.x+1,c.y));}}}
 
   private boolean floodFill_(int x,int y){
-    if(x<0||x>=enclosingarray.length||y<0||y>=enclosingarray[0].length||enclosingarray[x][y]!=null)return false;
-//    if(enclosingarray[x][y]!=null)return false;
+    if(enclosingarray[x][y]!=null)return false;
     enclosingarray[x][y]=new ZCell(x,y);
     interior.add(enclosingarray[x][y]);
+    
+    //TEST
+    enclosingarray[x][y].itest=4;
+    
     return true;}
   
   /*
@@ -226,14 +242,19 @@ public class PolygonAreaZCells implements ZCellMass{
   
   private List<ZCell> getNullNeighbors(ZCell c){
     List<ZCell> n=new ArrayList<ZCell>(8);
+    if(enclosingarray[c.x-1][c.y+1]==null)n.add(new ZCell(c.x-1,c.y+1));
+    if(enclosingarray[c.x][c.y+1]==null)n.add(new ZCell(c.x,c.y+1));
+    if(enclosingarray[c.x+1][c.y+1]==null)n.add(new ZCell(c.x+1,c.y+1));
+    if(enclosingarray[c.x+1][c.y]==null)n.add(new ZCell(c.x+1,c.y));
+    if(enclosingarray[c.x+1][c.y-1]==null)n.add(new ZCell(c.x+1,c.y-1));
+    if(enclosingarray[c.x][c.y-1]==null)n.add(new ZCell(c.x,c.y-1));
     if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x-1,c.y-1));
-    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x,c.y-1));
-    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x+1,c.y-1));
-    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x+1,c.y));
-    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x+1,c.y+1));
-    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x,c.y+1));
-    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x-1,c.y+1));
-    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x-1,c.y));
+    if(enclosingarray[c.x-1][c.y]==null)n.add(new ZCell(c.x-1,c.y));
+    
+    //test
+    for(ZCell f:n)
+      f.itest=testthing;
+    
     return n;}
   
   /*
@@ -246,10 +267,17 @@ public class PolygonAreaZCells implements ZCellMass{
   
   private void initInnerAndOuterEdge(){
     for(ZCell c:edgecells){
-      if(transformedpolygon.containsPoint(c.x+eaoffsetx,c.y+eaoffsety))
+      if(transformedpolygon.containsPoint(c.x+eaoffsetx,c.y+eaoffsety)){
+        c.itest=2;
         inneredge.add(c);
-      else
+      }else{
+        c.itest=3;
         outeredge.add(c);}}
+  
+    System.out.println("inneredge="+inneredge.size());
+    System.out.println("outeredge="+outeredge.size());
+  
+  }
   
   /*
    * ++++++++++++++++++++++++++++++++
@@ -268,13 +296,13 @@ public class PolygonAreaZCells implements ZCellMass{
   
   private List<ZCell> getAdjacents(ZCell c){
     List<ZCell> a=new ArrayList<ZCell>(8);
-    a.add(new ZCell(c.x-1,c.y-1));
-    a.add(new ZCell(c.x,c.y-1));
-    a.add(new ZCell(c.x+1,c.y-1));
-    a.add(new ZCell(c.x+1,c.y));
-    a.add(new ZCell(c.x+1,c.y+1));
-    a.add(new ZCell(c.x,c.y+1));
     a.add(new ZCell(c.x-1,c.y+1));
+    a.add(new ZCell(c.x,c.y+1));
+    a.add(new ZCell(c.x+1,c.y+1));
+    a.add(new ZCell(c.x+1,c.y));
+    a.add(new ZCell(c.x+1,c.y-1));
+    a.add(new ZCell(c.x,c.y-1));
+    a.add(new ZCell(c.x-1,c.y-1));
     a.add(new ZCell(c.x-1,c.y));
     return a;}
   
@@ -298,7 +326,7 @@ public class PolygonAreaZCells implements ZCellMass{
       p1=transformedpolygon.get(i1);
       c0=deGetCellAtPoint(p0.x,p0.y);
       c1=deGetCellAtPoint(p1.x,p1.y);
-      bresenhamSegDraw(c0.x,c0.y,c1.x,c1.y);}}
+      bresenhamSupercoverSegDraw(c0.x,c0.y,c1.x,c1.y);}}
   
   private ZCell deGetCellAtPoint(double x,double y){
     if(x-Math.floor(x)<0.5)
@@ -311,43 +339,74 @@ public class PolygonAreaZCells implements ZCellMass{
       y=Math.ceil(y);
     return new ZCell((int)x-eaoffsetx,(int)y-eaoffsety);}
   
-  private void bresenhamSegDraw(int x0,int y0,int x1,int y1){
-    int w=x1-x0;
-    int h=y1-y0;
-    int dx1=0,dy1=0,dx2=0,dy2=0;
-    if(w<0)
-      dx1=-1; 
-    else if(w>0)
-      dx1=1;
-    if(h<0)
-      dy1=-1; 
-    else if(h>0) 
-      dy1=1;
-    if(w<0)
-      dx2=-1; 
-    else if(w>0) 
-      dx2=1;
-    int longest=Math.abs(w);
-    int shortest=Math.abs(h);
-    if(!(longest>shortest)){
-      longest=Math.abs(h);
-      shortest=Math.abs(w);
-      if(h<0)
-        dy2=-1; 
-      else if(h>0) 
-        dy2=1;
-        dx2=0;}
-    int numerator=longest>>1;
-    for(int i=0;i<=longest;i++){
-      edgecells.add(new ZCell(x0,y0));
-      numerator+=shortest;
-      if(!(numerator<longest)){
-        numerator-=longest;
-        x0+=dx1;
-        y0+=dy1;
-      }else{
-        x0+=dx2;
-        y0+=dy2;}}}
+  /*
+   * BRESENHAM SUPERCOVER LINE DRAW
+   * 
+   * use Bresenham-like algorithm to address a line of squares from (y1,x1) to (y2,x2) 
+   * The difference from Bresenham is that ALL the points of the line are 
+   * printed, not only one per x coordinate. 
+   * Principles of the Bresenham's algorithm (heavily modified) were taken from: 
+   * http://www.intranet.ca/~sshah/waste/art7.html 
+   */
+  void bresenhamSupercoverSegDraw(int x0,int y0,int x1,int y1){
+    int i;               // loop counter 
+    int ystep, xstep;    // the step on y and x axis 
+    int error;           // the error accumulated during the increment 
+    int errorprev;       // vision the previous value of the error variable 
+    int y = y0, x = x0;  // the line points 
+    double ddy, ddx;        // compulsory variables: the double values of dy and dx 
+    int dx = x1 - x0; 
+    int dy = y1 - y0;
+//    segcells.add(cells[x][y]); //skip the first cell, otherwise some cells get selected twice
+    // NB the last point can't be here, because of its previous point (which has to be verified) 
+    if (dy < 0){ 
+      ystep = -1; 
+      dy = -dy; 
+    }else 
+      ystep = 1; 
+    if (dx < 0){ 
+      xstep = -1; 
+      dx = -dx; 
+    }else 
+      xstep = 1; 
+    ddy = 2 * dy;  // work with double values for full precision 
+    ddx = 2 * dx; 
+    if (ddx >= ddy){  // first octant (0 <= slope <= 1) 
+      // compulsory initialization (even for errorprev, needed when dx==dy) 
+      errorprev = error = dx;  // start in the middle of the square 
+      for (i=0 ; i < dx ; i++){  // do not use the first point (already done) 
+        x += xstep; 
+        error += ddy; 
+        if (error > ddx){  // increment y if AFTER the middle ( > ) 
+          y += ystep; 
+          error -= ddx; 
+          // three cases (octant == right->right-top for directions below): 
+          if (error + errorprev < ddx){  // bottom square also
+            edgecells.add(new ZCell(x,y-ystep));
+          }else if(error + errorprev > ddx){  // left square also 
+            edgecells.add(new ZCell(x-xstep,y));
+          }else{  // corner: bottom and left squares also 
+            edgecells.add(new ZCell(x,y-ystep));
+            edgecells.add(new ZCell(x-xstep,y));}} 
+        edgecells.add(new ZCell(x,y));
+        errorprev = error;} 
+    }else{// the same as above 
+      errorprev = error = dy; 
+      for (i=0 ; i < dy ; i++){ 
+        y += ystep; 
+        error += ddx; 
+        if (error > ddy){ 
+          x += xstep; 
+          error -= ddy; 
+          if (error + errorprev < ddy){ 
+            edgecells.add(new ZCell(x-xstep,y));
+          }else if (error + errorprev > ddy){ 
+            edgecells.add(new ZCell(x,y-ystep));
+          }else{ 
+            edgecells.add(new ZCell(x-xstep,y));
+            edgecells.add(new ZCell(x,y-ystep));}}
+        edgecells.add(new ZCell(x,y));
+        errorprev = error;}}}
   
   /*
    * ++++++++++++++++++++++++++++++++

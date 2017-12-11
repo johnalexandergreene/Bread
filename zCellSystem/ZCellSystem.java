@@ -140,7 +140,8 @@ public class ZCellSystem implements Iterable<ZCell>{
     ZCell c1;
     for(ZCell c0:pac){
         c1=getCell(c0.x,c0.y);
-        c1.addPresences(c0.presences);}
+        c1.addPresences(c0.presences);
+        c1.itest=c0.itest;}
     return pac;}
   
   private PolygonEdgeHCells mapPolygonBoiledEdge(ZCSMappedThing t){

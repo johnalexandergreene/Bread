@@ -16,11 +16,13 @@ public class TestComposition000 extends ForsythiaComposition{
   
   public TestComposition000(){
     super();
+    System.out.println("TEST COMPOISITION 0000");
     initGrammar();
     FMetagon rm=gleanRootMetagon(grammar);
     initTree(rm);
     Jig j=grammar.getJigs(rm).get(0);
-    j.createNodes(getRootPolygon());}
+    j.createNodes(getRootPolygon());
+    System.out.println("polygoncount="+getPolygons().size());}
   
   private FMetagon gleanRootMetagon(ForsythiaGrammar grammar){
     for(FMetagon m:grammar.getMetagons()){

@@ -7,11 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.fleen.bread.hCellSystem.HCellSystem;
 import org.fleen.bread.zCellSystem.ZCSMappedThing;
 import org.fleen.bread.zCellSystem.ZCellSystem;
 import org.fleen.forsythia.core.composition.FPolygon;
-import org.fleen.geom_2D.DPolygon;
+import org.fleen.forsythia.core.composition.ForsythiaComposition;
 
 public class ZCellTest{
 
@@ -27,6 +26,7 @@ public class ZCellTest{
     //
     initComposition();
     initCompositionCellSystemTransform();
+//    initMappedThingsListForSimpleTest();
     initMappedThingsList();
     //
     initCellSystem0();
@@ -65,10 +65,13 @@ public class ZCellTest{
    * ################################
    */
   
-  TestComposition001 composition;
+  ForsythiaComposition composition;
   
   private void initComposition(){
-    composition=new TestComposition001();}
+    composition=new TestComposition001();
+//    composition=new TestComposition000();
+    
+  }
   
   /*
    * ################################
@@ -79,7 +82,7 @@ public class ZCellTest{
    */
   
   int margin=8;
-  double scale=222;
+  double scale=55;
   AffineTransform compositioncellsystemtransform;
   
   private void initCompositionCellSystemTransform(){
@@ -104,6 +107,16 @@ public class ZCellTest{
   static final double GLOWSPAN=1.5;
   
   List<ZCSMappedThing> mappedthings;
+  
+  
+  private void initMappedThingsListForSimpleTest(){
+    mappedthings=new ArrayList<ZCSMappedThing>();
+    ZCSMappedThing leaf;
+    for(FPolygon p:composition.getLeafPolygons()){
+      if(p.hasTags("hex")){
+        leaf=new ZCSMappedThing(p,compositioncellsystemtransform,GLOWSPAN,new String[]{"leaf"});
+        mappedthings.add(leaf);}}
+  }
   
   private void initMappedThingsList(){
     mappedthings=new ArrayList<ZCSMappedThing>();
@@ -162,11 +175,11 @@ public class ZCellTest{
    * ################################
    */
   
-  ZCellTestRenderer renderer;
+  ZCellTestRenderer2 renderer;
   BufferedImage image=null;
   
   private void initRenderer(){
-    renderer=new ZCellTestRenderer(this);}
+    renderer=new ZCellTestRenderer2(this);}
   
   private void render(ZCellSystem zcs){
     image=renderer.render(zcs);

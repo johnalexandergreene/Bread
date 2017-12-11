@@ -28,6 +28,8 @@ public class ZCell{
     this.x=x;
     this.y=y;}
   
+  ZCell(){}
+  
   /*
    * ################################
    * GEOMETRY
@@ -142,6 +144,14 @@ public class ZCell{
     for(ZCSMappedThingPresence p:presences)
       s+=p.intensity;
     return s;}
+  
+  /*
+   * ################################
+   * TEST INTEGER
+   * ################################
+   */
+  
+  public int itest=0;
   
   /*
    * ################################
