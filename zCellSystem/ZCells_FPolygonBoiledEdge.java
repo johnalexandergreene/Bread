@@ -20,7 +20,7 @@ import org.fleen.geom_2D.DPolygon;
  * Mark all cells with presences according to distance from edge (inward or outward)
  *  
  */
-public class PolygonEdgeZCells implements ZCellMass{
+public class ZCells_FPolygonBoiledEdge implements ZCellMass{
   
   /*
    * ################################
@@ -28,7 +28,7 @@ public class PolygonEdgeZCells implements ZCellMass{
    * ################################
    */
   
-  PolygonEdgeZCells(DPolygon polygon,AffineTransform transform,double glowspan){
+  ZCells_FPolygonBoiledEdge(DPolygon polygon,AffineTransform transform,double glowspan){
     this.polygon=polygon;
     this.glowspan=glowspan;
     initTransformedPolygon(transform);

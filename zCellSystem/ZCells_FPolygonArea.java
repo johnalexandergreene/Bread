@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.geom_2D.DPoint;
 import org.fleen.geom_2D.DPolygon;
 
@@ -17,7 +16,7 @@ import org.fleen.geom_2D.DPolygon;
  * A polygon's shadow upon the raster cell array
  * all of the cells in which the Polygon manifests as a non-zero intensity Presence
  */
-public class PolygonAreaZCells implements ZCellMass{
+public class ZCells_FPolygonArea implements ZCellMass{
   
   /*
    * ################################
@@ -25,19 +24,18 @@ public class PolygonAreaZCells implements ZCellMass{
    * ################################
    */
   
-  PolygonAreaZCells(ZCSMappedThing mappedthing){
-    this.mappedthing=mappedthing;
+  ZCells_FPolygonArea(ZCSMT_FPolygonArea a){
+    mappedpolygonarea=a;
     initTransformedPolygon();
     mapPolygonArea();}
   
   /*
    * ################################
-   * MAPPED THING
-   * In this case, the area of a polygon
+   * MAPPED POLYGON AREA
    * ################################
    */
   
-  private ZCSMappedThing mappedthing;
+  private ZCSMT_FPolygonArea mappedpolygonarea;
   
   /*
    * ################################
@@ -48,14 +46,14 @@ public class PolygonAreaZCells implements ZCellMass{
   private DPolygon transformedpolygon;
   
   private void initTransformedPolygon(){
-    DPolygon polygon=((FPolygon)mappedthing.thing).getDPolygon();
-    int s=polygon.size();
+    DPolygon dpolygon=mappedpolygonarea.fpolygon.getDPolygon();
+    int s=dpolygon.size();
     transformedpolygon=new DPolygon(s);
     double[] a=new double[2];
-    for(DPoint p:polygon){
+    for(DPoint p:dpolygon){
       a[0]=p.x;
       a[1]=p.y;
-      mappedthing.transform.transform(a,0,a,0,1);
+      mappedpolygonarea.fpolygontransform.transform(a,0,a,0,1);
       transformedpolygon.add(new DPoint(a));}}
   
   /*
@@ -66,7 +64,7 @@ public class PolygonAreaZCells implements ZCellMass{
    */
   
   private double getGlowSpan(){
-    return mappedthing.glowspan;}
+    return mappedpolygonarea.glowspan;}
   
   /*
    * ################################
@@ -183,10 +181,8 @@ public class PolygonAreaZCells implements ZCellMass{
       //because we're filling only nulls
       enclosingarray[x][y]!=null)return false;
     enclosingarray[x][y]=new ZCell(x,y);
-    enclosingarray[x][y].addPresence(mappedthing,1.0);//1.0 because the thing is at max presence in the interior
+    enclosingarray[x][y].addPresence(mappedpolygonarea,1.0);//1.0 because the thing is at max presence in the interior
     innermost.add(enclosingarray[x][y]);
-    //TEST
-    enclosingarray[x][y].gp=6;
     return true;}
   
   /*
@@ -222,12 +218,9 @@ public class PolygonAreaZCells implements ZCellMass{
     if(d>g)return false;
     //that distance is our presence
     enclosingarray[x][y]=new ZCell(x,y);
-    enclosingarray[x][y].addPresence(mappedthing,0.5-(d/g)*0.5);
+    enclosingarray[x][y].addPresence(mappedpolygonarea,0.5-(d/g)*0.5);
     outeredge.add(enclosingarray[x][y]);
-    
-    //TEST
-    enclosingarray[x][y].gp=4;
-    
+    //
     return true;}
   
   private ZCell getOuterEdgeNullCell(){
@@ -276,16 +269,12 @@ public class PolygonAreaZCells implements ZCellMass{
     //cell for seeding our innermost flood, so we save it
     if(d>g){
       innermostfloodseednulls.add(new ZCell(x,y));
-      return false;
-    }
+      return false;}
     //that distance is our presence
     enclosingarray[x][y]=new ZCell(x,y);
-    enclosingarray[x][y].addPresence(mappedthing,0.5+(d/g)*0.5);
+    enclosingarray[x][y].addPresence(mappedpolygonarea,0.5+(d/g)*0.5);
     inneredge.add(enclosingarray[x][y]);
-    
-    //TEST
-    enclosingarray[x][y].gp=5;
-    
+    //
     return true;}
   
   private ZCell getInnerEdgeNullCell(){
@@ -312,10 +301,8 @@ public class PolygonAreaZCells implements ZCellMass{
   private void doInnerAndOuterEdge(){
     for(ZCell c:edge){
       if(transformedpolygon.containsPoint(c.x+eaoffsetx,c.y+eaoffsety)){
-        c.gp=2;
         inneredge.add(c);
       }else{
-        c.gp=3;
         outeredge.add(c);}}
     doPresencesForInnerEdge();
     doPresencesForOuterEdge();}
@@ -325,18 +312,18 @@ public class PolygonAreaZCells implements ZCellMass{
     for(ZCell c:inneredge){
       d=transformedpolygon.getDistance(c.x+eaoffsetx,c.y+eaoffsety);
       if(d>g){//this probably won't happen, but just in case
-        c.addPresence(mappedthing,1.0);
+        c.addPresence(mappedpolygonarea,1.0);
       }else{
-        c.addPresence(mappedthing,0.5+(d/g)*0.5);}}}
+        c.addPresence(mappedpolygonarea,0.5+(d/g)*0.5);}}}
   
   private void doPresencesForOuterEdge(){
     double d,g=getGlowSpan();
     for(ZCell c:outeredge){
       d=transformedpolygon.getDistance(c.x+eaoffsetx,c.y+eaoffsety);
       if(d>g){//this probably won't happen, but just in case
-        c.addPresence(mappedthing,0.0);
+        c.addPresence(mappedpolygonarea,0.0);
       }else{
-        c.addPresence(mappedthing,0.5-(d/g)*0.5);}}}
+        c.addPresence(mappedpolygonarea,0.5-(d/g)*0.5);}}}
   
   /*
    * ++++++++++++++++++++++++++++++++

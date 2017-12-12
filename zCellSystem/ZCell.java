@@ -28,6 +28,10 @@ public class ZCell{
     this.x=x;
     this.y=y;}
   
+  ZCell(int x,int y,ZCSMappedThing thing,double intensity){
+    this(x,y);
+    addPresence(thing,intensity);}
+  
   ZCell(){}
   
   /*
@@ -144,14 +148,6 @@ public class ZCell{
     for(ZCSMappedThingPresence p:presences)
       s+=p.intensity;
     return s;}
-  
-  /*
-   * ################################
-   * GENERAL PURPOSE OBJECT
-   * ################################
-   */
-  
-  public Object gp=null;
   
   /*
    * ################################

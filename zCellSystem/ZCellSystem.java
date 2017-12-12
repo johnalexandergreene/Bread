@@ -3,10 +3,6 @@ package org.fleen.bread.zCellSystem;
 import java.util.Iterator;
 import java.util.List;
 
-import org.fleen.bread.hCellSystem.MarginHCells;
-import org.fleen.bread.hCellSystem.PolygonEdgeHCells;
-import org.fleen.forsythia.core.composition.FPolygon;
-
 /* 
  * It's a reaction diffusion system
  * 
@@ -98,7 +94,7 @@ public class ZCellSystem implements Iterable<ZCell>{
     return n;}
   
   public Iterator<ZCell> iterator(){
-    return new ZCellIterator(this);}
+    return new ZCSCellIterator(this);}
   
   /*
    * return the cell that contains the specified point
@@ -126,25 +122,24 @@ public class ZCellSystem implements Iterable<ZCell>{
   
   private void doMappedThings(List<ZCSMappedThing> mappedthings){
     for(ZCSMappedThing t:mappedthings){
-      if(t.hasTags("margin")){
-        mapMargin(t);
-      }else if(t.hasTags("leaf")){
-        mapPolygonArea(t);
-      }else if(t.hasTags("boiled")){
-        mapPolygonBoiledEdge(t);
+      if(t instanceof ZCSMT_FCompositionMargin){
+        mapMargin((ZCSMT_FCompositionMargin)t);
+      }else if(t instanceof ZCSMT_FPolygonArea){
+        mapPolygonArea((ZCSMT_FPolygonArea)t);
+      }else if(t instanceof ZCSMT_FPolygonBoiledEdge){
+        mapPolygonBoiledEdge((ZCSMT_FPolygonBoiledEdge)t);
       }else{
         throw new IllegalArgumentException("mapping thing failed");}}}
   
-  private PolygonAreaZCells mapPolygonArea(ZCSMappedThing t){
-    PolygonAreaZCells pac=new PolygonAreaZCells(t);
+  private ZCells_FPolygonArea mapPolygonArea(ZCSMT_FPolygonArea t){
+    ZCells_FPolygonArea a=new ZCells_FPolygonArea(t);
     ZCell c1;
-    for(ZCell c0:pac){
+    for(ZCell c0:a){
         c1=getCell(c0.x,c0.y);
-        c1.addPresences(c0.presences);
-        c1.gp=c0.gp;}
-    return pac;}
+        c1.addPresences(c0.presences);}
+    return a;}
   
-  private PolygonEdgeHCells mapPolygonBoiledEdge(ZCSMappedThing t){
+  private ZCells_FPolygonBoiledEdge mapPolygonBoiledEdge(ZCSMT_FPolygonBoiledEdge t){
     return null;}
 //    PolygonEdgeZCells c=new PolygonEdgeZCells(((FPolygon)t.thing).getDPolygon(),t.transform);
 //    ZCell b;
@@ -153,14 +148,13 @@ public class ZCellSystem implements Iterable<ZCell>{
 //        b.thing=t;}
 //    return c;}
   
-  private MarginHCells mapMargin(ZCSMappedThing t){
-    return null;}
-//    MarginZCells c=new MarginZCells(getWidth(),getHeight(),((FPolygon)t.thing).getDPolygon(),t.transform);
-//    ZCell b;
-//    for(ZCell a:c){
-//        b=cells[a.x][a.y];
-//        b.thing=t;}
-//    return c;}
+  private ZCells_FCompositionMargin mapMargin(ZCSMT_FCompositionMargin t){
+    ZCells_FCompositionMargin m=new ZCells_FCompositionMargin(t);
+    ZCell c1;
+    for(ZCell c0:m){
+        c1=getCell(c0.x,c0.y);
+        c1.addPresences(c0.presences);}
+    return m;}
   
   /*
    * ################################

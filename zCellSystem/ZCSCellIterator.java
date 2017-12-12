@@ -3,9 +3,9 @@ package org.fleen.bread.zCellSystem;
 import java.util.Iterator;
 
 
-class ZCellIterator implements Iterator<ZCell> {
+class ZCSCellIterator implements Iterator<ZCell> {
   
-  ZCellIterator(ZCellSystem zcellsystem){
+  ZCSCellIterator(ZCellSystem zcellsystem){
     this.zcellsystem=zcellsystem;}
   
   ZCellSystem zcellsystem;

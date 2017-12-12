@@ -11,7 +11,7 @@ import java.util.Random;
 
 import org.fleen.bread.hCellSystem.HCell;
 import org.fleen.bread.palette.Palette;
-import org.fleen.bread.zCellSystem.ZCSMappedThing;
+import org.fleen.bread.zCellSystem.ZCSMT_FPolygonArea;
 import org.fleen.bread.zCellSystem.ZCSMappedThingPresence;
 import org.fleen.bread.zCellSystem.ZCell;
 import org.fleen.bread.zCellSystem.ZCellSystem;
@@ -131,7 +131,7 @@ public class ZCellTestRenderer2{
   Random rnd=new Random();
   Map<FPolygonSignature,Color> colorbypolygonsignature=new HashMap<FPolygonSignature,Color>();
   
-  private Color getPolygonColor(ZCSMappedThing thing){
+  private Color getPolygonColor(ZCSMT_FPolygonArea thing){
     Color c;
     if(thing.hasTags("leaf")||thing.hasTags("boiled")){
       FPolygon p=(FPolygon)thing.thing;

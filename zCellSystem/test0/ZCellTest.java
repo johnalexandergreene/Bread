@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.fleen.bread.zCellSystem.ZCSMT_FCompositionMargin;
+import org.fleen.bread.zCellSystem.ZCSMT_FPolygonArea;
 import org.fleen.bread.zCellSystem.ZCSMappedThing;
 import org.fleen.bread.zCellSystem.ZCellSystem;
 import org.fleen.forsythia.core.composition.FPolygon;
@@ -110,27 +112,28 @@ public class ZCellTest{
   List<ZCSMappedThing> mappedthings;
   
   
-  private void initMappedThingsListForSimpleTest(){
-    mappedthings=new ArrayList<ZCSMappedThing>();
-    ZCSMappedThing leaf;
-    for(FPolygon p:composition.getLeafPolygons()){
-      if(p.hasTags("hex")){
-        leaf=new ZCSMappedThing(p,compositioncellsystemtransform,GLOWSPAN,new String[]{"leaf"});
-        mappedthings.add(leaf);}}
-  }
+//  private void initMappedThingsListForSimpleTest(){
+//    mappedthings=new ArrayList<ZCSMappedThing>();
+//    ZCSMappedThing leaf;
+//    for(FPolygon p:composition.getLeafPolygons()){
+//      if(p.hasTags("hex")){
+//        leaf=new ZCSMappedThing(p,compositioncellsystemtransform,GLOWSPAN,new String[]{"leaf"});
+//        mappedthings.add(leaf);}}
+//  }
   
   private void initMappedThingsList(){
     mappedthings=new ArrayList<ZCSMappedThing>();
-    //
-//    MappedZCellSystemThing margin=
-//      new MappedZCellSystemThing(composition.getRootPolygon(),compositioncellsystemtransform,GLOWSPAN,new String[]{"margin"});
-//    mappedthings.add(margin);
-    //
-    ZCSMappedThing leaf;
+    //ADD MARGIN
+    ZCSMT_FCompositionMargin margin=
+      new ZCSMT_FCompositionMargin(getCellSystemWidth(),getCellSystemHeight(),composition.getRootPolygon(),
+      compositioncellsystemtransform,GLOWSPAN,new String[]{"margin"});
+    mappedthings.add(margin);
+    //ADD FORSYTHIA COMPOSITION LEAVES
+    ZCSMT_FPolygonArea leaf;
     for(FPolygon p:composition.getLeafPolygons()){
-      leaf=new ZCSMappedThing(p,compositioncellsystemtransform,GLOWSPAN,new String[]{"leaf"});
+      leaf=new ZCSMT_FPolygonArea(p,compositioncellsystemtransform,GLOWSPAN,new String[]{"leaf"});
       mappedthings.add(leaf);}
-    //
+    //ADD FORSYTHIA COMPOSITON BOILED POLYGON EDGES
 //    mappedthings.addAll(getBoiledPolygonEdgeThings());
     }
   
@@ -138,12 +141,12 @@ public class ZCellTest{
    * TODO
    * a nice symmetricrandom type selection
    */
-  private List<ZCSMappedThing> getBoiledPolygonEdgeThings(){
+  private List<ZCSMT_FPolygonArea> getBoiledPolygonEdgeThings(){
     Random r=new Random();
-    List<ZCSMappedThing> a=new ArrayList<ZCSMappedThing>();
+    List<ZCSMT_FPolygonArea> a=new ArrayList<ZCSMT_FPolygonArea>();
     for(FPolygon p:composition.getPolygons())
       if(r.nextDouble()>0.95)
-        a.add(new ZCSMappedThing(p,compositioncellsystemtransform,GLOWSPAN,new String[]{"boiled"}));
+        a.add(new ZCSMT_FPolygonArea(p,compositioncellsystemtransform,GLOWSPAN,new String[]{"boiled"}));
     return a;}
   
   /*
