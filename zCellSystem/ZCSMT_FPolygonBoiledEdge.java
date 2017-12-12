@@ -10,19 +10,22 @@ public class ZCSMT_FPolygonBoiledEdge implements ZCSMappedThing{
 
   /*
    * ################################
-   * CONSTRUCTOR
+   * CONSTRUCTORS
    * ################################
    */
   
-  public ZCSMT_FPolygonBoiledEdge(FPolygon polygon,AffineTransform transform,double glowspan,String[] tags){
-    this.fpolygon=polygon;
-    this.transform=transform;
-    this.glowspan=glowspan;
+  public ZCSMT_FPolygonBoiledEdge(FPolygon fpolygon,AffineTransform fpolygontransform,double glowspan){
+    this.fpolygon=fpolygon;
+    this.fpolygontransform=fpolygontransform;
+    this.glowspan=glowspan;}
+  
+  public ZCSMT_FPolygonBoiledEdge(FPolygon fpolygon,AffineTransform fpolygontransform,double glowspan,String[] tags){
+    this(fpolygon,fpolygontransform,glowspan);
     tagmanager.addTags(tags);}
   
   /*
    * ################################
-   * THING
+   * FPOLYGON THE EDGE OF WHICH WE ARE MAPPING
    * ################################
    */
   
@@ -34,7 +37,7 @@ public class ZCSMT_FPolygonBoiledEdge implements ZCSMappedThing{
    * ################################
    */
   
-  public AffineTransform transform;
+  public AffineTransform fpolygontransform;
   
   /*
    * ################################

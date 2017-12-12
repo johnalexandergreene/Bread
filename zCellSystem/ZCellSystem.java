@@ -45,7 +45,7 @@ public class ZCellSystem implements Iterable<ZCell>{
   
   public ZCellSystem(int w,int h,List<ZCSMappedThing> mappedthings){
     this(w,h);
-    doMappedThings(mappedthings);
+    mapThings(mappedthings);
     clean();}
   
   /*
@@ -115,12 +115,10 @@ public class ZCellSystem implements Iterable<ZCell>{
   /*
    * ################################
    * MAP THINGS TO CELLS
-   * Cast the presence of the thing, like a shadow, onto the cells
-   * At the moment we can map margin, leaf polygon and polygon edge
    * ################################
    */
   
-  private void doMappedThings(List<ZCSMappedThing> mappedthings){
+  private void mapThings(List<ZCSMappedThing> mappedthings){
     for(ZCSMappedThing t:mappedthings){
       if(t instanceof ZCSMT_FCompositionMargin){
         mapMargin((ZCSMT_FCompositionMargin)t);
@@ -131,30 +129,26 @@ public class ZCellSystem implements Iterable<ZCell>{
       }else{
         throw new IllegalArgumentException("mapping thing failed");}}}
   
-  private ZCells_FPolygonArea mapPolygonArea(ZCSMT_FPolygonArea t){
+  private void mapPolygonArea(ZCSMT_FPolygonArea t){
     ZCells_FPolygonArea a=new ZCells_FPolygonArea(t);
     ZCell c1;
     for(ZCell c0:a){
         c1=getCell(c0.x,c0.y);
-        c1.addPresences(c0.presences);}
-    return a;}
+        c1.addPresences(c0.presences);}}
   
-  private ZCells_FPolygonBoiledEdge mapPolygonBoiledEdge(ZCSMT_FPolygonBoiledEdge t){
-    return null;}
-//    PolygonEdgeZCells c=new PolygonEdgeZCells(((FPolygon)t.thing).getDPolygon(),t.transform);
-//    ZCell b;
-//    for(ZCell a:c){
-//        b=cells[a.x][a.y];
-//        b.thing=t;}
-//    return c;}
+  private void mapPolygonBoiledEdge(ZCSMT_FPolygonBoiledEdge t){
+    ZCells_FPolygonBoiledEdge m=new ZCells_FPolygonBoiledEdge(t);
+    ZCell c1;
+    for(ZCell c0:m){
+        c1=getCell(c0.x,c0.y);
+        c1.addPresences(c0.presences);}}
   
-  private ZCells_FCompositionMargin mapMargin(ZCSMT_FCompositionMargin t){
+  private void mapMargin(ZCSMT_FCompositionMargin t){
     ZCells_FCompositionMargin m=new ZCells_FCompositionMargin(t);
     ZCell c1;
     for(ZCell c0:m){
         c1=getCell(c0.x,c0.y);
-        c1.addPresences(c0.presences);}
-    return m;}
+        c1.addPresences(c0.presences);}}
   
   /*
    * ################################

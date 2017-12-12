@@ -9,6 +9,7 @@ import java.util.Random;
 
 import org.fleen.bread.zCellSystem.ZCSMT_FCompositionMargin;
 import org.fleen.bread.zCellSystem.ZCSMT_FPolygonArea;
+import org.fleen.bread.zCellSystem.ZCSMT_FPolygonBoiledEdge;
 import org.fleen.bread.zCellSystem.ZCSMappedThing;
 import org.fleen.bread.zCellSystem.ZCellSystem;
 import org.fleen.forsythia.core.composition.FPolygon;
@@ -107,7 +108,7 @@ public class ZCellTest{
   //we use this value for all mappings in the test
   //we could, of course, use different glowspans for all the mappings if we so chose.
   static final double GLOWSPAN=1.5;
-//  static final double GLOWSPAN=6.5;//TEST
+//  static final double GLOWSPAN=3.5;//TEST
   
   List<ZCSMappedThing> mappedthings;
   
@@ -134,19 +135,19 @@ public class ZCellTest{
       leaf=new ZCSMT_FPolygonArea(p,compositioncellsystemtransform,GLOWSPAN,new String[]{"leaf"});
       mappedthings.add(leaf);}
     //ADD FORSYTHIA COMPOSITON BOILED POLYGON EDGES
-//    mappedthings.addAll(getBoiledPolygonEdgeThings());
+    mappedthings.addAll(getBoiledPolygonEdgeThings());
     }
   
   /*
    * TODO
    * a nice symmetricrandom type selection
    */
-  private List<ZCSMT_FPolygonArea> getBoiledPolygonEdgeThings(){
+  private List<ZCSMT_FPolygonBoiledEdge> getBoiledPolygonEdgeThings(){
     Random r=new Random();
-    List<ZCSMT_FPolygonArea> a=new ArrayList<ZCSMT_FPolygonArea>();
+    List<ZCSMT_FPolygonBoiledEdge> a=new ArrayList<ZCSMT_FPolygonBoiledEdge>();
     for(FPolygon p:composition.getPolygons())
       if(r.nextDouble()>0.95)
-        a.add(new ZCSMT_FPolygonArea(p,compositioncellsystemtransform,GLOWSPAN,new String[]{"boiled"}));
+        a.add(new ZCSMT_FPolygonBoiledEdge(p,compositioncellsystemtransform,GLOWSPAN));
     return a;}
   
   /*
