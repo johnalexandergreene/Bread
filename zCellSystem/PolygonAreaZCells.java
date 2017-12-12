@@ -1,7 +1,6 @@
 package org.fleen.bread.zCellSystem;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,7 +8,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import org.fleen.bread.hCellSystem.HCell;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.geom_2D.DPoint;
 import org.fleen.geom_2D.DPolygon;
@@ -87,18 +85,29 @@ public class PolygonAreaZCells implements ZCellMass{
   /*
    * ################################
    * MAP POLYGON AREA
+   * 
    * create cell array to enclose polygon, with offsets : enclosingarray 
    *   And margins to allow for glow and safety
-   * get edge of polygon using bresenhams : edgecells
-   * 
-   * get interior of polygon using floodfill
    *   
-   * 
-   * get outer edge using floodfill constrained to glowdistance
-   * 
-   * get inner edge using floodfill constrained to glowdistance
+   * get edge of polygon using supercover bresenhams : edge
+   *   (supercover gives us a fatter stroke, less chance of leaks during floodfill)
    *   
+   * fatten up the edge with a little expand, the better to get 2 unambiguously distinguished masses,
+   *   inneredge and outeredge
+   *   1 or 2 cycles should do it.
+   *   
+   * distinguish the edge into 2 masses, inneredge and outer edge, using inside test 
    * 
+   * floodfill from the outer edge outwards
+   *   testing and storing the distancefrompolygon (in terms of proportion of glowspan, ie presence) for each cell
+   *   constrain that floodfill to glowspan distance from the polygon
+   *   
+   * floodfill from the inneredge similarly
+   *   we will hold on to cells that test for too far from polygon, 
+   *   where the floodfill stops, to use as seeds for the final floodfill of the inner area
+   * 
+   * the remaining inner area gets a plain floodfill
+   *   presence is set to 1.0
    * 
    * ################################
    */
@@ -107,39 +116,24 @@ public class PolygonAreaZCells implements ZCellMass{
   ZCell[][] enclosingarray;
   int eaoffsetx,eaoffsety;
   Set<ZCell> 
-    edgecells=new HashSet<ZCell>(),
+    edge=new HashSet<ZCell>(),
     inneredge=new HashSet<ZCell>(),
     outeredge=new HashSet<ZCell>(),
-    interior=new HashSet<ZCell>();
+    innermost=new HashSet<ZCell>(),
+    innermostfloodseednulls=new HashSet<ZCell>();
   
   int testthing;
   
   private void mapPolygonArea(){
     createEnclosingArray();
-    initEdge();
-    mapCellsToEnclosingArray(edgecells);
-    doInterior();
-//    initInnerAndOuterEdge();
-//    testthing=2;
-//    expand(inneredge);
-//    testthing=3;
-//    expand(outeredge);
-//    doInterior();
-    
-    //set presence for outeredge
-    // " for inner edge
-    // " for interior
-    
-    copyCellsToList();
-    
-    //test
-    for(ZCell c:cells)
-      c.addPresence(mappedthing,1.0);}
-  
-
-  
-  
-  
+    doEdge();
+    expandEdge();
+    mapEdgeCellsToEnclosingArray();
+    doInnerAndOuterEdge();
+    doFloodFromOuterEdge();
+    doFloodFromInnerEdge();
+    doInnermostFlood();
+    copyCellsToList();}
   
   /*
    * copy the nonnull cells from the enclosing array to the cells list
@@ -155,129 +149,194 @@ public class PolygonAreaZCells implements ZCellMass{
           c.y+=eaoffsety;
           cells.add(c);}}}}
   
-  private void mapCellsToEnclosingArray(Collection<ZCell> c){
-    for(ZCell a:c){
+  private void mapEdgeCellsToEnclosingArray(){
+    for(ZCell a:edge){
       enclosingarray[a.x][a.y]=a;}}
   
   /*
    * ++++++++++++++++++++++++++++++++
-   * DO INTERIOR
-   * get a null interior cell
-   * floodfill everything inside the edge
+   * DO INNERMOST FLOOD
    * ++++++++++++++++++++++++++++++++
    */
   
-  private void doInterior(){
-    ZCell a=getNullInteriorCell();
-    floodFill(a);}
+  private void doInnermostFlood(){
+    for(ZCell a:innermostfloodseednulls)
+      innermostFlood(a);}
   
-  private ZCell getNullInteriorCell(){
-    ZCell c0=new ZCell();
-    for(ZCell c:edgecells){
-      c0.x=c.x;
-      c0.y=c.y-1;
-      if(isNullInteriorCell(c0))return c0;
-      c0.y=c.y+1;
-      if(isNullInteriorCell(c0))return c0;
-      c0.x=c.x-1;
-      c0.y=c.y;
-      if(isNullInteriorCell(c0))return c0;
-      c0.x=c.x+1;
-      if(isNullInteriorCell(c0))return c0;}
-    throw new IllegalArgumentException("couldn't get a null interior cell");}
-  
-  private boolean isNullInteriorCell(ZCell c){
-    if(enclosingarray[c.x][c.y]!=null)return false;
-    return transformedpolygon.containsPoint(c.x+eaoffsetx,c.y+eaoffsety);}
-  
-  private void floodFill(ZCell a){
+  private void innermostFlood(ZCell a){
+    if(enclosingarray[a.x][a.y]!=null)return;
     Queue<ZCell> queue=new LinkedList<ZCell>();
     ZCell c;
     queue.add(a);
     while(!queue.isEmpty()) {
       c=queue.remove();
-      if(floodFill_(c.x,c.y)){     
+      if(innermostFlood(c.x,c.y)){     
         queue.add(new ZCell(c.x,c.y-1)); 
         queue.add(new ZCell(c.x,c.y+1)); 
         queue.add(new ZCell(c.x-1,c.y)); 
         queue.add(new ZCell(c.x+1,c.y));}}}
 
-  private boolean floodFill_(int x,int y){
-    if(enclosingarray[x][y]!=null)return false;
+  private boolean innermostFlood(int x,int y){
+    if(
+      //so it doesn't crash on weird tiny situations, just delivers a graphic glitch
+      x<0||x>=enclosingarray.length||y<0||y>=enclosingarray[0].length||
+      //because we're filling only nulls
+      enclosingarray[x][y]!=null)return false;
     enclosingarray[x][y]=new ZCell(x,y);
-    interior.add(enclosingarray[x][y]);
-    
+    enclosingarray[x][y].addPresence(mappedthing,1.0);//1.0 because the thing is at max presence in the interior
+    innermost.add(enclosingarray[x][y]);
     //TEST
-    enclosingarray[x][y].itest=4;
-    
+    enclosingarray[x][y].gp=6;
     return true;}
   
   /*
    * ++++++++++++++++++++++++++++++++
-   * EXPAND INNER AND OUTER EDGE
-   * get all the cells adjacent to the edge cells
-   * then get all the cells adjacent to those cells
-   * and so on
-   * for a number of cycles to encompass glow
+   * DO FLOOD FROM OUTER EDGE
    * ++++++++++++++++++++++++++++++++
    */
   
-  private void expand(Set<ZCell> edgecells){
-    Set<ZCell> 
-      active=new HashSet<ZCell>(edgecells),
-      newactive=new HashSet<ZCell>();
-    int expandcyclescount=getExpandCyclesCount();
-    for(int i=0;i<expandcyclescount;i++){
-      for(ZCell c:active){
-        newactive.addAll(getNullNeighbors(c));}
-      mapCellsToEnclosingArray(newactive);
-      edgecells.addAll(newactive);
-      active.clear();
-      active.addAll(newactive);
-      newactive.clear();}}
-  
-  private int getExpandCyclesCount(){
-    int a=(int)(Math.ceil(getGlowSpan())+1);
-    return a;}
-  
-  private List<ZCell> getNullNeighbors(ZCell c){
-    List<ZCell> n=new ArrayList<ZCell>(8);
-    if(enclosingarray[c.x-1][c.y+1]==null)n.add(new ZCell(c.x-1,c.y+1));
-    if(enclosingarray[c.x][c.y+1]==null)n.add(new ZCell(c.x,c.y+1));
-    if(enclosingarray[c.x+1][c.y+1]==null)n.add(new ZCell(c.x+1,c.y+1));
-    if(enclosingarray[c.x+1][c.y]==null)n.add(new ZCell(c.x+1,c.y));
-    if(enclosingarray[c.x+1][c.y-1]==null)n.add(new ZCell(c.x+1,c.y-1));
-    if(enclosingarray[c.x][c.y-1]==null)n.add(new ZCell(c.x,c.y-1));
-    if(enclosingarray[c.x-1][c.y-1]==null)n.add(new ZCell(c.x-1,c.y-1));
-    if(enclosingarray[c.x-1][c.y]==null)n.add(new ZCell(c.x-1,c.y));
+  private void doFloodFromOuterEdge(){
+    ZCell a=getOuterEdgeNullCell();
+    if(a==null)return;
+    Queue<ZCell> queue=new LinkedList<ZCell>();
+    ZCell c;
+    queue.add(a);
+    while(!queue.isEmpty()) {
+      c=queue.remove();
+      if(floodFromOuterEdge(c.x,c.y)){     
+        queue.add(new ZCell(c.x,c.y-1)); 
+        queue.add(new ZCell(c.x,c.y+1)); 
+        queue.add(new ZCell(c.x-1,c.y)); 
+        queue.add(new ZCell(c.x+1,c.y));}}}
+
+  private boolean floodFromOuterEdge(int x,int y){
+    if(
+      //so it doesn't crash on weird tiny situations, just delivers a graphic glitch
+      x<0||x>=enclosingarray.length||y<0||y>=enclosingarray[0].length||
+      //because we're filling only nulls
+      enclosingarray[x][y]!=null)return false;
+    //check distance constraint, because we are constrining our flood to glowspan distance from the polygon's edge
+    double 
+      d=transformedpolygon.getDistance(x+eaoffsetx,y+eaoffsety),
+      g=getGlowSpan();
+    if(d>g)return false;
+    //that distance is our presence
+    enclosingarray[x][y]=new ZCell(x,y);
+    enclosingarray[x][y].addPresence(mappedthing,0.5-(d/g)*0.5);
+    outeredge.add(enclosingarray[x][y]);
     
-    //test
-    for(ZCell f:n)
-      f.itest=testthing;
+    //TEST
+    enclosingarray[x][y].gp=4;
     
-    return n;}
+    return true;}
+  
+  private ZCell getOuterEdgeNullCell(){
+    for(ZCell c:outeredge){
+      if(enclosingarray[c.x-1][c.y+1]==null)return new ZCell(c.x-1,c.y+1);
+      if(enclosingarray[c.x][c.y+1]==null)return new ZCell(c.x,c.y+1);
+      if(enclosingarray[c.x+1][c.y+1]==null)return new ZCell(c.x+1,c.y+1);
+      if(enclosingarray[c.x+1][c.y]==null)return new ZCell(c.x+1,c.y);
+      if(enclosingarray[c.x+1][c.y-1]==null)return new ZCell(c.x+1,c.y-1);
+      if(enclosingarray[c.x][c.y+1]==null)return new ZCell(c.x,c.y+1);
+      if(enclosingarray[c.x-1][c.y+1]==null)return new ZCell(c.x-1,c.y+1);
+      if(enclosingarray[c.x-1][c.y]==null)return new ZCell(c.x-1,c.y);}
+    return null;}//fail
   
   /*
    * ++++++++++++++++++++++++++++++++
-   * INIT INNER AND OUTER EDGE
-   * for all the cells in edgecells
-   * test for polygon.contained
+   * DO FLOOD FROM INNER EDGE
    * ++++++++++++++++++++++++++++++++
    */
   
-  private void initInnerAndOuterEdge(){
-    for(ZCell c:edgecells){
+  private void doFloodFromInnerEdge(){
+    ZCell a=getInnerEdgeNullCell();
+    if(a==null)return;//fail. maybe there was no room there
+    Queue<ZCell> queue=new LinkedList<ZCell>();
+    ZCell c;
+    queue.add(a);
+    while(!queue.isEmpty()) {
+      c=queue.remove();
+      if(floodFromInnerEdge(c.x,c.y)){     
+        queue.add(new ZCell(c.x,c.y-1)); 
+        queue.add(new ZCell(c.x,c.y+1)); 
+        queue.add(new ZCell(c.x-1,c.y)); 
+        queue.add(new ZCell(c.x+1,c.y));}}}
+
+  private boolean floodFromInnerEdge(int x,int y){
+    if(
+      //so it doesn't crash on weird tiny situations, just delivers a graphic glitch
+      x<0||x>=enclosingarray.length||y<0||y>=enclosingarray[0].length||
+      //because we're filling only nulls
+      enclosingarray[x][y]!=null)return false;
+    //check distance constraint, because we are constrining our flood to glowspan distance from the polygon's edge
+    double 
+      d=transformedpolygon.getDistance(x+eaoffsetx,y+eaoffsety),
+      g=getGlowSpan();
+    //when the cell fails at this point it makes a good null 
+    //cell for seeding our innermost flood, so we save it
+    if(d>g){
+      innermostfloodseednulls.add(new ZCell(x,y));
+      return false;
+    }
+    //that distance is our presence
+    enclosingarray[x][y]=new ZCell(x,y);
+    enclosingarray[x][y].addPresence(mappedthing,0.5+(d/g)*0.5);
+    inneredge.add(enclosingarray[x][y]);
+    
+    //TEST
+    enclosingarray[x][y].gp=5;
+    
+    return true;}
+  
+  private ZCell getInnerEdgeNullCell(){
+    for(ZCell c:inneredge){
+      if(enclosingarray[c.x-1][c.y+1]==null)return new ZCell(c.x-1,c.y+1);
+      if(enclosingarray[c.x][c.y+1]==null)return new ZCell(c.x,c.y+1);
+      if(enclosingarray[c.x+1][c.y+1]==null)return new ZCell(c.x+1,c.y+1);
+      if(enclosingarray[c.x+1][c.y]==null)return new ZCell(c.x+1,c.y);
+      if(enclosingarray[c.x+1][c.y-1]==null)return new ZCell(c.x+1,c.y-1);
+      if(enclosingarray[c.x][c.y+1]==null)return new ZCell(c.x,c.y+1);
+      if(enclosingarray[c.x-1][c.y+1]==null)return new ZCell(c.x-1,c.y+1);
+      if(enclosingarray[c.x-1][c.y]==null)return new ZCell(c.x-1,c.y);}
+    return null;}//it happens when the glow fills the whole interior
+  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * DO INNER AND OUTER EDGE
+   * given the edge, distinguish it into inner and outer edges
+   * we do it by resting for polygon.contained
+   * then we do the presences
+   * ++++++++++++++++++++++++++++++++
+   */
+  
+  private void doInnerAndOuterEdge(){
+    for(ZCell c:edge){
       if(transformedpolygon.containsPoint(c.x+eaoffsetx,c.y+eaoffsety)){
-        c.itest=2;
+        c.gp=2;
         inneredge.add(c);
       }else{
-        c.itest=3;
+        c.gp=3;
         outeredge.add(c);}}
+    doPresencesForInnerEdge();
+    doPresencesForOuterEdge();}
   
-    System.out.println("inneredge="+inneredge.size());
-    System.out.println("outeredge="+outeredge.size());
+  private void doPresencesForInnerEdge(){
+    double d,g=getGlowSpan();
+    for(ZCell c:inneredge){
+      d=transformedpolygon.getDistance(c.x+eaoffsetx,c.y+eaoffsety);
+      if(d>g){//this probably won't happen, but just in case
+        c.addPresence(mappedthing,1.0);
+      }else{
+        c.addPresence(mappedthing,0.5+(d/g)*0.5);}}}
   
-  }
+  private void doPresencesForOuterEdge(){
+    double d,g=getGlowSpan();
+    for(ZCell c:outeredge){
+      d=transformedpolygon.getDistance(c.x+eaoffsetx,c.y+eaoffsety);
+      if(d>g){//this probably won't happen, but just in case
+        c.addPresence(mappedthing,0.0);
+      }else{
+        c.addPresence(mappedthing,0.5-(d/g)*0.5);}}}
   
   /*
    * ++++++++++++++++++++++++++++++++
@@ -288,11 +347,11 @@ public class PolygonAreaZCells implements ZCellMass{
    * ++++++++++++++++++++++++++++++++
    */
   
-  private void doEdgeAdjacents(){
+  private void expandEdge(){
     List<ZCell> a=new ArrayList<ZCell>();
-    for(ZCell b:edgecells)
+    for(ZCell b:edge)
       a.addAll(getAdjacents(b));
-    edgecells.addAll(a);}
+    edge.addAll(a);}
   
   private List<ZCell> getAdjacents(ZCell c){
     List<ZCell> a=new ArrayList<ZCell>(8);
@@ -314,7 +373,7 @@ public class PolygonAreaZCells implements ZCellMass{
    * ++++++++++++++++++++++++++++++++
    */
   
-  private void initEdge(){
+  private void doEdge(){
     int s=transformedpolygon.size(),i1;
     ZCell c0,c1;
     DPoint p0,p1;
@@ -340,12 +399,7 @@ public class PolygonAreaZCells implements ZCellMass{
     return new ZCell((int)x-eaoffsetx,(int)y-eaoffsety);}
   
   /*
-   * BRESENHAM SUPERCOVER LINE DRAW
-   * 
-   * use Bresenham-like algorithm to address a line of squares from (y1,x1) to (y2,x2) 
-   * The difference from Bresenham is that ALL the points of the line are 
-   * printed, not only one per x coordinate. 
-   * Principles of the Bresenham's algorithm (heavily modified) were taken from: 
+   * gleaned from 
    * http://www.intranet.ca/~sshah/waste/art7.html 
    */
   void bresenhamSupercoverSegDraw(int x0,int y0,int x1,int y1){
@@ -382,13 +436,13 @@ public class PolygonAreaZCells implements ZCellMass{
           error -= ddx; 
           // three cases (octant == right->right-top for directions below): 
           if (error + errorprev < ddx){  // bottom square also
-            edgecells.add(new ZCell(x,y-ystep));
+            edge.add(new ZCell(x,y-ystep));
           }else if(error + errorprev > ddx){  // left square also 
-            edgecells.add(new ZCell(x-xstep,y));
+            edge.add(new ZCell(x-xstep,y));
           }else{  // corner: bottom and left squares also 
-            edgecells.add(new ZCell(x,y-ystep));
-            edgecells.add(new ZCell(x-xstep,y));}} 
-        edgecells.add(new ZCell(x,y));
+            edge.add(new ZCell(x,y-ystep));
+            edge.add(new ZCell(x-xstep,y));}} 
+        edge.add(new ZCell(x,y));
         errorprev = error;} 
     }else{// the same as above 
       errorprev = error = dy; 
@@ -399,13 +453,13 @@ public class PolygonAreaZCells implements ZCellMass{
           x += xstep; 
           error -= ddy; 
           if (error + errorprev < ddy){ 
-            edgecells.add(new ZCell(x-xstep,y));
+            edge.add(new ZCell(x-xstep,y));
           }else if (error + errorprev > ddy){ 
-            edgecells.add(new ZCell(x,y-ystep));
+            edge.add(new ZCell(x,y-ystep));
           }else{ 
-            edgecells.add(new ZCell(x-xstep,y));
-            edgecells.add(new ZCell(x,y-ystep));}}
-        edgecells.add(new ZCell(x,y));
+            edge.add(new ZCell(x-xstep,y));
+            edge.add(new ZCell(x,y-ystep));}}
+        edge.add(new ZCell(x,y));
         errorprev = error;}}}
   
   /*

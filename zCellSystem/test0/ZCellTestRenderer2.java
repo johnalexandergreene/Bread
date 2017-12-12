@@ -110,14 +110,19 @@ public class ZCellTestRenderer2{
 //    return new Color(r,g,b);}
   
   private Color getColor(ZCell c){
-    if(c.itest==2)
+    int a=0;
+    if(c.gp!=null)
+      a=(Integer)c.gp;
+    if(a==2)
       return Color.red;
-    else if(c.itest==3)
+    else if(a==3)
       return Color.green;
-    else if(c.itest==4)
+    else if(a==4)
       return Color.yellow;
-    else if(c.itest==5)
-      return Color.white;
+    else if(a==5)
+      return Color.MAGENTA;
+    else if(a==6)
+      return Color.blue;
     else
       return Color.black;}
   

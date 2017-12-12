@@ -82,7 +82,7 @@ public class ZCellTest{
    */
   
   int margin=8;
-  double scale=55;
+  double scale=222;
   AffineTransform compositioncellsystemtransform;
   
   private void initCompositionCellSystemTransform(){
@@ -105,6 +105,7 @@ public class ZCellTest{
   //we use this value for all mappings in the test
   //we could, of course, use different glowspans for all the mappings if we so chose.
   static final double GLOWSPAN=1.5;
+//  static final double GLOWSPAN=6.5;//TEST
   
   List<ZCSMappedThing> mappedthings;
   
@@ -175,11 +176,11 @@ public class ZCellTest{
    * ################################
    */
   
-  ZCellTestRenderer2 renderer;
+  ZCellTestRenderer renderer;
   BufferedImage image=null;
   
   private void initRenderer(){
-    renderer=new ZCellTestRenderer2(this);}
+    renderer=new ZCellTestRenderer(this);}
   
   private void render(ZCellSystem zcs){
     image=renderer.render(zcs);

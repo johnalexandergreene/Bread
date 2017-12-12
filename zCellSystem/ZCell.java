@@ -147,11 +147,11 @@ public class ZCell{
   
   /*
    * ################################
-   * TEST INTEGER
+   * GENERAL PURPOSE OBJECT
    * ################################
    */
   
-  public int itest=0;
+  public Object gp=null;
   
   /*
    * ################################
