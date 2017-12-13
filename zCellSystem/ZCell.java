@@ -111,6 +111,14 @@ public class ZCell{
     return 0;}
   
   /*
+   * set all the presences
+   * used in cell rule process
+   */
+  public void setPresences(List<ZCSMappedThingPresence> presences){
+    this.presences=presences;
+    clean();}
+  
+  /*
    * ################################
    * CLEAN
    * remove zero intensity presences

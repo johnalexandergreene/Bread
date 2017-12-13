@@ -5,9 +5,12 @@ package org.fleen.bread.zCellSystem;
  */
 public class ZCSMappedThingPresence{
   
-  ZCSMappedThingPresence(ZCSMappedThing thing,double intensity){
+  public ZCSMappedThingPresence(ZCSMappedThing thing,double intensity){
     this.thing=thing;
     this.intensity=intensity;}
+  
+  public ZCSMappedThingPresence(ZCSMappedThingPresence p){
+    this(p.thing,p.intensity);}
   
   public ZCSMappedThing thing;
   public double intensity;

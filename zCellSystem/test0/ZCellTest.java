@@ -42,14 +42,70 @@ public class ZCellTest{
    */
   
   public void run(){
-//    for(int i=0;i<3;i++){
-////      doRules();
-//      render();
-//    }
-
+    System.out.println("RUN");
     render(cellsystem0);
+    doRule2(6);
+//    doRule1(1);
+//    doRule0(1);
+//    doRule1(1);
+//    doRule0(1);
+//    doRule1(1);
+//    doRule0(1);
+//    doRule1(1);
+    
     
   }
+  
+  boolean flipflop=true;
+  
+  private void doRule0(int t){
+    Rule rule=new R_FattenBoiledEdge();
+    for(int i=0;i<t;i++){
+      //
+      try{
+        Thread.sleep(500);
+      }catch(Exception x){}
+      //
+      if(flipflop){
+        rule.doRule(cellsystem0,cellsystem1);
+        render(cellsystem1);
+      }else{
+        rule.doRule(cellsystem1,cellsystem0);
+        render(cellsystem0);}
+      flipflop=!flipflop;}}
+  
+  private void doRule1(int t){
+    Rule rule=new R_Smooth();
+    for(int i=0;i<t;i++){
+      //
+      try{
+        Thread.sleep(500);
+      }catch(Exception x){}
+      //
+      if(flipflop){
+        rule.doRule(cellsystem0,cellsystem1);
+        render(cellsystem1);
+      }else{
+        rule.doRule(cellsystem1,cellsystem0);
+        render(cellsystem0);}
+      flipflop=!flipflop;}}
+  
+  private void doRule2(int t){
+    Rule rule=new R_Blur();
+    for(int i=0;i<t;i++){
+      System.out.println("blur "+i+" / "+t);
+      //
+//      try{
+//        Thread.sleep(500);
+//      }catch(Exception x){}
+      //
+      if(flipflop){
+        rule.doRule(cellsystem0,cellsystem1);
+        render(cellsystem1);
+      }else{
+        rule.doRule(cellsystem1,cellsystem0);
+        render(cellsystem0);}
+      flipflop=!flipflop;}}
   
   /*
    * ################################
