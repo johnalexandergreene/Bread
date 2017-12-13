@@ -44,7 +44,7 @@ public class ZCellTest{
   public void run(){
     System.out.println("RUN");
     render(cellsystem0);
-    doRule2(6);
+    doRule0(1);
 //    doRule1(1);
 //    doRule0(1);
 //    doRule1(1);
@@ -61,11 +61,7 @@ public class ZCellTest{
   private void doRule0(int t){
     Rule rule=new R_FattenBoiledEdge();
     for(int i=0;i<t;i++){
-      //
-      try{
-        Thread.sleep(500);
-      }catch(Exception x){}
-      //
+      System.out.println("fatten boiled edge "+i+" / "+t);
       if(flipflop){
         rule.doRule(cellsystem0,cellsystem1);
         render(cellsystem1);
@@ -77,11 +73,6 @@ public class ZCellTest{
   private void doRule1(int t){
     Rule rule=new R_Smooth();
     for(int i=0;i<t;i++){
-      //
-      try{
-        Thread.sleep(500);
-      }catch(Exception x){}
-      //
       if(flipflop){
         rule.doRule(cellsystem0,cellsystem1);
         render(cellsystem1);
@@ -94,11 +85,6 @@ public class ZCellTest{
     Rule rule=new R_Blur();
     for(int i=0;i<t;i++){
       System.out.println("blur "+i+" / "+t);
-      //
-//      try{
-//        Thread.sleep(500);
-//      }catch(Exception x){}
-      //
       if(flipflop){
         rule.doRule(cellsystem0,cellsystem1);
         render(cellsystem1);

@@ -67,24 +67,24 @@ public class ZCell{
     }else{
       presences.add(p);}}
   
-  void addPresence(ZCSMappedThing thing,double intensity){
+  public void addPresence(ZCSMappedThing thing,double intensity){
     addPresence(new ZCSMappedThingPresence(thing,intensity));}
   
   /*
    * intensity is assumed to be 1.0
    * we use this for polygon interiors.
    */
-  void addPresence(ZCSMappedThing thing){
+  public void addPresence(ZCSMappedThing thing){
     addPresence(thing,1.0);}
   
-  void addPresences(List<ZCSMappedThingPresence> presences){
+  public void addPresences(List<ZCSMappedThingPresence> presences){
     for(ZCSMappedThingPresence p:presences)
       addPresence(p);}
   
   /*
    * returns true if the specified thing has nonzero presence at this cell
    */
-  boolean hasPresence(ZCSMappedThing thing){
+  public boolean hasPresence(ZCSMappedThing thing){
     for(ZCSMappedThingPresence p:presences)
       if(p.thing==thing)
         return true;

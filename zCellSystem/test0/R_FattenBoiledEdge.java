@@ -5,16 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.fleen.bread.zCellSystem.ZCSMT_FPolygonBoiledEdge;
 import org.fleen.bread.zCellSystem.ZCSMappedThing;
 import org.fleen.bread.zCellSystem.ZCSMappedThingPresence;
 import org.fleen.bread.zCellSystem.ZCell;
 import org.fleen.bread.zCellSystem.ZCellSystem;
 
 /*
- * given a mass of edge to be boiled, expand it
- * 
- * take census of neighbors
- * 
+ * dupe present presences state
+ * get sum of neighboring boiled edge presences : s
+ * add s*k presence to cell
  * 
  */
 public class R_FattenBoiledEdge implements Rule{
@@ -34,24 +34,21 @@ public class R_FattenBoiledEdge implements Rule{
 //    {-2,-2},{-1,-2},{0,-2},{1,-2},{2,-2},
 //    {-1,-3},{0,-3},{1,-3}};
   
-  /*
-   * given c0
-   * look at the cells within range
-   * if any of them has a boiled thing then the new cell gets that boiled thing
-   * otherwise the new cell gets whatever c0 had 
-   */
   public void doRule(ZCellSystem s0,ZCellSystem s1){
     List<ZCSMappedThingPresence> psum;
     ZCell c1;
     for(ZCell c0:s0){
-      psum=getLocalPresenceSum(c0,s0);
       c1=s1.getCell(c0.x,c0.y);
-      c1.setPresences(psum);}}
+      c1.setPresences(c0.presences);
+      psum=getBoiledEdgeWeightedPresenceSum(c0,s0);
+      c1.addPresences(psum);
+      c1.clean();}}
   
   /*
-   * get normalized summed presences of the 8 neighboring cells 
+   * TODO we need a PresenceSum object, not just a list
+   * something we can add to, remove from, copy, etc
    */
-  private List<ZCSMappedThingPresence> getLocalPresenceSum(ZCell c,ZCellSystem s){
+  private List<ZCSMappedThingPresence> getBoiledEdgeWeightedPresenceSum(ZCell c,ZCellSystem s){
     Map<ZCSMappedThing,ZCSMappedThingPresence> summedpresencebything=new HashMap<ZCSMappedThing,ZCSMappedThingPresence>();
     ZCell n;
     ZCSMappedThingPresence p;
@@ -59,12 +56,13 @@ public class R_FattenBoiledEdge implements Rule{
       n=s.getCell(c.x+a[0],c.y+a[1]);
       if(n!=null){
         for(ZCSMappedThingPresence p0:n.presences){
-          p=summedpresencebything.get(p0.thing);
-          if(p==null){
-            p=new ZCSMappedThingPresence(p0);
-            summedpresencebything.put(p.thing,p);
-          }else{
-            p.intensity+=p0.intensity;}}}}
+          if(p0.thing instanceof ZCSMT_FPolygonBoiledEdge){
+            p=summedpresencebything.get(p0.thing);
+            if(p==null){
+              p=new ZCSMappedThingPresence(p0);
+              summedpresencebything.put(p.thing,p);
+            }else{
+              p.intensity+=p0.intensity;}}}}}
     List<ZCSMappedThingPresence> sum=new ArrayList<ZCSMappedThingPresence>(summedpresencebything.values());
     return sum;}
   
