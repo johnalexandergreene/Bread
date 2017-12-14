@@ -8,16 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 /*
- * A NEW CURVE SMOOTHING ALG
- * take the array
- * convert to float array
- * do blur
- *   ie : average of neighbors, 2 or 3 times
- * then convert back to cells
- * yes????
- * 
- * 
- * 
+ * get census
+ * get majority presence in cell
+ * weight census by that majority presence
+ * or something
  */
 public class R_Smooth implements Rule{
   

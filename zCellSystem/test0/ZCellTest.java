@@ -45,6 +45,11 @@ public class ZCellTest{
     System.out.println("RUN");
     render(cellsystem0);
     doRule0(1);
+    doRule2(1);
+    doRule0(1);
+    doRule2(1);
+    doRule0(1);
+    doRule2(1);
 //    doRule1(1);
 //    doRule0(1);
 //    doRule1(1);

@@ -179,7 +179,7 @@ public class ZCells_FPolygonBoiledEdge implements ZCellMass{
     if(d>g)return false;
     //that distance is our presence
     enclosingarray[x][y]=new ZCell(x,y);
-    enclosingarray[x][y].addPresence(mappedpolygonboilededge,1.0-(d/g)*1.0);
+    enclosingarray[x][y].presences.addPresence(mappedpolygonboilededge,1.0-(d/g)*1.0);
     outeredge.add(enclosingarray[x][y]);
     //
     return true;}
@@ -229,7 +229,7 @@ public class ZCells_FPolygonBoiledEdge implements ZCellMass{
     if(d>g)return false;
     //that distance is our presence
     enclosingarray[x][y]=new ZCell(x,y);
-    enclosingarray[x][y].addPresence(mappedpolygonboilededge,1.0-(d/g)*1.0);
+    enclosingarray[x][y].presences.addPresence(mappedpolygonboilededge,1.0-(d/g)*1.0);
     inneredge.add(enclosingarray[x][y]);
     //
     return true;}
@@ -269,18 +269,18 @@ public class ZCells_FPolygonBoiledEdge implements ZCellMass{
     for(ZCell c:inneredge){
       d=transformedpolygon.getDistance(c.x+eaoffsetx,c.y+eaoffsety);
       if(d>g){//this probably won't happen, but just in case
-        c.addPresence(mappedpolygonboilededge,1.0);
+        c.presences.addPresence(mappedpolygonboilededge,1.0);
       }else{
-        c.addPresence(mappedpolygonboilededge,0.5+(d/g)*0.5);}}}
+        c.presences.addPresence(mappedpolygonboilededge,0.5+(d/g)*0.5);}}}
   
   private void doPresencesForOuterEdge(){
     double d,g=getGlowSpan();
     for(ZCell c:outeredge){
       d=transformedpolygon.getDistance(c.x+eaoffsetx,c.y+eaoffsety);
       if(d>g){//this probably won't happen, but just in case
-        c.addPresence(mappedpolygonboilededge,0.0);
+        c.presences.addPresence(mappedpolygonboilededge,0.0);
       }else{
-        c.addPresence(mappedpolygonboilededge,0.5-(d/g)*0.5);}}}
+        c.presences.addPresence(mappedpolygonboilededge,0.5-(d/g)*0.5);}}}
   
   /*
    * ++++++++++++++++++++++++++++++++

@@ -46,7 +46,7 @@ public class R_Blur implements Rule{
     for(ZCell c0:s0){
       psum=getLocalPresenceSum(c0,s0);
       c1=s1.getCell(c0.x,c0.y);
-      c1.setPresences(psum);}}
+      c1.presences.setPresences(psum);}}
   
   /*
    * get normalized summed presences of the 8 neighboring cells 

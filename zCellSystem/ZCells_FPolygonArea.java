@@ -181,7 +181,7 @@ public class ZCells_FPolygonArea implements ZCellMass{
       //because we're filling only nulls
       enclosingarray[x][y]!=null)return false;
     enclosingarray[x][y]=new ZCell(x,y);
-    enclosingarray[x][y].addPresence(mappedpolygonarea,1.0);//1.0 because the thing is at max presence in the interior
+    enclosingarray[x][y].presences.addPresence(mappedpolygonarea,1.0);//1.0 because the thing is at max presence in the interior
     innermost.add(enclosingarray[x][y]);
     return true;}
   
@@ -218,7 +218,7 @@ public class ZCells_FPolygonArea implements ZCellMass{
     if(d>g)return false;
     //that distance is our presence
     enclosingarray[x][y]=new ZCell(x,y);
-    enclosingarray[x][y].addPresence(mappedpolygonarea,0.5-(d/g)*0.5);
+    enclosingarray[x][y].presences.addPresence(mappedpolygonarea,0.5-(d/g)*0.5);
     outeredge.add(enclosingarray[x][y]);
     //
     return true;}
@@ -272,7 +272,7 @@ public class ZCells_FPolygonArea implements ZCellMass{
       return false;}
     //that distance is our presence
     enclosingarray[x][y]=new ZCell(x,y);
-    enclosingarray[x][y].addPresence(mappedpolygonarea,0.5+(d/g)*0.5);
+    enclosingarray[x][y].presences.addPresence(mappedpolygonarea,0.5+(d/g)*0.5);
     inneredge.add(enclosingarray[x][y]);
     //
     return true;}
@@ -312,18 +312,18 @@ public class ZCells_FPolygonArea implements ZCellMass{
     for(ZCell c:inneredge){
       d=transformedpolygon.getDistance(c.x+eaoffsetx,c.y+eaoffsety);
       if(d>g){//this probably won't happen, but just in case
-        c.addPresence(mappedpolygonarea,1.0);
+        c.presences.addPresence(mappedpolygonarea,1.0);
       }else{
-        c.addPresence(mappedpolygonarea,0.5+(d/g)*0.5);}}}
+        c.presences.addPresence(mappedpolygonarea,0.5+(d/g)*0.5);}}}
   
   private void doPresencesForOuterEdge(){
     double d,g=getGlowSpan();
     for(ZCell c:outeredge){
       d=transformedpolygon.getDistance(c.x+eaoffsetx,c.y+eaoffsety);
       if(d>g){//this probably won't happen, but just in case
-        c.addPresence(mappedpolygonarea,0.0);
+        c.presences.addPresence(mappedpolygonarea,0.0);
       }else{
-        c.addPresence(mappedpolygonarea,0.5-(d/g)*0.5);}}}
+        c.presences.addPresence(mappedpolygonarea,0.5-(d/g)*0.5);}}}
   
   /*
    * ++++++++++++++++++++++++++++++++

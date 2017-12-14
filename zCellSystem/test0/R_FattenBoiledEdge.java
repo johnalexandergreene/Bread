@@ -1,12 +1,10 @@
 package org.fleen.bread.zCellSystem.test0;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.fleen.bread.zCellSystem.PresenceSystem;
 import org.fleen.bread.zCellSystem.ZCSMT_FPolygonBoiledEdge;
-import org.fleen.bread.zCellSystem.ZCSMappedThing;
 import org.fleen.bread.zCellSystem.ZCSMappedThingPresence;
 import org.fleen.bread.zCellSystem.ZCell;
 import org.fleen.bread.zCellSystem.ZCellSystem;
@@ -39,31 +37,25 @@ public class R_FattenBoiledEdge implements Rule{
     ZCell c1;
     for(ZCell c0:s0){
       c1=s1.getCell(c0.x,c0.y);
-      c1.setPresences(c0.presences);
+      c1.presences.setPresences(c0.presences);
       psum=getBoiledEdgeWeightedPresenceSum(c0,s0);
-      c1.addPresences(psum);
-      c1.clean();}}
+      c1.presences.addPresences(psum);
+      c1.presences.clean();}}
   
   /*
    * TODO we need a PresenceSum object, not just a list
    * something we can add to, remove from, copy, etc
    */
   private List<ZCSMappedThingPresence> getBoiledEdgeWeightedPresenceSum(ZCell c,ZCellSystem s){
-    Map<ZCSMappedThing,ZCSMappedThingPresence> summedpresencebything=new HashMap<ZCSMappedThing,ZCSMappedThingPresence>();
+    PresenceSystem sum=new PresenceSystem();
     ZCell n;
-    ZCSMappedThingPresence p;
     for(int[] a:NOFF_RANGE1){
       n=s.getCell(c.x+a[0],c.y+a[1]);
       if(n!=null){
-        for(ZCSMappedThingPresence p0:n.presences){
-          if(p0.thing instanceof ZCSMT_FPolygonBoiledEdge){
-            p=summedpresencebything.get(p0.thing);
-            if(p==null){
-              p=new ZCSMappedThingPresence(p0);
-              summedpresencebything.put(p.thing,p);
-            }else{
-              p.intensity+=p0.intensity;}}}}}
-    List<ZCSMappedThingPresence> sum=new ArrayList<ZCSMappedThingPresence>(summedpresencebything.values());
+        for(ZCSMappedThingPresence p:n.presences){
+          if(p.thing instanceof ZCSMT_FPolygonBoiledEdge){
+            sum.addPresence(p);}}}}
+    sum.factorIntensities(0.3);
     return sum;}
   
 }

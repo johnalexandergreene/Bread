@@ -12,7 +12,7 @@ public class UI extends JFrame {
 	public UI(ZCellTest test){
 	  this.test=test;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(50,50,1700,1000);
+		setBounds(350,50,1500,900);
 		viewer=new Viewer(this);
 		setContentPane(viewer);
 		setVisible(true);}

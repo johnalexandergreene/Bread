@@ -134,21 +134,21 @@ public class ZCellSystem implements Iterable<ZCell>{
     ZCell c1;
     for(ZCell c0:a){
         c1=getCell(c0.x,c0.y);
-        c1.addPresences(c0.presences);}}
+        c1.presences.addPresences(c0.presences);}}
   
   private void mapPolygonBoiledEdge(ZCSMT_FPolygonBoiledEdge t){
     ZCells_FPolygonBoiledEdge m=new ZCells_FPolygonBoiledEdge(t);
     ZCell c1;
     for(ZCell c0:m){
         c1=getCell(c0.x,c0.y);
-        c1.addPresences(c0.presences);}}
+        c1.presences.addPresences(c0.presences);}}
   
   private void mapMargin(ZCSMT_FCompositionMargin t){
     ZCells_FCompositionMargin m=new ZCells_FCompositionMargin(t);
     ZCell c1;
     for(ZCell c0:m){
         c1=getCell(c0.x,c0.y);
-        c1.addPresences(c0.presences);}}
+        c1.presences.addPresences(c0.presences);}}
   
   /*
    * ################################
@@ -159,6 +159,6 @@ public class ZCellSystem implements Iterable<ZCell>{
   
   public void clean(){
     for(ZCell c:this)
-      c.clean();}
+      c.presences.clean();}
   
 }

@@ -75,8 +75,8 @@ public class ZCells_FCompositionMargin implements ZCellMass{
     ZCSMappedThingPresence p0,p1;
     for(ZCell c0:a){
       c1=cellarray[c0.x][c0.y];
-      p0=c0.getPresence(t);
-      p1=c1.getPresence(marginthing);
+      p0=c0.presences.getPresence(t);
+      p1=c1.presences.getPresence(marginthing);
       p1.intensity-=p0.intensity;}}
   
   private void initCellArray(){
