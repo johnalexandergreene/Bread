@@ -30,9 +30,22 @@ public class R_Smooth implements Rule{
 //    {-1,-1},{0,-1},{1,-1}};
   
   /*
-   * get c0 neighbors out to viewrange
-   * get sum for each thing
-   * set c1 cell to thing with greatest sum 
+   * 
+   * given c0
+   * 
+   * first duplicate
+   * 
+   * then, get the c0 presences
+   * if there is a presence that is>0.5
+   *   get the average of all local matching presences, including c0's matching presence, weighted up a bit (1.1 or something) : k
+   * set the presence to intensity k;
+   * 
+   * maybe only adjust the weighted presence intensity if the result is > than the present intensity
+   *   
+   *    
+   * 
+   * 
+   * 
    */
   public void doRule(HCellSystem cs0,HCellSystem cs1){
     HCell c1;
