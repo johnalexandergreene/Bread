@@ -1,6 +1,8 @@
-package org.fleen.bread.app.forsythiaSpinner;
+package org.fleen.bread.app.longGarden;
 
-public class FS{
+import java.io.File;
+
+public class LongGarden{
   
   /*
    * ################################
@@ -8,7 +10,7 @@ public class FS{
    * ################################
    */
   
-  FS(String[] a){
+  LongGarden(String[] a){
     initParams(a);
     initUI();
     initChain();
@@ -20,10 +22,21 @@ public class FS{
    * ################################
    */
   
-  Params params;
+  Config params;
   
   private void initParams(String[] a){
-    params=new Params(a);}
+    params=new Config(a);}
+  
+
+  /*
+   * ################################
+   * UTIL
+   * ################################
+   */
+  
+  public File getLocalDirectory(){
+    
+  }
   
   /*
    * ################################
@@ -32,6 +45,6 @@ public class FS{
    */
   
   public static final void main(String[] a){
-    new FS(a);}
+    new LongGarden(a);}
 
 }

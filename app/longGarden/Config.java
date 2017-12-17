@@ -1,9 +1,9 @@
-package org.fleen.bread.app.forsythiaSpinner;
+package org.fleen.bread.app.longGarden;
 
 import java.awt.Color;
 import java.io.File;
 
-public class Params{
+public class Config{
   
   /*
    * ################################
@@ -11,8 +11,32 @@ public class Params{
    * ################################
    */
   
-  public Params(String[] s){
-    parse(s);}
+  public Config(LongGarden lg){
+    this.lg=lg;
+    init();}
+  
+  /*
+   * ################################
+   * LONG GARDEN
+   * ################################
+   */
+  
+  LongGarden lg;
+  
+  /*
+   * ################################
+   * INIT
+   * Get the config text file from the working directory
+   * if it's there
+   *   parse it 
+   *   get params
+   * if it isn't there 
+   *   go with param defaults
+   *   write a fresh all-defaults config text file
+   * ################################
+   */
+  
+  static final String CONFIG_TEXT_FILE_NAME="LONG_GARDEN_CONFIG";
   
   /*
    * ################################
@@ -65,33 +89,16 @@ public class Params{
   //
   Color[] polygonpalette;
   
-  //the path to the image that gets inserted into the graphics stream now and then
-  //an advertisement or credits or logo or something
-  String insertpath;
-  
-  //approximate pixel distance between inserts
-  int insertperiod;
-  
   //turn on the debug messages and such. all the nonfatal stuff (in addition to the always-on fatal stuff)
   boolean debug;
   
   /*
    * ################################
-   * PARSE LINES TO PARAMS
+   * PARSE TEXT FILE
    * ################################
    */
   
   private void parse(String[] s){
-    
-  }
-  
-  /*
-   * ################################
-   * UTIL
-   * ################################
-   */
-  
-  public File getLocalDirectory(){
     
   }
 
