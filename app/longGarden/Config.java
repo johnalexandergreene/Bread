@@ -38,6 +38,10 @@ public class Config{
   
   static final String CONFIG_TEXT_FILE_NAME="LONG_GARDEN_CONFIG";
   
+  private void init(){
+    
+  }
+  
   /*
    * ################################
    * PARAMS
@@ -74,8 +78,8 @@ public class Config{
   //path to a serialized Forsythia Grammar file
   static final String PKEY_GRAMMARPATH="GRAMMARPATH";
   //relative to the working directory, where the JAR was run
-  static final String GRAMMARPATH_DEFAULT="nice0000.grammar";
-  String grammarpath=getLocalDirectory().getAbsolutePath()+"/"+GRAMMARPATH_DEFAULT;
+  static final String GRAMMARPATH_DEFAULT="/nice0000.grammar";
+  String grammarpath=lg.getLocalDir().getAbsolutePath()+GRAMMARPATH_DEFAULT;
   
   //controls how small the polygons can get in the pattern
   double detaillimit;
@@ -98,7 +102,7 @@ public class Config{
    * ################################
    */
   
-  private void parse(String[] s){
+  private void parse(){
     
   }
 

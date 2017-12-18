@@ -1,0 +1,19 @@
+A coloring technology
+
+Use 3 colors : red, yellow, blue
+
+Color by assigning colors
+Returned colir is color + color of parent. Thus we get all 6 colors.
+
+We could do 3 level blend too
+
+———
+
+A params for long garden
+
+Symmetry 1
+Symmetry 2
+...
+Symmetry n
+
+Symmetry probability at respective build levels
