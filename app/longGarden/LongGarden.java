@@ -3,6 +3,9 @@ package org.fleen.bread.app.longGarden;
 import java.io.File;
 import java.net.URLDecoder;
 
+import org.fleen.bread.app.longGarden.config.Config;
+import org.fleen.bread.app.longGarden.frameGenerator.FrameGenerator;
+import org.fleen.bread.app.longGarden.stripeChainGenerator.StripeChainGenerator;
 import org.fleen.forsythia.app.grammarEditor.GE;
 
 public class LongGarden{
@@ -13,10 +16,9 @@ public class LongGarden{
    * ################################
    */
   
-  LongGarden(String[] a){
+  LongGarden(){
     initConfig();
-    initUI();
-    start();}
+    initUI();}
   
   /*
    * ################################
@@ -24,7 +26,7 @@ public class LongGarden{
    * ################################
    */
   
-  Config config;
+  public Config config;
   
   private void initConfig(){
     config=new Config(this);}
@@ -35,24 +37,36 @@ public class LongGarden{
    * ################################
    */
   
-  UI ui;
+  public UI ui;
   
   private void initUI(){
     ui=new UI(this);}
   
   /*
    * ################################
-   * START STOP
+   * LOOP
    * ################################
    */
   
-  private void start(){
-    
-  }
+  private static final long STOP_TEST_PERIOD=3000;
+  public StripeChainGenerator stripechaingenerator=new StripeChainGenerator(this);
+  public FrameGenerator framegenerator=new FrameGenerator(this);
+  private boolean run=true;
   
-  public void stop(){
+  private void start(){
+    stripechaingenerator.start();
+    framegenerator.start();
+    while(run)
+      try{
+        Thread.sleep(STOP_TEST_PERIOD);
+      }catch(Exception x){
+        x.printStackTrace();}}
     
-  }
+  public void stop(){
+    framegenerator.stop();
+    stripechaingenerator.stop();
+    run=false;
+    System.exit(0);}
   
   /*
    * ################################
@@ -78,6 +92,7 @@ public class LongGarden{
    */
   
   public static final void main(String[] a){
-    new LongGarden(a);}
+    LongGarden g=new LongGarden();
+    g.start();}
 
 }

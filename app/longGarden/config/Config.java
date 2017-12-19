@@ -1,7 +1,9 @@
-package org.fleen.bread.app.longGarden;
+package org.fleen.bread.app.longGarden.config;
 
 import java.awt.Color;
 import java.io.File;
+
+import org.fleen.bread.app.longGarden.LongGarden;
 
 public class Config{
   
@@ -64,7 +66,7 @@ public class Config{
   //in milliseconds
   static final String PKEY_FRAMEPERIOD="FRAMEPERIOD";
   static final long FRAMEPERIOD_DEFAULT=34;
-  long frameperiod=FRAMEPERIOD_DEFAULT;
+  public long frameperiod=FRAMEPERIOD_DEFAULT;
   
   //the distance between the edge of the viewport and the end of the stripe, in pixels, 
   //below which, adding a new stripe to the chain is warranted.
