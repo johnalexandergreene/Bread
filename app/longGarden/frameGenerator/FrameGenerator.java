@@ -32,15 +32,19 @@ public class FrameGenerator{
   public void start(){
     new Thread(){
       long 
-        frameperiod=lg.config.frameperiod,
+        frameperiod=lg.config.getFramePeriod(),
         t;
       public void run(){
+        //we keep the frame period constant, of course
         while(run){
           t=System.currentTimeMillis();
           doFrame();
           t=System.currentTimeMillis()-t;
           try{
-            Thread.sleep(frameperiod-t);
+            if(t<frameperiod){
+              Thread.sleep(frameperiod-t);
+            }else{
+              System.out.println("WARNING : Frame generation time exceeded period.");}
           }catch(Exception x){
             x.printStackTrace();}}}
     }.start();}
@@ -55,7 +59,7 @@ public class FrameGenerator{
    */
   
   private void doFrame(){
-    
+    System.out.println("do frame");
   }
 
 }

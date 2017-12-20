@@ -28,18 +28,17 @@ public class StripeChainGenerator{
    */
   
   private boolean run=true;
-  static final long CHECK_FOR_NEW_STRIPE_NEEDED_PERIOD=1000;
+  static final long UPDATE_STRIPE_CHAIN_PERIOD=500;
   
   public void start(){
     new Thread(){
       public void run(){
         while(run){
-          if(needAnotherStripe())
-            createStripe();}
+          updateStripeChain();
           try{
-            Thread.sleep(CHECK_FOR_NEW_STRIPE_NEEDED_PERIOD);
+            Thread.sleep(UPDATE_STRIPE_CHAIN_PERIOD);
           }catch(Exception x){
-            x.printStackTrace();}}
+            x.printStackTrace();}}}
     }.start();}
   
   public void stop(){
@@ -52,11 +51,8 @@ public class StripeChainGenerator{
    */
   
   //TODO
-  private boolean needAnotherStripe(){
-    return false;
-  }
-  
-  private void createStripe(){
+  private void updateStripeChain(){
+    System.out.println("update stripechain");
     
   }
     

@@ -74,7 +74,7 @@ public class LongGarden{
    * ################################
    */
   
-  public File getLocalDir(){
+  public File getWorkingDir(){
     String path=GE.class.getProtectionDomain().getCodeSource().getLocation().getPath();
     String decodedpath;
     try{
