@@ -1,11 +1,13 @@
 package org.fleen.bread.app.longGarden;
 
+import java.awt.EventQueue;
 import java.io.File;
 import java.net.URLDecoder;
 
 import org.fleen.bread.app.longGarden.config.Config;
 import org.fleen.bread.app.longGarden.frameGenerator.FrameGenerator;
 import org.fleen.bread.app.longGarden.stripeChainGenerator.StripeChainGenerator;
+import org.fleen.bread.app.longGarden.ui.UI;
 import org.fleen.forsythia.app.grammarEditor.GE;
 
 public class LongGarden{
@@ -48,24 +50,35 @@ public class LongGarden{
    * ################################
    */
   
-  private static final long STOP_TEST_PERIOD=3000;
+  static final long RUN_TEST_PERIOD=3000;
   public StripeChainGenerator stripechaingenerator=new StripeChainGenerator(this);
   public FrameGenerator framegenerator=new FrameGenerator(this);
-  private boolean run=true;
+  public boolean run=true;
   
-  private void start(){
+  public void start(){
+    run=true;
     stripechaingenerator.start();
     framegenerator.start();
+    //occasionally check the state of run while the generators do their thing
     while(run)
       try{
-        Thread.sleep(STOP_TEST_PERIOD);
+        Thread.sleep(RUN_TEST_PERIOD);
       }catch(Exception x){
         x.printStackTrace();}}
     
   public void stop(){
-    framegenerator.stop();
-    stripechaingenerator.stop();
     run=false;
+    framegenerator.stop();
+    stripechaingenerator.stop();}
+  
+  /*
+   * ################################
+   * EXIT
+   * ################################
+   */
+  
+  public void exit(){
+    System.out.println("LONG GARDEN EXIT");
     System.exit(0);}
   
   /*
@@ -92,7 +105,8 @@ public class LongGarden{
    */
   
   public static final void main(String[] a){
-    LongGarden g=new LongGarden();
-    g.start();}
+    LongGarden instance=new LongGarden();
+//    g.start();
+    }
 
 }

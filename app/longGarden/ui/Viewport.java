@@ -1,30 +1,31 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator;
+package org.fleen.bread.app.longGarden.ui;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
-public class Viewer extends JPanel{
+import org.fleen.bread.app.longGarden.LongGarden;
 
-  private static final long serialVersionUID=581500866418502553L;
-  
+@SuppressWarnings("serial")
+public class Viewport extends JPanel{
+
   /*
    * ################################
    * CONSTRUCTOR
    * ################################
    */
   
-  Viewer(FCGenerator generator){
-    this.generator=generator;}
+  Viewport(LongGarden lg){
+    this.lg=lg;}
   
   /*
    * ################################
-   * GENERATOR
+   * LONG GARDEN
    * ################################
    */
   
-  FCGenerator generator;
+  LongGarden lg;
   
   /*
    * ################################
@@ -34,8 +35,7 @@ public class Viewer extends JPanel{
   
   public void paint(Graphics g){
     super.paint(g);
-    if(generator==null||generator.image==null)return;
+    if(lg==null||lg.framegenerator==null||lg.framegenerator.frame==null)return;
     Graphics2D g2=(Graphics2D)g;
-    g2.drawImage(generator.image,null,null);}
-
+    g2.drawImage(lg.framegenerator.frame,null,null);}
 }

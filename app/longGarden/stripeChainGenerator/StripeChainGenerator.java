@@ -33,8 +33,9 @@ public class StripeChainGenerator{
   public void start(){
     new Thread(){
       public void run(){
+        setPriority(NORM_PRIORITY);
         while(run){
-          updateStripeChain();
+          conditionallyUpdateStripeChain();
           try{
             Thread.sleep(UPDATE_STRIPE_CHAIN_PERIOD);
           }catch(Exception x){
@@ -50,8 +51,11 @@ public class StripeChainGenerator{
    * ################################
    */
   
-  //TODO
-  private void updateStripeChain(){
+  /*
+   * if the viewport has gotten too close to the end of the stripechain then create another stripe.
+   * if the last stripe in the stripeshain is far enough outside the viewport then remove it.
+   */
+  private void conditionallyUpdateStripeChain(){
     System.out.println("update stripechain");
     
   }

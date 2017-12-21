@@ -1,5 +1,7 @@
 package org.fleen.bread.app.longGarden.frameGenerator;
 
+import java.awt.image.BufferedImage;
+
 import org.fleen.bread.app.longGarden.LongGarden;
 
 public class FrameGenerator{
@@ -35,6 +37,7 @@ public class FrameGenerator{
         frameperiod=lg.config.getFramePeriod(),
         t;
       public void run(){
+        setPriority(MAX_PRIORITY);
         //we keep the frame period constant, of course
         while(run){
           t=System.currentTimeMillis();
@@ -57,6 +60,8 @@ public class FrameGenerator{
    * FRAME
    * ################################
    */
+  
+  public BufferedImage frame=null;
   
   private void doFrame(){
     System.out.println("do frame");
