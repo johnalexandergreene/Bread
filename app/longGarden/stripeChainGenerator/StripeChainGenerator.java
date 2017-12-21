@@ -27,10 +27,12 @@ public class StripeChainGenerator{
    * ################################
    */
   
-  private boolean run=true;
   static final long UPDATE_STRIPE_CHAIN_PERIOD=500;
+  private boolean run=false;
   
   public void start(){
+    System.out.println("stripe chain generator start");
+    run=true;
     new Thread(){
       public void run(){
         setPriority(NORM_PRIORITY);
@@ -43,6 +45,7 @@ public class StripeChainGenerator{
     }.start();}
   
   public void stop(){
+    System.out.println("stripe chain generator stop");
     run=false;}
   
   /*

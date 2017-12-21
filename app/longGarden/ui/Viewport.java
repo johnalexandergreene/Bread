@@ -35,7 +35,7 @@ public class Viewport extends JPanel{
   
   public void paint(Graphics g){
     super.paint(g);
-    if(lg==null||lg.framegenerator==null||lg.framegenerator.frame==null)return;
+    if(lg==null||lg.framegenerator==null||lg.framegenerator.frameimage==null)return;
     Graphics2D g2=(Graphics2D)g;
-    g2.drawImage(lg.framegenerator.frame,null,null);}
+    g2.drawImage(lg.framegenerator.frameimage,null,null);}
 }

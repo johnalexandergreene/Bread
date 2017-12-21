@@ -9,6 +9,7 @@ import org.fleen.bread.app.longGarden.frameGenerator.FrameGenerator;
 import org.fleen.bread.app.longGarden.stripeChainGenerator.StripeChainGenerator;
 import org.fleen.bread.app.longGarden.ui.UI;
 import org.fleen.forsythia.app.grammarEditor.GE;
+import org.fleen.forsythia.app.grammarEditor.UIMain;
 
 public class LongGarden{
   
@@ -20,7 +21,7 @@ public class LongGarden{
   
   LongGarden(){
     initConfig();
-    initUI();}
+    initUI(this);}
   
   /*
    * ################################
@@ -41,8 +42,16 @@ public class LongGarden{
   
   public UI ui;
   
-  private void initUI(){
-    ui=new UI(this);}
+//  private void initUI(){
+//    ui=new UI(this);}
+  
+  private void initUI(final LongGarden thislg){
+    EventQueue.invokeLater(new Runnable(){
+      public void run(){
+        try{
+          ui=new UI(thislg);
+        }catch(Exception x){
+          x.printStackTrace();}}});}
   
   /*
    * ################################
@@ -53,20 +62,16 @@ public class LongGarden{
   static final long RUN_TEST_PERIOD=3000;
   public StripeChainGenerator stripechaingenerator=new StripeChainGenerator(this);
   public FrameGenerator framegenerator=new FrameGenerator(this);
-  public boolean run=true;
+  public boolean run=false;
   
   public void start(){
+    System.out.println("long garden start");
     run=true;
     stripechaingenerator.start();
-    framegenerator.start();
-    //occasionally check the state of run while the generators do their thing
-    while(run)
-      try{
-        Thread.sleep(RUN_TEST_PERIOD);
-      }catch(Exception x){
-        x.printStackTrace();}}
+    framegenerator.start();}
     
   public void stop(){
+    System.out.println("long garden stop");
     run=false;
     framegenerator.stop();
     stripechaingenerator.stop();}
@@ -78,6 +83,7 @@ public class LongGarden{
    */
   
   public void exit(){
+    if(run)stop();
     System.out.println("LONG GARDEN EXIT");
     System.exit(0);}
   
@@ -105,7 +111,7 @@ public class LongGarden{
    */
   
   public static final void main(String[] a){
-    LongGarden instance=new LongGarden();
+    LongGarden g=new LongGarden();
 //    g.start();
     }
 

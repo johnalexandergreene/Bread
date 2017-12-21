@@ -1,5 +1,7 @@
 package org.fleen.bread.app.longGarden.frameGenerator;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import org.fleen.bread.app.longGarden.LongGarden;
@@ -29,9 +31,11 @@ public class FrameGenerator{
    * ################################
    */
   
-  private boolean run=true;
+  private boolean run=false;
   
   public void start(){
+    System.out.println("frame generator start");
+    run=true;
     new Thread(){
       long 
         frameperiod=lg.config.getFramePeriod(),
@@ -41,7 +45,7 @@ public class FrameGenerator{
         //we keep the frame period constant, of course
         while(run){
           t=System.currentTimeMillis();
-          doFrame();
+          incrementFrame();
           t=System.currentTimeMillis()-t;
           try{
             if(t<frameperiod){
@@ -53,18 +57,72 @@ public class FrameGenerator{
     }.start();}
   
   public void stop(){
+    System.out.println("frame generator stop");
     run=false;}
   
   /*
    * ################################
-   * FRAME
+   * GEOMETRY
+   * The position of the frame relative to the stripechain
+   * the stripechain is a rectangle 
+   *   variable width
+   *   same height as ui viewport 
+   * the frame is a rectangle
+   *   same height and width as the ui viewport
+   *   incrementally moves from left to right along the stripechain
+   *     which is to say, we increment the x coor of the left edge
+   *   also adjust value of that xcoor when we modify the stripechain  
    * ################################
    */
   
-  public BufferedImage frame=null;
+  private int framex;
   
-  private void doFrame(){
-    System.out.println("do frame");
+  public int getFrameWidth(){
+    return lg.ui.getViewport().getWidth();}
+  
+  public int getFrameHeight(){
+    return lg.ui.getViewport().getHeight();}
+  
+  public int getFrameX(){
+    return framex;}
+  
+  public void setFrameX(int x){
+    framex=x;}
+  
+  public int getFrameY(){
+    return 0;}
+
+  private void incrementFrame(){
+    framex++;
+    updateFrameImage();}
+  
+  /*
+   * ################################
+   * IMAGE
+   * A piece of the stripechain image
+   * ################################
+   */
+  
+  public BufferedImage frameimage=null;
+  
+  /*
+   * TODO optimize
+   */
+  private void updateFrameImage(){
+    System.out.println("update frame image");
+    frameimage=null;
+    BufferedImage i=new BufferedImage(getFrameWidth(),getFrameHeight(),BufferedImage.TYPE_INT_RGB);
+    Graphics2D g=i.createGraphics();
+    g.setPaint(Color.orange);
+    g.fillRect(0,0,i.getWidth(),i.getHeight());
+    frameimage=i;
+    lg.ui.getViewport().repaint();
+    
+    
   }
+  
+  
+  
+
 
 }

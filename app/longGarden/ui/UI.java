@@ -50,13 +50,7 @@ public class UI extends JFrame{
   
   /*
    * ################################
-   * VIEWPORT
-   * 
-   * controls
-   *   esc=quit
-   *   s=stop or start
-   *   f=flip between fullscreen and nonfullscreen
-   * 
+   * VIEW PORT
    * ################################
    */
   
@@ -66,6 +60,9 @@ public class UI extends JFrame{
     viewport=new Viewport(lg);
     viewport.setBorder(null);
     setContentPane(viewport);}
+  
+  public Viewport getViewport(){
+    return viewport;}
   
   /*
    * ################################
@@ -91,6 +88,7 @@ public class UI extends JFrame{
         if(a==CHAR_EXIT){
           lg.exit();
         }else if(a==CHAR_STOPSTART){
+          System.out.println("stopstart");
           if(lg.run)
             lg.stop();
           else
