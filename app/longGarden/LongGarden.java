@@ -9,7 +9,6 @@ import org.fleen.bread.app.longGarden.frameGenerator.FrameGenerator;
 import org.fleen.bread.app.longGarden.stripeChainGenerator.StripeChainGenerator;
 import org.fleen.bread.app.longGarden.ui.UI;
 import org.fleen.forsythia.app.grammarEditor.GE;
-import org.fleen.forsythia.app.grammarEditor.UIMain;
 
 public class LongGarden{
   
@@ -59,7 +58,6 @@ public class LongGarden{
    * ################################
    */
   
-  static final long RUN_TEST_PERIOD=3000;
   public StripeChainGenerator stripechaingenerator=new StripeChainGenerator(this);
   public FrameGenerator framegenerator=new FrameGenerator(this);
   public boolean run=false;
@@ -107,6 +105,7 @@ public class LongGarden{
   /*
    * ################################
    * MAIN
+   * fullscreen and start
    * ################################
    */
   

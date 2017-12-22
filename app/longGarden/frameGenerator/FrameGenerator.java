@@ -1,7 +1,5 @@
 package org.fleen.bread.app.longGarden.frameGenerator;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import org.fleen.bread.app.longGarden.LongGarden;
@@ -86,12 +84,19 @@ public class FrameGenerator{
   public int getFrameX(){
     return framex;}
   
+  /*
+   * use this from stripechaingenerator when we modify the stripechain
+   * to account for changes in stripechain length
+   */
   public void setFrameX(int x){
     framex=x;}
   
   public int getFrameY(){
     return 0;}
 
+  /*
+   * this gives us our scrolling animation
+   */
   private void incrementFrame(){
     framex++;
     updateFrameImage();}
@@ -105,24 +110,9 @@ public class FrameGenerator{
   
   public BufferedImage frameimage=null;
   
-  /*
-   * TODO optimize
-   */
   private void updateFrameImage(){
-    System.out.println("update frame image");
-    frameimage=null;
-    BufferedImage i=new BufferedImage(getFrameWidth(),getFrameHeight(),BufferedImage.TYPE_INT_RGB);
-    Graphics2D g=i.createGraphics();
-    g.setPaint(Color.orange);
-    g.fillRect(0,0,i.getWidth(),i.getHeight());
-    frameimage=i;
-    lg.ui.getViewport().repaint();
-    
-    
-  }
+    BufferedImage sci=lg.stripechaingenerator.getImage();
+    frameimage=sci.getSubimage(getFrameX(),getFrameY(),getFrameWidth(),getFrameHeight());
+    lg.ui.getViewport().repaint();}
   
-  
-  
-
-
 }
