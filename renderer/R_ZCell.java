@@ -1,4 +1,4 @@
-package org.fleen.bread.renderer2;
+package org.fleen.bread.renderer;
 
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
@@ -16,7 +16,7 @@ import org.fleen.forsythia.core.composition.ForsythiaComposition;
  * map composition to zcellsystem
  * render zcellsystem in terms of colormap
  */
-public class R_ZCell implements Renderer2{
+public class R_ZCell implements Renderer{
 
   static final double GLOWSPAN=1.5;
   
@@ -34,7 +34,9 @@ public class R_ZCell implements Renderer2{
     BufferedImage i=createImage(colormap,zcs);
     return i;}
   
-  //scale and fit
+  /*
+   * returns transform to scale and fit the composition to the image
+   */
   private AffineTransform getTransform(int width,int height,ForsythiaComposition composition){
     //get all the relevant metrics
     Rectangle2D.Double compositionbounds=composition.getRootPolygon().getDPolygon().getBounds();
@@ -66,7 +68,7 @@ public class R_ZCell implements Renderer2{
   private ZCellSystem getZCellSystem(int width,int height,ForsythiaComposition composition,AffineTransform t){
     ZCellSystem zcs=new ZCellSystem(width,height);
     for(FPolygon p:composition.getLeafPolygons())
-      zcs.mapPolygonArea(p.getDPolygon(),t,GLOWSPAN);
+      zcs.mapPolygonArea(p,t,GLOWSPAN);
     zcs.clean();
     return zcs;}
   
@@ -87,7 +89,7 @@ public class R_ZCell implements Renderer2{
     int r=0,g=0,b=0;
     Color color;
     for(ZCSMappedThingPresence p:c.presences){
-      color=colormap.getColor((FPolygon)p.polygon.object);//so ya, we put the fpolygon in the dpolygon's gp object when we created that dpolygon
+      color=colormap.getColor((FPolygon)p.thing);
       r+=(int)(color.getRed()*p.intensity);
       g+=(int)(color.getGreen()*p.intensity);
       b+=(int)(color.getBlue()*p.intensity);}

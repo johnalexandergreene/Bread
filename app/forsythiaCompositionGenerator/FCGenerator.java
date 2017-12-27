@@ -9,7 +9,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
-import java.awt.geom.Path2D.Double;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,9 +26,9 @@ import org.fleen.bread.composer.Composer;
 import org.fleen.bread.composer.Composer002_SplitBoil_WithALittleNoiseNearTheRoot;
 import org.fleen.bread.export.RasterExporter;
 import org.fleen.bread.palette.Palette;
+import org.fleen.bread.renderer.R_SimpleStrokes;
+import org.fleen.bread.renderer.Renderer;
 import org.fleen.bread.renderer.Renderer_Abstract;
-import org.fleen.bread.renderer2.R_ZCell;
-import org.fleen.bread.renderer2.Renderer2;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
@@ -77,10 +76,14 @@ public class FCGenerator{
 //  Renderer renderer=new Renderer_002_ArbitrarySubPalettes();
 //  Renderer renderer=new Renderer_001();
 //  Renderer renderer=new Renderer_Rasterizer004_ALittleSyntheticStroke();
-  Renderer2 renderer=new R_ZCell();
+//  Renderer2 renderer=new R_ZCell();
 //  Renderer2 renderer=new R_ZCell_DarkStrokes();
   
   String exportdirpath="/home/john/Desktop/newstuff";
+  
+  Renderer renderer=new R_SimpleStrokes();
+  
+  ColorMap colormap;
   
   /*
    * ++++++++++++++++++++++++++++++++
@@ -221,8 +224,6 @@ public class FCGenerator{
    * ++++++++++++++++++++++++++++++++
    */
   
-  ColorMap colormap;
-  
   private void doIntermittantCreation(){
     composition=composer.compose(getGrammar(),DETAIL_LIMIT);
     colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
@@ -325,13 +326,13 @@ public class FCGenerator{
   
   RasterExporter rasterexporter=new RasterExporter();
   
-//  private void export(File exportdir,int w,int h){
-//    System.out.println(">>>EXPORT<<<");
-//    if(colormap==null)
-//      colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
-//    BufferedImage exportimage=renderer.createImage(w,h,composition,colormap);
-//    rasterexporter.setExportDir(exportdir);
-//    rasterexporter.export(exportimage);}
+  private void export(File exportdir,int w,int h){
+    System.out.println(">>>EXPORT<<<");
+    if(colormap==null)
+      colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
+    BufferedImage exportimage=renderer.createImage(w,h,composition,colormap);
+    rasterexporter.setExportDir(exportdir);
+    rasterexporter.export(exportimage);}
   
   /*
    * ++++++++++++++++++++++++++++++++
@@ -345,11 +346,11 @@ public class FCGenerator{
    * 2 nonmatching colors from our palette comprise the textcolor and background color
    * ++++++++++++++++++++++++++++++++
    */
-  private void export(File exportdir,int w,int h){
-    System.out.println(">>>EXPORT MARTIAN MONEY<<<");
-    BufferedImage exportimage=getMartianMoneyImage();
-    rasterexporter.setExportDir(exportdir);
-    rasterexporter.export(exportimage);}
+//  private void export(File exportdir,int w,int h){
+//    System.out.println(">>>EXPORT MARTIAN MONEY<<<");
+//    BufferedImage exportimage=getMartianMoneyImage();
+//    rasterexporter.setExportDir(exportdir);
+//    rasterexporter.export(exportimage);}
   
   private BufferedImage getMartianMoneyImage(){
     if(colormap==null)

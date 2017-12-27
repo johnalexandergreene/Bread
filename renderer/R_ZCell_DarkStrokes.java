@@ -1,4 +1,4 @@
-package org.fleen.bread.renderer2;
+package org.fleen.bread.renderer;
 
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
@@ -16,7 +16,7 @@ import org.fleen.forsythia.core.composition.ForsythiaComposition;
  * map composition to zcellsystem
  * render zcellsystem in terms of colormap
  */
-public class R_ZCell_DarkStrokes implements Renderer2{
+public class R_ZCell_DarkStrokes implements Renderer{
 
   static final double GLOWSPAN=1.5;
   

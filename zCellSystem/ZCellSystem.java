@@ -1,7 +1,10 @@
 package org.fleen.bread.zCellSystem;
 
+import java.awt.geom.AffineTransform;
 import java.util.Iterator;
 import java.util.List;
+
+import org.fleen.forsythia.core.composition.FPolygon;
 
 /* 
  * It's a reaction diffusion system
