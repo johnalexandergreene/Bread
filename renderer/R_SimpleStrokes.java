@@ -53,7 +53,7 @@ public class R_SimpleStrokes implements Renderer{
       g.fill(p.getDPolygon().getPath2D());}
     //do stroke
     g.setPaint(strokecolor);
-    g.setStroke(createStroke((float)(strokethickness/t.getScaleX())));
+    g.setStroke(createStroke());
     for(FPolygon p:composition.getLeafPolygons())
       g.draw(p.getDPolygon().getPath2D());
     //
@@ -65,8 +65,10 @@ public class R_SimpleStrokes implements Renderer{
    * ################################
    */
   
-  float strokethickness=2;//unscaled of course
-  Color strokecolor=Color.black;
+  static final float STROKETHICKNESS_DEFAULT=0.012f;
+  static final Color STROKECOLOR_DEFAULT=Color.white;
+  float strokethickness=STROKETHICKNESS_DEFAULT;
+  Color strokecolor=STROKECOLOR_DEFAULT;
   
   public void setStrokeThickness(double a){
     strokethickness=(float)a;}
@@ -74,8 +76,8 @@ public class R_SimpleStrokes implements Renderer{
   public void setStrokeColor(Color a){
     strokecolor=a;}
   
-  private Stroke createStroke(float realstrokethickness){
-    Stroke stroke=new BasicStroke(realstrokethickness,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_ROUND,0,null,0);
+  private Stroke createStroke(){
+    Stroke stroke=new BasicStroke(strokethickness,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_ROUND,0,null,0);
     return stroke;}
   
   /*
