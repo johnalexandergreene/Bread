@@ -65,7 +65,9 @@ public class R_SimpleStrokes implements Renderer{
    * ################################
    */
   
-  static final float STROKETHICKNESS_DEFAULT=0.012f;
+//  static final float STROKETHICKNESS_DEFAULT=0.014f;
+  static final float STROKETHICKNESS_DEFAULT=0.018f;
+//  static final float STROKETHICKNESS_DEFAULT=0.005f;
   static final Color STROKECOLOR_DEFAULT=Color.white;
   float strokethickness=STROKETHICKNESS_DEFAULT;
   Color strokecolor=STROKECOLOR_DEFAULT;

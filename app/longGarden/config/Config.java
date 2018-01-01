@@ -117,7 +117,8 @@ public class Config{
    */
   
   static final String PKEY_FRAMEPERIOD="FRAMEPERIOD";
-  static final long FRAMEPERIOD_DEFAULT=34;
+//  static final long FRAMEPERIOD_DEFAULT=34;
+  static final long FRAMEPERIOD_DEFAULT=83;
   long frameperiod=FRAMEPERIOD_DEFAULT;
   
   public long getFramePeriod(){

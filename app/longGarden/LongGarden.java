@@ -6,7 +6,6 @@ import java.net.URLDecoder;
 
 import org.fleen.bread.app.longGarden.config.Config;
 import org.fleen.bread.app.longGarden.frameGenerator.FrameGenerator;
-import org.fleen.bread.app.longGarden.stripeChainGenerator.StripeChainGenerator;
 import org.fleen.bread.app.longGarden.ui.UI;
 import org.fleen.forsythia.app.grammarEditor.GE;
 
@@ -20,7 +19,7 @@ public class LongGarden{
   
   LongGarden(){
     initConfig();
-    initUI(this);}
+    initUI();}
   
   /*
    * ################################
@@ -41,14 +40,11 @@ public class LongGarden{
   
   public UI ui;
   
-//  private void initUI(){
-//    ui=new UI(this);}
-  
-  private void initUI(final LongGarden thislg){
+  private void initUI(){
     EventQueue.invokeLater(new Runnable(){
       public void run(){
         try{
-          ui=new UI(thislg);
+          ui=new UI(LongGarden.this);
         }catch(Exception x){
           x.printStackTrace();}}});}
   
@@ -58,21 +54,18 @@ public class LongGarden{
    * ################################
    */
   
-  public StripeChainGenerator stripechaingenerator=new StripeChainGenerator(this);
   public FrameGenerator framegenerator=new FrameGenerator(this);
   public boolean run=false;
   
   public void start(){
     System.out.println("long garden start");
     run=true;
-    stripechaingenerator.start();
     framegenerator.start();}
     
   public void stop(){
     System.out.println("long garden stop");
     run=false;
-    framegenerator.stop();
-    stripechaingenerator.stop();}
+    framegenerator.stop();}
   
   /*
    * ################################

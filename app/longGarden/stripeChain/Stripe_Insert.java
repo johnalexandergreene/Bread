@@ -1,4 +1,4 @@
-package org.fleen.bread.app.longGarden.stripeChainGenerator;
+package org.fleen.bread.app.longGarden.stripeChain;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

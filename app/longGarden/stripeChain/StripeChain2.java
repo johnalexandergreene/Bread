@@ -1,4 +1,4 @@
-package org.fleen.bread.app.longGarden.stripeChainGenerator;
+package org.fleen.bread.app.longGarden.stripeChain;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -21,7 +21,7 @@ import org.fleen.util.tree.TreeNode;
  * A chain of stripe nodes
  */
 @SuppressWarnings("serial")
-public class StripeChain extends LinkedList<Stripe>{
+public class StripeChain2 extends LinkedList<Stripe>{
   
   /*
    * ################################
@@ -29,10 +29,10 @@ public class StripeChain extends LinkedList<Stripe>{
    * ################################
    */
   
-  public StripeChain(FSLAFGenerator generator){
+  public StripeChain2(FSLAFGenerator generator){
     this.generator=generator;}
   
-  public StripeChain(FSLAFGenerator generator,List<Stripe> stripes){
+  public StripeChain2(FSLAFGenerator generator,List<Stripe> stripes){
     this(generator);
     addAll(stripes);}
   

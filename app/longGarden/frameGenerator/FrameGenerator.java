@@ -3,6 +3,7 @@ package org.fleen.bread.app.longGarden.frameGenerator;
 import java.awt.image.BufferedImage;
 
 import org.fleen.bread.app.longGarden.LongGarden;
+import org.fleen.bread.app.longGarden.stripeChain.StripeChain;
 
 public class FrameGenerator{
   
@@ -21,11 +22,13 @@ public class FrameGenerator{
    * ################################
    */
   
-  LongGarden lg;
+  public LongGarden lg;
   
   /*
    * ################################
    * LOOP
+   * conditionally update stripechain every STRIPECHAINUPDATECHECK frames
+   *   STRIPECHAINUPDATECHECK should be about half of STRIPEEDGERANGE
    * ################################
    */
   
@@ -44,6 +47,7 @@ public class FrameGenerator{
         while(run){
           t=System.currentTimeMillis();
           incrementFrame();
+          stripechain.updateStripes();
           t=System.currentTimeMillis()-t;
           try{
             if(t<frameperiod){
@@ -103,6 +107,14 @@ public class FrameGenerator{
   
   /*
    * ################################
+   * STRIPE CHAIN
+   * ################################
+   */
+  
+  private StripeChain stripechain=new StripeChain(this);
+  
+  /*
+   * ################################
    * IMAGE
    * A piece of the stripechain image
    * ################################
@@ -111,7 +123,7 @@ public class FrameGenerator{
   public BufferedImage frameimage=null;
   
   private void updateFrameImage(){
-    BufferedImage sci=lg.stripechaingenerator.getImage();
+    BufferedImage sci=stripechain.getImage();
     frameimage=sci.getSubimage(getFrameX(),getFrameY(),getFrameWidth(),getFrameHeight());
     lg.ui.getViewport().repaint();}
   

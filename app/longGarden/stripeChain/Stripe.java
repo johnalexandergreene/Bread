@@ -1,4 +1,4 @@
-package org.fleen.bread.app.longGarden.stripeChainGenerator;
+package org.fleen.bread.app.longGarden.stripeChain;
 
 /*
  * A single node in a chain of nodes
@@ -8,11 +8,11 @@ package org.fleen.bread.app.longGarden.stripeChainGenerator;
  */
 public interface Stripe{
   
-  int getImageWidth();
+  int getWidth();
   
   /*
    * location of the left edge of this stripe's image within the stripechain image. 
    */
-  int getImageX();
+  int getX();
   
 }

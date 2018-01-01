@@ -1,6 +1,10 @@
 chaingen
 framegen
 
+it should have a screengrab function
+  write present frame to local dir PNG 
+ 
+
 
 
 A coloring technology

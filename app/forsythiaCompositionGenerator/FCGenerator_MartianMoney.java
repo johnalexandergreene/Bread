@@ -1,11 +1,22 @@
 package org.fleen.bread.app.forsythiaCompositionGenerator;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Stroke;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 import javax.swing.JTextField;
 
@@ -17,13 +28,14 @@ import org.fleen.bread.export.RasterExporter;
 import org.fleen.bread.palette.Palette;
 import org.fleen.bread.renderer.R_SimpleStrokes;
 import org.fleen.bread.renderer.Renderer;
+import org.fleen.bread.renderer.Renderer_Abstract;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
 /*
  * a single forsythia composition
  */
-public class FCGenerator{
+public class FCGenerator_MartianMoney extends FCGenerator{
   
   /*
    * ################################
@@ -31,7 +43,7 @@ public class FCGenerator{
    * ################################
    */
   
-  public FCGenerator(){
+  public FCGenerator_MartianMoney(){
     initUI();}
   
   /*
@@ -49,10 +61,9 @@ public class FCGenerator{
 //  String grammar_file_path="/home/john/Desktop/stripegrammar/s003.grammar";
 //  String grammar_file_path="/home/john/Desktop/ge/nuther003.grammar";
 //  String grammar_file_path="/home/john/Desktop/ge/aa004.grammar";
-  String grammar_file_path="/home/john/Desktop/grammars/s008.grammar";
+//  String grammar_file_path="/home/john/Desktop/grammars/s008.grammar";
 //  String grammar_file_path="/home/john/Desktop/grammars/hexmandala001.grammar";
-//  String grammar_file_path="/home/john/Desktop/grammars/s011martianmoney.grammar";
-  
+  String grammar_file_path="/home/john/Desktop/grammars/s011martianmoney.grammar";
   
   Composer composer=new Composer002_SplitBoil_WithALittleNoiseNearTheRoot();
 //  Composer composer=new Composer001_SplitBoil();
@@ -72,9 +83,7 @@ public class FCGenerator{
 //  Renderer2 renderer=new R_ZCell();
 //  Renderer2 renderer=new R_ZCell_DarkStrokes();
   
-//  String exportdirpath="/home/john/Desktop/newstuff";
-  
-  String exportdirpath="/home/john/Desktop/happnewyeargif";
+  String exportdirpath="/home/john/Desktop/newstuff";
   
   Renderer renderer=new R_SimpleStrokes();
   
@@ -131,7 +140,7 @@ public class FCGenerator{
     EventQueue.invokeLater(new Runnable(){
       public void run(){
         try{
-          ui=new UI(FCGenerator.this);
+          ui=new UI(FCGenerator_MartianMoney.this);
           ui.setDefaultWindowBounds();
           ui.setVisible(true);
           ui.setTitle(TITLE);
@@ -330,12 +339,110 @@ public class FCGenerator{
     rasterexporter.export(exportimage);}
   
   /*
+   * ++++++++++++++++++++++++++++++++
+   * MARTIAN MONEY
+   * 4x6 print
+   * 1800wx1200h
+   * composition fills 1727x1200
+   * which leaves 63x1200 on the end
+   * which we fill with a nice random hexadecimal string
+   * font is something mono and techno
+   * 2 nonmatching colors from our palette comprise the textcolor and background color
+   * ++++++++++++++++++++++++++++++++
+   */
+//  private void export(File exportdir,int w,int h){
+//    System.out.println(">>>EXPORT MARTIAN MONEY<<<");
+//    BufferedImage exportimage=getMartianMoneyImage();
+//    rasterexporter.setExportDir(exportdir);
+//    rasterexporter.export(exportimage);}
+  
+  private BufferedImage getMartianMoneyImage(){
+    if(colormap==null)
+      colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
+    BufferedImage c=renderer.createImage(1728,1200,composition,colormap);
+    //
+    BufferedImage m=new BufferedImage(1800,1200,BufferedImage.TYPE_INT_RGB);
+    Graphics2D g=m.createGraphics();
+    g.setRenderingHints(Renderer_Abstract.RENDERING_HINTS);
+    g.drawImage(c,null,null);
+    //
+    Color[] c3=get3Colors();
+    //
+    BufferedImage s=getCharacterStrip(c3);
+    g.drawImage(s,1727,0,null);
+    //
+    drawMars(g,c3[2]);
+    //
+    return m;}
+  
+  private void drawMars(Graphics2D g,Color c){
+    int x=1736,y=22;
+    g.setStroke(createStroke(8f));
+    g.setPaint(c);
+    g.drawOval(x,y,30,30);
+    Path2D.Double a=new Path2D.Double();
+    a.moveTo(x+27,y+27);
+    a.lineTo(x+45,y+45);
+    a.lineTo(x+45,y+25);
+    a.moveTo(x+45,y+45);
+    a.lineTo(x+25,y+45);
+    g.draw(a);}
+  
+  private Stroke createStroke(float w){
+    Stroke stroke=new BasicStroke(w,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND,0,null,0);
+    return stroke;}
+  
+  private Color[] get3Colors(){
+    Random r=new Random();
+    List<Color> c=new ArrayList<Color>();
+    c.addAll(Arrays.asList(Palette.P_TOY_STORY_ADJUSTED2));
+    Color[] a=new Color[3];
+    a[0]=c.remove(r.nextInt(c.size()));
+    a[1]=c.remove(r.nextInt(c.size()));
+    a[2]=c.remove(r.nextInt(c.size()));
+    return a;}
+  
+  private BufferedImage getCharacterStrip(Color[] c3){
+    BufferedImage s=new BufferedImage(73,1200,BufferedImage.TYPE_INT_RGB);
+    Graphics2D g=s.createGraphics();
+    g.setRenderingHints(Renderer_Abstract.RENDERING_HINTS);
+    g.setPaint(c3[0]);
+    g.fillRect(0,0,73,1200);
+    //
+    g.setTransform(AffineTransform.getQuadrantRotateInstance(1));
+    //
+    g.setPaint(c3[1]);
+    g.setFont(getMMFont());
+    g.drawString(getMMString(),88,-10);
+    
+    return s;
+  }
+  
+  static final String CHAR="0123456789ABCDEF";
+  
+  private String getMMString(){
+    Random r=new Random();
+    StringBuffer a=new StringBuffer();
+    for(int i=0;i<31;i++)
+      a.append(CHAR.charAt(r.nextInt(CHAR.length())));
+    return a.toString();}
+  
+  private Font getMMFont(){
+    try{
+      GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+      ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,new File("/home/john/.fonts/ShareTechMono-Regular.ttf")));
+    }catch(Exception x){
+      x.printStackTrace();}
+    Font f=new Font("Share Tech Mono",Font.PLAIN,65);
+    return f;}
+  
+  /*
    * ################################
    * MAIN
    * ################################
    */
   
   public static final void main(String[] a){
-    new FCGenerator();}
+    new FCGenerator_MartianMoney();}
   
 }
