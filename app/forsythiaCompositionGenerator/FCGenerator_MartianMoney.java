@@ -442,7 +442,7 @@ public class FCGenerator_MartianMoney extends FCGenerator{
    * ################################
    */
   
-  public static final void main(String[] a){
-    new FCGenerator_MartianMoney();}
+//  public static final void main(String[] a){
+//    new FCGenerator_MartianMoney();}
   
 }

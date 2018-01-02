@@ -72,13 +72,15 @@ public class FCGenerator{
 //  Renderer2 renderer=new R_ZCell();
 //  Renderer2 renderer=new R_ZCell_DarkStrokes();
   
-//  String exportdirpath="/home/john/Desktop/newstuff";
+  String exportdirpath="/home/john/Desktop/newstuff";
   
-  String exportdirpath="/home/john/Desktop/happnewyeargif";
+//  String exportdirpath="/home/john/Desktop/happnewyeargif";
   
   Renderer renderer=new R_SimpleStrokes();
   
   ColorMap colormap;
+  
+  public int margin=20;
   
   /*
    * ++++++++++++++++++++++++++++++++

@@ -5,8 +5,10 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.fleen.bread.app.longGarden.frameGenerator.FrameGenerator;
 import org.fleen.forsythia.core.composition.FPolygon;
@@ -155,17 +157,22 @@ public class StripeChain extends LinkedList<Stripe>{
     if(isEmpty())initStripes();
     //
     System.out.println("---update image");
-    image=new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_RGB);
-    Graphics2D g=image.createGraphics();
-    renderTestStripes(g);
+    BufferedImage newimage=new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_RGB);
+    Graphics2D g=newimage.createGraphics();
+    
+    List<Stripe> chaincopy=new ArrayList<Stripe>(this);//to avoid concurrent mod exceptions
+    //TODO maybe we should do some kind of lock on this stripechain instead
+    
+    renderTestStripes(g,chaincopy);
 //    renderMessages();
-    renderCompositionPolygonFill(g);
-    renderCompositionPolygonStroke(g);
+    renderCompositionPolygonFill(g,chaincopy);
+    renderCompositionPolygonStroke(g,chaincopy);
+    image=newimage;
     }
   
-  private void renderTestStripes(Graphics2D g){
+  private void renderTestStripes(Graphics2D g,List<Stripe> chaincopy){
     Stripe_Test st;
-    for(Stripe s:this){
+    for(Stripe s:chaincopy){
       if(s instanceof Stripe_Test){
         st=(Stripe_Test)s;
         g.setPaint(st.color);
@@ -174,7 +181,7 @@ public class StripeChain extends LinkedList<Stripe>{
   }
   
   
-  private void renderCompositionPolygonStroke(Graphics2D g){
+  private void renderCompositionPolygonStroke(Graphics2D g,List<Stripe> chaincopy){
     
   }
   
@@ -184,8 +191,8 @@ public class StripeChain extends LinkedList<Stripe>{
    * ++++++++++++++++++++++++++++++++
    */
   
-  private void renderCompositionPolygonFill(Graphics2D g){
-    for(Stripe stripe:this)
+  private void renderCompositionPolygonFill(Graphics2D g,List<Stripe> chaincopy){
+    for(Stripe stripe:chaincopy)
       if(stripe instanceof Stripe_Composition)
         renderPolygonFill(g,(Stripe_Composition)stripe);}
   
