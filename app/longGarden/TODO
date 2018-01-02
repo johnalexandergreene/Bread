@@ -3,6 +3,11 @@ framegen
 
 it should have a screengrab function
   write present frame to local dir PNG 
+  
+do a little blur postprocess
+
+we are presently using a general purpose composer but we should 
+replace that with a custom made one that can use entropy params
  
 
 

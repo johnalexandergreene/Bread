@@ -3,8 +3,10 @@ package org.fleen.bread.app.longGarden.stripeChain;
 import java.util.List;
 import java.util.Random;
 
-import org.fleen.bread.colorMap.ColorMap;
 import org.fleen.bread.colorMap.CM_SymmetricChaosEggLevel;
+import org.fleen.bread.colorMap.ColorMap;
+import org.fleen.bread.composer.Composer;
+import org.fleen.bread.composer.Composer002_SplitBoil_WithALittleNoiseNearTheRoot;
 import org.fleen.forsythia.core.composition.FGridRoot;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
@@ -18,7 +20,7 @@ import org.fleen.geom_Kisrhombille.KPolygon;
  * refers to a ForsythiaComposition with a rectangular root.
  * 
  */
-public class Stripe_ForsythiaComposition implements Stripe{
+public class Stripe_Composition implements Stripe{
   
   /*
    * ################################
@@ -26,19 +28,19 @@ public class Stripe_ForsythiaComposition implements Stripe{
    * ################################
    */
   
-  public Stripe_ForsythiaComposition(StripeChain chain){
-    this.chain=chain;
+  public Stripe_Composition(StripeChain stripechain){
+    this.stripechain=stripechain;
     initComposition();
     initColorMap();}
   
   /*
    * ################################
-   * CHAIN
+   * STRIPECHAIN
    * The stripe chain that this stripe is a part of
    * ################################
    */
   
-  StripeChain chain;
+  StripeChain stripechain;
   
   /*
    * ################################
@@ -57,7 +59,7 @@ public class Stripe_ForsythiaComposition implements Stripe{
   
   private void initComposition(){
     //get the root polygon
-    FMetagon rootmetagon=chain.generator.getRandomRectangularMetagon();
+    FMetagon rootmetagon=stripechain.fg.lg.config.getRandomRectangularMetagon();
     KPolygon p0=rootmetagon.getPolygon();
     List<KAnchor> anchors=rootmetagon.getAnchorOptions(p0);
     KAnchor a=anchors.get(new Random().nextInt(anchors.size()));
@@ -66,9 +68,10 @@ public class Stripe_ForsythiaComposition implements Stripe{
     FGridRoot rootgrid=new FGridRoot();
     //create the composition and compose it up
     composition=new ForsythiaComposition();
-    composition.setGrammar(chain.generator.grammar);
+    composition.setGrammar(stripechain.fg.lg.config.getGrammar());
     composition.initTree(rootgrid,rootpolygon);
-    chain.generator.composer.compose(composition,getScaledDetailLimit(rootpolygon));}
+    Composer composer=new Composer002_SplitBoil_WithALittleNoiseNearTheRoot();
+    composer.compose(composition,getScaledDetailLimit(rootpolygon));}
   
   /*
    * The unscaled height of our rectangular compositions varies, 
@@ -76,7 +79,7 @@ public class Stripe_ForsythiaComposition implements Stripe{
    *   therefore it needs to be scaled accordingly.
    */
   private double getScaledDetailLimit(FPolygon polygon){
-    return chain.generator.detaillimit*polygon.getDPolygon().getBounds().height;}
+    return stripechain.fg.lg.config.getDetailLimit()*polygon.getDPolygon().getBounds().height;}
   
   /*
    * ################################
@@ -88,7 +91,7 @@ public class Stripe_ForsythiaComposition implements Stripe{
   public ColorMap colormap;
   
   private void initColorMap(){
-    colormap=new CM_SymmetricChaosEggLevel(composition,chain.generator.palette);}
+    colormap=new CM_SymmetricChaosEggLevel(composition,stripechain.fg.lg.config.getPolygonPalette());}
   
   /*
    * ################################
@@ -98,34 +101,34 @@ public class Stripe_ForsythiaComposition implements Stripe{
   
   public double getImageScale(){
     double a=composition.getRootPolygon().getDPolygon().getBounds().height;
-    double b=chain.generator.viewportheight/a;
+    double b=stripechain.fg.lg.ui.getViewport().getHeight()/a;
     return b;}
-
-  public int getImageX(){
-    int 
-      a=chain.indexOf(this),
-      sum=0;
-    for(int i=0;i<a;i++)
-      sum+=chain.get(i).getImageWidth();
-    return sum;}
+  
+  public int getX(){
+    int x=0;
+    for(Stripe s:stripechain){
+      if(s==this)
+        return x;
+      x+=s.getWidth();}
+    return x;}
   
   /*
    * ++++++++++++++++++++++++++++++++
-   * IMAGE WIDTH
+   * WIDTH
    * ++++++++++++++++++++++++++++++++
    */
   
-  private int imagewidth=-1;
+  private int width=-1;
   
-  public int getImageWidth(){
-    if(imagewidth==-1)
-      initImageWidth();
-    return imagewidth;}
+  public int getWidth(){
+    if(width==-1)
+      initWidth();
+    return width;}
   
-  private void initImageWidth(){
+  private void initWidth(){
     double
       s=getImageScale(),
       w=composition.getRootPolygon().getDPolygon().getBounds().width;
-    imagewidth=(int)(s*w);}
+    width=(int)(s*w);}
     
 }

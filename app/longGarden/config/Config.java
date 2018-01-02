@@ -16,9 +16,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.fleen.bread.app.longGarden.LongGarden;
 import org.fleen.forsythia.app.grammarEditor.sampleGrammars.SampleGrammars;
+import org.fleen.forsythia.core.grammar.FMetagon;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
 /*
@@ -166,7 +168,8 @@ public class Config{
    */
   
   static final String PKEY_GRAMMARPATH="GRAMMARPATH";
-  static final String GRAMMARPATH_DEFAULT="/default.grammar";
+//  static final String GRAMMARPATH_DEFAULT="/default.grammar";
+  static final String GRAMMARPATH_DEFAULT="/home/john/Desktop/grammars/s008.grammar";
   String grammarpath=GRAMMARPATH_DEFAULT;
   
   public String getGrammarPath(){
@@ -434,7 +437,7 @@ public class Config{
       return;}}
   
   private ForsythiaGrammar loadGrammar(String path){
-    File file=new File(lg.getWorkingDir()+path);
+    File file=new File(path);
     FileInputStream fis;
     ObjectInputStream ois;
     ForsythiaGrammar fg=null;
@@ -475,5 +478,50 @@ public class Config{
       System.out.println("get default grammar failed.");
       e.printStackTrace();}
     return g;}
+  
+  /*
+   * ################################
+   * RECTANGULAR METAGONS
+   * Get the rectangular metagons in our working grammar
+   * Used as root polygon by the stripe node compositions
+   * ################################
+   */
+  
+  private List<FMetagon> rectangularmetagons=null;
+  
+  public FMetagon getRandomRectangularMetagon(){
+    if(rectangularmetagons==null)
+      initRectangularMetagons();
+    Random rnd=new Random();
+    int a=rnd.nextInt(rectangularmetagons.size());
+    FMetagon m=rectangularmetagons.get(a);
+    return m;}
+  
+  private void initRectangularMetagons(){
+    System.out.println("^^^ init rectangular metagons");
+    rectangularmetagons=new ArrayList<FMetagon>();
+    for(FMetagon m:getGrammar().getMetagons())
+      if(isRectangular(m))
+        rectangularmetagons.add(m);
+    System.out.println("rectangular metagon count = "+rectangularmetagons.size());}
+  
+  private boolean isRectangular(FMetagon m){
+    //a rectangular metagon has 2 vectors
+    if(m.vectors.length!=2)return false;
+    //those vectors have directiondelta=3
+    if(!(
+      m.vectors[0].directiondelta==3&&
+      m.vectors[1].directiondelta==3))return false;
+    //the second vector has length==1 (more or less)
+    if(!(isOne(m.vectors[1].relativeinterval)))return false;
+    //
+    return true;} 
+  
+  //wtfe
+  //close enough to 1
+  static final double ONEERROR=0.000000000000005;
+  private boolean isOne(double a){
+    return (a>1-ONEERROR)&&(a<1+ONEERROR);}
+ 
       
 }

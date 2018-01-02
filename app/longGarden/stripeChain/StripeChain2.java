@@ -55,7 +55,7 @@ public class StripeChain2 extends LinkedList<Stripe>{
   
   public void addRandomForsythiaCompositionStripeToEnd(){
     invalidateImage();
-    Stripe s=new Stripe_ForsythiaComposition(this);
+    Stripe s=new Stripe_Composition(this);
     generator.stripewidthsum+=s.getImageWidth();
     add(s);}
   
@@ -174,9 +174,9 @@ public class StripeChain2 extends LinkedList<Stripe>{
    * ################################
    */
   
-  private AffineTransform getStripeFCImageTransform(Stripe_ForsythiaComposition stripe){
+  private AffineTransform getStripeFCImageTransform(Stripe_Composition stripe){
     //get all the relevant metrics
-    Rectangle2D.Double compositionbounds=((Stripe_ForsythiaComposition)stripe).composition.getRootPolygon().getDPolygon().getBounds();
+    Rectangle2D.Double compositionbounds=((Stripe_Composition)stripe).composition.getRootPolygon().getDPolygon().getBounds();
     double
       cbwidth=compositionbounds.getWidth(),
       cbheight=compositionbounds.getHeight(),
@@ -208,22 +208,22 @@ public class StripeChain2 extends LinkedList<Stripe>{
   
   private void renderPolygonFill(Graphics2D g){
     for(Stripe stripe:this)
-      if(stripe instanceof Stripe_ForsythiaComposition)
-        renderPolygonFill(g,(Stripe_ForsythiaComposition)stripe);}
+      if(stripe instanceof Stripe_Composition)
+        renderPolygonFill(g,(Stripe_Composition)stripe);}
   
-  private void renderPolygonFill(Graphics2D g,Stripe_ForsythiaComposition stripe){
+  private void renderPolygonFill(Graphics2D g,Stripe_Composition stripe){
     AffineTransform 
       told=g.getTransform(),
       t=new AffineTransform(told);
     t.concatenate(getStripeFCImageTransform(stripe));
     g.setTransform(t);
     //
-    Iterator<TreeNode> i=((Stripe_ForsythiaComposition)stripe).composition.getLeafPolygonIterator();
+    Iterator<TreeNode> i=((Stripe_Composition)stripe).composition.getLeafPolygonIterator();
     FPolygon p;
     Color color;
     while(i.hasNext()){
       p=(FPolygon)i.next();
-      color=((Stripe_ForsythiaComposition)stripe).colormap.getColor(p);
+      color=((Stripe_Composition)stripe).colormap.getColor(p);
       g.setPaint(color);
       g.fill(p.getDPolygon().getPath2D());}
     g.setTransform(told);}
@@ -236,17 +236,17 @@ public class StripeChain2 extends LinkedList<Stripe>{
   
   private void renderPolygonStroke(Graphics2D g){
     for(Stripe stripe:this)
-      if(stripe instanceof Stripe_ForsythiaComposition)
-        renderPolygonStroke(g,(Stripe_ForsythiaComposition)stripe);}
+      if(stripe instanceof Stripe_Composition)
+        renderPolygonStroke(g,(Stripe_Composition)stripe);}
   
-  private void renderPolygonStroke(Graphics2D g,Stripe_ForsythiaComposition stripe){
+  private void renderPolygonStroke(Graphics2D g,Stripe_Composition stripe){
     AffineTransform 
       told=g.getTransform(),
       t=new AffineTransform(told);
     t.concatenate(getStripeFCImageTransform(stripe));
     g.setTransform(t);
     //
-    Iterator<TreeNode> i=((Stripe_ForsythiaComposition)stripe).composition.getLeafPolygonIterator();
+    Iterator<TreeNode> i=((Stripe_Composition)stripe).composition.getLeafPolygonIterator();
     FPolygon p;
     g.setPaint(Color.black);
     g.setStroke(createStroke((float)(STROKETHICKNESS/getStripeFCImageTransform(stripe).getScaleX())));
@@ -269,10 +269,10 @@ public class StripeChain2 extends LinkedList<Stripe>{
   
   private void renderStripeBlockfill(Graphics2D g){
     for(Stripe stripe:this)
-      if(stripe instanceof Stripe_ForsythiaComposition)
-        renderStripeBlockfill(g,(Stripe_ForsythiaComposition)stripe);}
+      if(stripe instanceof Stripe_Composition)
+        renderStripeBlockfill(g,(Stripe_Composition)stripe);}
 
-  private void renderStripeBlockfill(Graphics2D g,Stripe_ForsythiaComposition stripe){
+  private void renderStripeBlockfill(Graphics2D g,Stripe_Composition stripe){
     AffineTransform 
       told=g.getTransform(),
       t=new AffineTransform(told);
@@ -283,7 +283,7 @@ public class StripeChain2 extends LinkedList<Stripe>{
       g.setPaint(Color.red);
     }else{
       g.setPaint(Color.blue);}
-    g.fill(((Stripe_ForsythiaComposition)stripe).composition.getRootPolygon().getDPolygon().getPath2D());
+    g.fill(((Stripe_Composition)stripe).composition.getRootPolygon().getDPolygon().getPath2D());
     //
     g.setTransform(told);}
   
