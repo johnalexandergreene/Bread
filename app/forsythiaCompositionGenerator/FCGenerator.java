@@ -32,7 +32,8 @@ public class FCGenerator{
    */
   
   public FCGenerator(){
-    initUI();}
+    initUI();
+    initRenderer();}
   
   /*
    * ################################
@@ -44,7 +45,9 @@ public class FCGenerator{
    * ################################
    */
   
-  Color[] palette=Palette.P_TOY_STORY_ADJUSTED2;
+//  Color[] palette=Palette.P_TOY_STORY_ADJUSTED2;
+//  Color[] palette=Palette.P_PORCO_ROSSO;
+  Color[] palette=Palette.P_THOR_MOVIE_POSTER;
   
 //  String grammar_file_path="/home/john/Desktop/stripegrammar/s003.grammar";
 //  String grammar_file_path="/home/john/Desktop/ge/nuther003.grammar";
@@ -59,7 +62,10 @@ public class FCGenerator{
 //  static final double DETAIL_LIMIT=0.025;
   
   //coarse, for the 4x6 prints
-  static final double DETAIL_LIMIT=0.09;
+//  static final double DETAIL_LIMIT=0.09;
+  
+  //very coarse
+  static final double DETAIL_LIMIT=0.12;
   
   //for 20x30 print
 //  static final double DETAIL_LIMIT=0.03;
@@ -76,11 +82,32 @@ public class FCGenerator{
   
 //  String exportdirpath="/home/john/Desktop/happnewyeargif";
   
-  Renderer renderer=new R_SimpleStrokes();
-  
   ColorMap colormap;
   
-  public int margin=20;
+  int borderthickness=20;
+  Color bordercolor=Color.white;
+  Color strokecolor=Color.white;
+  
+//  float strokethickness=0.018f;
+//  float strokethickness=0.005f;
+  float strokethickness=0.014f;
+  
+  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * RENDERER
+   * ++++++++++++++++++++++++++++++++
+   */
+  
+  Renderer renderer;
+  
+  private void initRenderer(){
+    renderer=new R_SimpleStrokes();
+    R_SimpleStrokes r=(R_SimpleStrokes)renderer;
+    r.setBorderColor(bordercolor);
+    r.setBorderThickness(borderthickness);
+    r.setStrokeColor(strokecolor);
+    r.setStrokeThickness(strokethickness);}
   
   /*
    * ++++++++++++++++++++++++++++++++
@@ -223,8 +250,10 @@ public class FCGenerator{
   
   private void doIntermittantCreation(){
     composition=composer.compose(getGrammar(),DETAIL_LIMIT);
-    colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
-    image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight(),composition,colormap);
+    colormap=new CM_SymmetricChaos(composition,palette);
+    renderer.setColorMap(colormap);
+    renderer.setComposition(composition);
+    image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight());
     ui.panimage.repaint();
     //maybe export
     if(isExportModeAuto())
@@ -250,8 +279,10 @@ public class FCGenerator{
           starttime=System.currentTimeMillis();
           //compose and render
           composition=composer.compose(grammar,DETAIL_LIMIT);
-          colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
-          image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight(),composition,colormap);
+          colormap=new CM_SymmetricChaos(composition,palette);
+          renderer.setColorMap(colormap);
+          renderer.setComposition(composition);
+          image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight());
           //pause if necessary
           elapsedtime=System.currentTimeMillis()-starttime;
           pausetime=creationinterval-elapsedtime;
@@ -327,7 +358,9 @@ public class FCGenerator{
     System.out.println(">>>EXPORT<<<");
     if(colormap==null)
       colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
-    BufferedImage exportimage=renderer.createImage(w,h,composition,colormap);
+    renderer.setColorMap(colormap);
+    renderer.setComposition(composition);
+    BufferedImage exportimage=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight());
     rasterexporter.setExportDir(exportdir);
     rasterexporter.export(exportimage);}
   

@@ -191,7 +191,7 @@ public class Config{
    */
   
   static final String PKEY_DETAILLIMIT="DETAILLIMIT";
-  static final double DETAILLIMIT_DEFAULT=0.015;
+  static final double DETAILLIMIT_DEFAULT=0.1;
   double detaillimit=DETAILLIMIT_DEFAULT;
   
   public double getDetailLimit(){

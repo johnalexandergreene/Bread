@@ -32,7 +32,7 @@ public class Palette{
   /*
    * THOR MOVIE POSTER
    */
-  static final Color[] P_THOR_MOVIE_POSTER=new Color[]{
+  public static final Color[] P_THOR_MOVIE_POSTER=new Color[]{
     new Color(186,137,132),
     new Color(43,44,38),
     new Color(241,240,196),

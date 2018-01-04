@@ -7,9 +7,10 @@ import org.fleen.forsythia.core.composition.ForsythiaComposition;
 
 public interface Renderer{
   
-  BufferedImage createImage(
-    int width,int height,
-    ForsythiaComposition composition,
-    ColorMap colormap);
+  BufferedImage createImage(int width,int height);
+  
+  void setComposition(ForsythiaComposition c);
+  
+  void setColorMap(ColorMap m);
 
 }
