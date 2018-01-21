@@ -81,6 +81,14 @@ public class PresenceSystem extends ArrayList<ZCSMappedThingPresence>{
     addAll(presences);
     clean();}
   
+  public void addPresences(List<ZCSMappedThingPresence> presences,double weight){
+    ZCSMappedThing t;
+    double i;
+    for(ZCSMappedThingPresence p:presences){
+      t=p.thing;
+      i=p.intensity*weight;
+      addPresence(t,i);}}
+  
   /*
    * ################################
    * PRESENCE MATH

@@ -57,8 +57,8 @@ public class ZCellTestRenderer{
     //TODO we should have a scale param here, and a final transform, 
     //then scale up the rendered image to a bigger image or whatever to fit the viewer
     int 
-      w=test.cellsystem0.getWidth(),
-      h=test.cellsystem0.getHeight();
+      w=test.getCellSystemWidth(),
+      h=test.getCellSystemHeight();
     //
     BufferedImage image0=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
     for(ZCell c:zcellsystem){
@@ -67,8 +67,8 @@ public class ZCellTestRenderer{
     int
       imagewidth=image0.getWidth(),
       imageheight=image0.getHeight(),
-      viewerwidth=test.ui.viewer.getPaddedWidth(),
-      viewerheight=test.ui.viewer.getPaddedHeight();
+      viewerwidth=test.getUI().viewer.getPaddedWidth(),
+      viewerheight=test.getUI().viewer.getPaddedHeight();
     double 
       imagedimsratio=((double)imagewidth)/((double)imageheight),
       viewerdimsratio=((double)viewerwidth)/((double)viewerheight),

@@ -9,7 +9,7 @@ import java.io.ObjectInputStream;
 
 import javax.swing.JTextField;
 
-import org.fleen.bread.colorMap.CM_SymmetricChaos;
+import org.fleen.bread.colorMap.CM_SymmetricChaos_EggLevelTriplePaletteSplit;
 import org.fleen.bread.colorMap.ColorMap;
 import org.fleen.bread.composer.Composer;
 import org.fleen.bread.composer.Composer002_SplitBoil_WithALittleNoiseNearTheRoot;
@@ -47,7 +47,8 @@ public class FCGenerator{
   
 //  Color[] palette=Palette.P_TOY_STORY_ADJUSTED2;
 //  Color[] palette=Palette.P_PORCO_ROSSO;
-  Color[] palette=Palette.P_THOR_MOVIE_POSTER;
+  Color[] palette=Palette.P_PORCO_ROSSO_TRIPLESPLIT;
+//  Color[] palette=Palette.P_THOR_MOVIE_POSTER;
   
 //  String grammar_file_path="/home/john/Desktop/stripegrammar/s003.grammar";
 //  String grammar_file_path="/home/john/Desktop/ge/nuther003.grammar";
@@ -55,28 +56,13 @@ public class FCGenerator{
   String grammar_file_path="/home/john/Desktop/grammars/s008.grammar";
 //  String grammar_file_path="/home/john/Desktop/grammars/hexmandala001.grammar";
 //  String grammar_file_path="/home/john/Desktop/grammars/s011martianmoney.grammar";
+//  String grammar_file_path="/home/john/Desktop/moregrammars/triangley.grammar";
+//  String grammar_file_path="/home/john/Desktop/moregrammars/boxy.grammar";
   
   
   Composer composer=new Composer002_SplitBoil_WithALittleNoiseNearTheRoot();
 //  Composer composer=new Composer001_SplitBoil();
-//  static final double DETAIL_LIMIT=0.025;
-  
-  //coarse, for the 4x6 prints
-//  static final double DETAIL_LIMIT=0.09;
-  
-  //very coarse
-  static final double DETAIL_LIMIT=0.12;
-  
-  //for 20x30 print
-//  static final double DETAIL_LIMIT=0.03;
-  
-  
-//  Renderer renderer=new Renderer_Rasterizer005_TestRDSystem();
-//  Renderer renderer=new Renderer_002_ArbitrarySubPalettes();
-//  Renderer renderer=new Renderer_001();
-//  Renderer renderer=new Renderer_Rasterizer004_ALittleSyntheticStroke();
-//  Renderer2 renderer=new R_ZCell();
-//  Renderer2 renderer=new R_ZCell_DarkStrokes();
+
   
   String exportdirpath="/home/john/Desktop/newstuff";
   
@@ -84,13 +70,26 @@ public class FCGenerator{
   
   ColorMap colormap;
   
-  int borderthickness=20;
+  int borderthickness=12;
   Color bordercolor=Color.white;
   Color strokecolor=Color.white;
   
+//  Color bordercolor=Color.black;
+//  Color strokecolor=Color.black;
+  
 //  float strokethickness=0.018f;
 //  float strokethickness=0.005f;
-  float strokethickness=0.014f;
+//  float strokethickness=0.014f;
+  float strokethickness=0.005f;//for 20x30 print
+//  float strokethickness=0.005f;
+  
+  
+//  double detaillimit=0.025;
+//  double detaillimit=0.07;//coarse, for the 4x6 prints
+//  double detaillimit=0.06;
+//  double detaillimit=0.12;//very coarse
+//  double detaillimit=0.23;//very very coarse
+  double detaillimit=0.03;//for 20x30 print
   
   
   /*
@@ -249,8 +248,9 @@ public class FCGenerator{
    */
   
   private void doIntermittantCreation(){
-    composition=composer.compose(getGrammar(),DETAIL_LIMIT);
-    colormap=new CM_SymmetricChaos(composition,palette);
+    composition=composer.compose(getGrammar(),detaillimit);
+//    colormap=new CM_SymmetricChaos(composition,palette);
+    colormap=new CM_SymmetricChaos_EggLevelTriplePaletteSplit(composition,palette);
     renderer.setColorMap(colormap);
     renderer.setComposition(composition);
     image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight());
@@ -278,8 +278,9 @@ public class FCGenerator{
         while(!stopcontinuouscreation){
           starttime=System.currentTimeMillis();
           //compose and render
-          composition=composer.compose(grammar,DETAIL_LIMIT);
-          colormap=new CM_SymmetricChaos(composition,palette);
+          composition=composer.compose(grammar,detaillimit);
+//          colormap=new CM_SymmetricChaos(composition,palette);
+          colormap=new CM_SymmetricChaos_EggLevelTriplePaletteSplit(composition,palette);
           renderer.setColorMap(colormap);
           renderer.setComposition(composition);
           image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight());
@@ -356,11 +357,12 @@ public class FCGenerator{
   
   private void export(File exportdir,int w,int h){
     System.out.println(">>>EXPORT<<<");
-    if(colormap==null)
-      colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
+    if(colormap==null){
+//      colormap=new CM_SymmetricChaos(composition,palette);
+      colormap=new CM_SymmetricChaos_EggLevelTriplePaletteSplit(composition,palette);}
     renderer.setColorMap(colormap);
     renderer.setComposition(composition);
-    BufferedImage exportimage=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight());
+    BufferedImage exportimage=renderer.createImage(w,h);
     rasterexporter.setExportDir(exportdir);
     rasterexporter.export(exportimage);}
   

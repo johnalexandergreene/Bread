@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.fleen.bread.hCellSystem.HCell;
 import org.fleen.bread.palette.Palette;
 import org.fleen.bread.zCellSystem.ZCSMT_FPolygonArea;
+import org.fleen.bread.zCellSystem.ZCSMT_FPolygonBoiledEdge;
+import org.fleen.bread.zCellSystem.ZCSMappedThing;
 import org.fleen.bread.zCellSystem.ZCSMappedThingPresence;
 import org.fleen.bread.zCellSystem.ZCell;
 import org.fleen.bread.zCellSystem.ZCellSystem;
-import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.FPolygonSignature;
 
 /*
@@ -57,8 +57,8 @@ public class ZCellTestRenderer2{
     //TODO we should have a scale param here, and a final transform, 
     //then scale up the rendered image to a bigger image or whatever to fit the viewer
     int 
-      w=test.cellsystem0.getWidth(),
-      h=test.cellsystem0.getHeight();
+      w=test.getCellSystemWidth(),
+      h=test.getCellSystemHeight();
     //
     BufferedImage image0=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
     for(ZCell c:zcellsystem){
@@ -67,8 +67,8 @@ public class ZCellTestRenderer2{
     int
       imagewidth=image0.getWidth(),
       imageheight=image0.getHeight(),
-      viewerwidth=test.ui.viewer.getPaddedWidth(),
-      viewerheight=test.ui.viewer.getPaddedHeight();
+      viewerwidth=test.getUI().viewer.getPaddedWidth(),
+      viewerheight=test.getUI().viewer.getPaddedHeight();
     double 
       imagedimsratio=((double)imagewidth)/((double)imageheight),
       viewerdimsratio=((double)viewerwidth)/((double)viewerheight),
@@ -96,62 +96,49 @@ public class ZCellTestRenderer2{
    * ################################
    */
   
-//  private Color getColor(ZCell c){
-//    int r=0,g=0,b=0;
-//    Color color;
-//    for(ZCSMappedThingPresence p:c.presences){
-//      color=getPolygonColor(p.thing);
-//      r+=(int)(color.getRed()*p.intensity);
-//      g+=(int)(color.getGreen()*p.intensity);
-//      b+=(int)(color.getBlue()*p.intensity);}
-//    if(r>255)r=255;
-//    if(g>255)g=255;
-//    if(b>255)b=255;
-//    return new Color(r,g,b);}
-  
   private Color getColor(ZCell c){
-    int a=0;
-    if(c.gp!=null)
-      a=(Integer)c.gp;
-    if(a==2)
-      return Color.red;
-    else if(a==3)
-      return Color.green;
-    else if(a==4)
-      return Color.yellow;
-    else if(a==5)
-      return Color.MAGENTA;
-    else if(a==6)
-      return Color.blue;
-    else
-      return Color.black;}
+    int r=0,g=0,b=0;
+    Color color;
+    for(ZCSMappedThingPresence p:c.presences){
+      color=getMappedThingColor(p.thing);
+      r+=(int)(color.getRed()*p.intensity);
+      g+=(int)(color.getGreen()*p.intensity);
+      b+=(int)(color.getBlue()*p.intensity);}
+    if(r>255)r=255;
+    if(g>255)g=255;
+    if(b>255)b=255;
+    return new Color(r,g,b);}
   
-  //COLOR
+  //COLOR all black or whatever
   
   Random rnd=new Random();
-  Map<FPolygonSignature,Color> colorbypolygonsignature=new HashMap<FPolygonSignature,Color>();
+  Map<FPolygonSignature,Color> colorbythingpolygonsignature=new HashMap<FPolygonSignature,Color>();
   
-  private Color getPolygonColor(ZCSMT_FPolygonArea thing){
+  private Color getMappedThingColor(ZCSMappedThing thing){
     Color c;
-    if(thing.hasTags("leaf")||thing.hasTags("boiled")){
-      FPolygon p=(FPolygon)thing.thing;
-      FPolygonSignature s=p.getSignature();
-      c=colorbypolygonsignature.get(s);
+    if(thing instanceof ZCSMT_FPolygonArea){
+      FPolygonSignature s=((ZCSMT_FPolygonArea)thing).fpolygon.getSignature();
+      c=colorbythingpolygonsignature.get(s);
       if(c==null){
-        c=getColorForPolygon((FPolygon)thing.thing);
-        colorbypolygonsignature.put(s,c);}
-    }else{
+        c=getColorForPolygon();
+        colorbythingpolygonsignature.put(s,c);}
+    }else if(thing instanceof ZCSMT_FPolygonBoiledEdge){
+      FPolygonSignature s=((ZCSMT_FPolygonBoiledEdge)thing).fpolygon.getSignature();
+      c=colorbythingpolygonsignature.get(s);
+      if(c==null){
+        c=getColorForPolygon();
+        colorbythingpolygonsignature.put(s,c);}
+    }else{//it's a margin thing
       c=getColorForMargin();}
     return c;}
   
-  private Color getColorForPolygon(FPolygon p){
-    int i=rnd.nextInt(Palette.P_CRUDERAINBOW.length);
-    Color c=Palette.P_CRUDERAINBOW[i];
-    return c;}
+  private Color getColorForPolygon(){
+//    int i=rnd.nextInt(Palette.P_CRUDERAINBOW.length);
+//    Color c=Palette.P_CRUDERAINBOW[i];
+    
+    return Color.white;}
   
   private Color getColorForMargin(){
     return Color.GRAY;}
   
-  
-
 }

@@ -16,7 +16,7 @@ public class TestComposition001 extends ForsythiaComposition{
   
   static final String GRAMMARPATH="/home/john/Desktop/grammars/s008.grammar";
   
-  static final double DETAILLIMIT=0.1;
+  static final double DETAILLIMIT=0.2;
   
   public TestComposition001(){
     super();

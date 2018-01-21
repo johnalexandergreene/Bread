@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.fleen.bread.colorMap.ColorMap;
-import org.fleen.bread.colorMap.CM_SymmetricChaosEggLevel;
+import org.fleen.bread.colorMap.CM_SymmetricChaos_EggLevelDoublePaletteSplit;
 import org.fleen.forsythia.core.composition.FGridRoot;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
@@ -88,7 +88,7 @@ public class Stripe_ForsythiaComposition implements Stripe{
   public ColorMap colormap;
   
   private void initColorMap(){
-    colormap=new CM_SymmetricChaosEggLevel(composition,chain.generator.palette);}
+    colormap=new CM_SymmetricChaos_EggLevelDoublePaletteSplit(composition,chain.generator.palette);}
   
   /*
    * ################################

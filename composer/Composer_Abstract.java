@@ -98,6 +98,14 @@ public abstract class Composer_Abstract implements Composer{
     FPolygon p=new FPolygon(m);
     return p;}
   
+//  private FMetagon getRandomRoot(){
+//    
+//  }
+//  
+//  private FMetagon getRoot(){
+//    
+//  }
+  
   /*
    * ################################
    * POLYGON CAPPING UTILITY

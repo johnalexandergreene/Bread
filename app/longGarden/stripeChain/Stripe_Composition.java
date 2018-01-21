@@ -3,7 +3,7 @@ package org.fleen.bread.app.longGarden.stripeChain;
 import java.util.List;
 import java.util.Random;
 
-import org.fleen.bread.colorMap.CM_SymmetricChaosEggLevel;
+import org.fleen.bread.colorMap.CM_SymmetricChaos_EggLevelDoublePaletteSplit;
 import org.fleen.bread.colorMap.ColorMap;
 import org.fleen.bread.composer.Composer;
 import org.fleen.bread.composer.Composer002_SplitBoil_WithALittleNoiseNearTheRoot;
@@ -91,7 +91,7 @@ public class Stripe_Composition implements Stripe{
   public ColorMap colormap;
   
   private void initColorMap(){
-    colormap=new CM_SymmetricChaosEggLevel(composition,stripechain.fg.lg.config.getPolygonPalette());}
+    colormap=new CM_SymmetricChaos_EggLevelDoublePaletteSplit(composition,stripechain.fg.lg.config.getPolygonPalette());}
   
   /*
    * ################################

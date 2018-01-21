@@ -93,6 +93,20 @@ public class Palette{
     new Color(90,14,0),
     new Color(189,53,31)};
   
+  public static final Color[] P_PORCO_ROSSO_TRIPLESPLIT=new Color[]{
+      new Color(227,237,76),
+      new Color(184,194,105),
+      new Color(226,235,232),
+      
+      new Color(174,202,224),
+      new Color(94,132,197),
+      new Color(179,145,120),
+      
+      new Color(248,203,161),
+      new Color(220,178,164),
+      new Color(90,14,0),
+      new Color(189,53,31)};
+  
   public static final Color[] P_CRUDERAINBOW=new Color[]{
       new Color(248,77,64),
       new Color(248,155,64),

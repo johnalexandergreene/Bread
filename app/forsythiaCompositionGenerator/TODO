@@ -1,0 +1,21 @@
+Try some new color selection algs
+vary selection over 
+  distance from center
+    change palette
+    change entropy
+  X or Y axis
+    palette
+    entropy
+    
+Get some contrast. Less field of noise.
+
+Instead of constantly switching around the params on our main class, 
+  create a few composition-genre-specific classes. Run THIS to get THESE.
+  or param-sets
+  or packages
+  or something
+  
+Do a better stroked renderer
+  Instead of stroking each leaf polygon, thus stroking many segs multiple times, thus getting some rather thickened strokes
+  gather all segs into a set, cull coincident segs,  and draw each one only once
+  thus we get more uniform drawing.

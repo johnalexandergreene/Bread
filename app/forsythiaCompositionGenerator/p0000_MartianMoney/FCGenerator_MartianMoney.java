@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator;
+package org.fleen.bread.app.forsythiaCompositionGenerator.p0000_MartianMoney;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -20,6 +20,8 @@ import java.util.Random;
 
 import javax.swing.JTextField;
 
+import org.fleen.bread.app.forsythiaCompositionGenerator.FCGenerator;
+import org.fleen.bread.app.forsythiaCompositionGenerator.UI;
 import org.fleen.bread.colorMap.CM_SymmetricChaos;
 import org.fleen.bread.colorMap.ColorMap;
 import org.fleen.bread.composer.Composer;

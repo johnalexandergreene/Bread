@@ -18,7 +18,7 @@ import org.fleen.util.tree.TreeNode;
  * this looks good with strokes
  */
 @SuppressWarnings("serial")
-public class CM_SymmetricChaosEggLevel extends HashMap<FPolygon,Color> implements ColorMap{
+public class CM_SymmetricChaos_EggLevelDoublePaletteSplit extends HashMap<FPolygon,Color> implements ColorMap{
   
   /*
    * ################################
@@ -26,7 +26,7 @@ public class CM_SymmetricChaosEggLevel extends HashMap<FPolygon,Color> implement
    * ################################
    */
   
-  public CM_SymmetricChaosEggLevel(ForsythiaComposition composition,Color[] palette){
+  public CM_SymmetricChaos_EggLevelDoublePaletteSplit(ForsythiaComposition composition,Color[] palette){
     initPalettes(palette);
     doPolygonColors(composition);}
   
