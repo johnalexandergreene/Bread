@@ -47,7 +47,8 @@ public class FCGenerator{
   
 //  Color[] palette=Palette.P_TOY_STORY_ADJUSTED2;
 //  Color[] palette=Palette.P_PORCO_ROSSO;
-  Color[] palette=Palette.P_PORCO_ROSSO_TRIPLESPLIT;
+//  Color[] palette=Palette.P_PORCO_ROSSO_TRIPLESPLIT;
+    Color[] palette=Palette.P_GRACIE001;
 //  Color[] palette=Palette.P_THOR_MOVIE_POSTER;
   
 //  String grammar_file_path="/home/john/Desktop/stripegrammar/s003.grammar";
