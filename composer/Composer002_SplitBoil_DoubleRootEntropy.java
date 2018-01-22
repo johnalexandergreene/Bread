@@ -14,7 +14,7 @@ import org.fleen.forsythia.core.grammar.Jig;
 import org.fleen.forsythia.core.grammar.JigSection;
 import org.fleen.util.tree.TreeNodeIterator;
 
-public class Composer002_SplitBoil_WithALittleNoiseNearTheRoot extends Composer_Abstract{
+public class Composer002_SplitBoil_DoubleRootEntropy extends Composer_Abstract{
   
   Random rnd=new Random();
   
@@ -22,34 +22,23 @@ public class Composer002_SplitBoil_WithALittleNoiseNearTheRoot extends Composer_
    * ################################
    * BUILD
    * overriding the abstract here
-   * 
-   * at buildcycleindex 1 and 2 we entropize the chorus indices
+   * at buildcycleindex 1 and 2 (ie polygon tree level 1 and 2) we entropize the chorus indices
    * ################################
    */
   
-  static final double 
-    ENTROPYPROBABILITY1=1.0,
-    ENTROPYPROBABILITY2=1.0;
-  
-//  static final double 
-//  ENTROPYPROBABILITY1=0.98,
-//  ENTROPYPROBABILITY2=0.01;
-  
-  //handy reference
   protected int buildcycleindex;
   
   protected void build(ForsythiaComposition composition,double detaillimit){
     boolean creatednodes=true;
     buildcycleindex=0;
     while(creatednodes){
-      if(buildcycleindex==1)entropize(composition,ENTROPYPROBABILITY1);
-      if(buildcycleindex==2)entropize(composition,ENTROPYPROBABILITY2);
       System.out.println("buildcycleindex="+buildcycleindex);
+      if(buildcycleindex==1)entropize(composition);
+      if(buildcycleindex==2)entropize(composition);
       buildcycleindex++;
       creatednodes=createNodes(composition,detaillimit);}}
   
-  private void entropize(ForsythiaComposition composition,double probability){
-    if(rnd.nextDouble()>probability)return;
+  private void entropize(ForsythiaComposition composition){
     int a=0;
     for(FPolygon p:composition.getPolygons()){
       p.chorusindex=a;

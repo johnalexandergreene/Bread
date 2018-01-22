@@ -6,7 +6,7 @@ import java.util.Random;
 import org.fleen.bread.colorMap.CM_SymmetricChaos_EggLevelDoublePaletteSplit;
 import org.fleen.bread.colorMap.ColorMap;
 import org.fleen.bread.composer.Composer;
-import org.fleen.bread.composer.Composer002_SplitBoil_WithALittleNoiseNearTheRoot;
+import org.fleen.bread.composer.Composer002_SplitBoil_DoubleRootEntropy;
 import org.fleen.forsythia.core.composition.FGridRoot;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
@@ -70,7 +70,7 @@ public class Stripe_Composition implements Stripe{
     composition=new ForsythiaComposition();
     composition.setGrammar(stripechain.fg.lg.config.getGrammar());
     composition.initTree(rootgrid,rootpolygon);
-    Composer composer=new Composer002_SplitBoil_WithALittleNoiseNearTheRoot();
+    Composer composer=new Composer002_SplitBoil_DoubleRootEntropy();
     composer.compose(composition,getScaledDetailLimit(rootpolygon));}
   
   /*

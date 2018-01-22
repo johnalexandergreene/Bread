@@ -1,28 +1,15 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.p0000_MartianMoney;
+package org.fleen.bread.app.forsythiaCompositionGenerator;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
-import java.awt.Stroke;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 import javax.swing.JTextField;
 
-import org.fleen.bread.app.forsythiaCompositionGenerator.FCGenerator;
-import org.fleen.bread.app.forsythiaCompositionGenerator.UI;
-import org.fleen.bread.colorMap.CM_SymmetricChaos;
+import org.fleen.bread.colorMap.CM_SymmetricChaos_EggLevelTriplePaletteSplit;
 import org.fleen.bread.colorMap.ColorMap;
 import org.fleen.bread.composer.Composer;
 import org.fleen.bread.composer.Composer002_SplitBoil_DoubleRootEntropy;
@@ -30,14 +17,13 @@ import org.fleen.bread.export.RasterExporter;
 import org.fleen.bread.palette.Palette;
 import org.fleen.bread.renderer.R_SimpleStrokes;
 import org.fleen.bread.renderer.Renderer;
-import org.fleen.bread.renderer.Renderer_Abstract;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
 /*
  * a single forsythia composition
  */
-public class FCGenerator_MartianMoney extends FCGenerator{
+public class FCGenerator2{
   
   /*
    * ################################
@@ -45,8 +31,9 @@ public class FCGenerator_MartianMoney extends FCGenerator{
    * ################################
    */
   
-  public FCGenerator_MartianMoney(){
-    initUI();}
+  public FCGenerator2(){
+    initUI();
+    initRenderer();}
   
   /*
    * ################################
@@ -58,38 +45,40 @@ public class FCGenerator_MartianMoney extends FCGenerator{
    * ################################
    */
   
-  Color[] palette=Palette.P_TOY_STORY_ADJUSTED2;
-  
-//  String grammar_file_path="/home/john/Desktop/stripegrammar/s003.grammar";
-//  String grammar_file_path="/home/john/Desktop/ge/nuther003.grammar";
-//  String grammar_file_path="/home/john/Desktop/ge/aa004.grammar";
-//  String grammar_file_path="/home/john/Desktop/grammars/s008.grammar";
-//  String grammar_file_path="/home/john/Desktop/grammars/hexmandala001.grammar";
-  String grammar_file_path="/home/john/Desktop/grammars/s011martianmoney.grammar";
-  
-  Composer composer=new Composer002_SplitBoil_DoubleRootEntropy();
-//  Composer composer=new Composer001_SplitBoil();
-//  static final double DETAIL_LIMIT=0.025;
-  
-  //coarse, for the 4x6 prints
-  static final double DETAIL_LIMIT=0.09;
-  
-  //for 20x30 print
-//  static final double DETAIL_LIMIT=0.03;
-  
-  
-//  Renderer renderer=new Renderer_Rasterizer005_TestRDSystem();
-//  Renderer renderer=new Renderer_002_ArbitrarySubPalettes();
-//  Renderer renderer=new Renderer_001();
-//  Renderer renderer=new Renderer_Rasterizer004_ALittleSyntheticStroke();
-//  Renderer2 renderer=new R_ZCell();
-//  Renderer2 renderer=new R_ZCell_DarkStrokes();
-  
-  String exportdirpath="/home/john/Desktop/newstuff";
-  
-  Renderer renderer=new R_SimpleStrokes();
-  
+  ForsythiaGrammar grammar;
+  Composer composer;
   ColorMap colormap;
+  Renderer renderer;
+  int exportw,exporth,borderthickness;
+  
+  
+  
+  Color[] palette=Palette.P_GRACIE001;
+  String grammar_file_path="/home/john/projects/code/Bread/src/org/fleen/bread/grammar/verynice_2018_01_06.grammar";
+  Composer composer=new Composer002_SplitBoil_DoubleRootEntropy();
+  String exportdirpath="/home/john/Desktop/newstuff";
+  ColorMap colormap;
+  int borderthickness=12;
+  Color bordercolor=Color.white;
+  Color strokecolor=Color.white;
+  float strokethickness=0.005f;
+  double detaillimit=0.03;
+  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * RENDERER
+   * ++++++++++++++++++++++++++++++++
+   */
+  
+  Renderer renderer;
+  
+  private void initRenderer(){
+    renderer=new R_SimpleStrokes();
+    R_SimpleStrokes r=(R_SimpleStrokes)renderer;
+    r.setBorderColor(bordercolor);
+    r.setBorderThickness(borderthickness);
+    r.setStrokeColor(strokecolor);
+    r.setStrokeThickness(strokethickness);}
   
   /*
    * ++++++++++++++++++++++++++++++++
@@ -138,11 +127,11 @@ public class FCGenerator_MartianMoney extends FCGenerator{
   private static final String TITLE="Fleen Bread 0.3";
   public UI ui;
   
-  private void initUI(){
+  protected void initUI(){
     EventQueue.invokeLater(new Runnable(){
       public void run(){
         try{
-          ui=new UI(FCGenerator_MartianMoney.this);
+          ui=new UI(FCGenerator2.this);
           ui.setDefaultWindowBounds();
           ui.setVisible(true);
           ui.setTitle(TITLE);
@@ -231,9 +220,12 @@ public class FCGenerator_MartianMoney extends FCGenerator{
    */
   
   private void doIntermittantCreation(){
-    composition=composer.compose(getGrammar(),DETAIL_LIMIT);
-    colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
-    image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight(),composition,colormap);
+    composition=composer.compose(getGrammar(),detaillimit);
+//    colormap=new CM_SymmetricChaos(composition,palette);
+    colormap=new CM_SymmetricChaos_EggLevelTriplePaletteSplit(composition,palette);
+    renderer.setColorMap(colormap);
+    renderer.setComposition(composition);
+    image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight());
     ui.panimage.repaint();
     //maybe export
     if(isExportModeAuto())
@@ -258,9 +250,12 @@ public class FCGenerator_MartianMoney extends FCGenerator{
         while(!stopcontinuouscreation){
           starttime=System.currentTimeMillis();
           //compose and render
-          composition=composer.compose(grammar,DETAIL_LIMIT);
-          colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
-          image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight(),composition,colormap);
+          composition=composer.compose(grammar,detaillimit);
+//          colormap=new CM_SymmetricChaos(composition,palette);
+          colormap=new CM_SymmetricChaos_EggLevelTriplePaletteSplit(composition,palette);
+          renderer.setColorMap(colormap);
+          renderer.setComposition(composition);
+          image=renderer.createImage(ui.panimage.getWidth(),ui.panimage.getHeight());
           //pause if necessary
           elapsedtime=System.currentTimeMillis()-starttime;
           pausetime=creationinterval-elapsedtime;
@@ -334,117 +329,13 @@ public class FCGenerator_MartianMoney extends FCGenerator{
   
   private void export(File exportdir,int w,int h){
     System.out.println(">>>EXPORT<<<");
-    if(colormap==null)
-      colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
-    BufferedImage exportimage=renderer.createImage(w,h,composition,colormap);
+    if(colormap==null){
+//      colormap=new CM_SymmetricChaos(composition,palette);
+      colormap=new CM_SymmetricChaos_EggLevelTriplePaletteSplit(composition,palette);}
+    renderer.setColorMap(colormap);
+    renderer.setComposition(composition);
+    BufferedImage exportimage=renderer.createImage(w,h);
     rasterexporter.setExportDir(exportdir);
     rasterexporter.export(exportimage);}
-  
-  /*
-   * ++++++++++++++++++++++++++++++++
-   * MARTIAN MONEY
-   * 4x6 print
-   * 1800wx1200h
-   * composition fills 1727x1200
-   * which leaves 63x1200 on the end
-   * which we fill with a nice random hexadecimal string
-   * font is something mono and techno
-   * 2 nonmatching colors from our palette comprise the textcolor and background color
-   * ++++++++++++++++++++++++++++++++
-   */
-//  private void export(File exportdir,int w,int h){
-//    System.out.println(">>>EXPORT MARTIAN MONEY<<<");
-//    BufferedImage exportimage=getMartianMoneyImage();
-//    rasterexporter.setExportDir(exportdir);
-//    rasterexporter.export(exportimage);}
-  
-  private BufferedImage getMartianMoneyImage(){
-    if(colormap==null)
-      colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
-    BufferedImage c=renderer.createImage(1728,1200,composition,colormap);
-    //
-    BufferedImage m=new BufferedImage(1800,1200,BufferedImage.TYPE_INT_RGB);
-    Graphics2D g=m.createGraphics();
-    g.setRenderingHints(Renderer_Abstract.RENDERING_HINTS);
-    g.drawImage(c,null,null);
-    //
-    Color[] c3=get3Colors();
-    //
-    BufferedImage s=getCharacterStrip(c3);
-    g.drawImage(s,1727,0,null);
-    //
-    drawMars(g,c3[2]);
-    //
-    return m;}
-  
-  private void drawMars(Graphics2D g,Color c){
-    int x=1736,y=22;
-    g.setStroke(createStroke(8f));
-    g.setPaint(c);
-    g.drawOval(x,y,30,30);
-    Path2D.Double a=new Path2D.Double();
-    a.moveTo(x+27,y+27);
-    a.lineTo(x+45,y+45);
-    a.lineTo(x+45,y+25);
-    a.moveTo(x+45,y+45);
-    a.lineTo(x+25,y+45);
-    g.draw(a);}
-  
-  private Stroke createStroke(float w){
-    Stroke stroke=new BasicStroke(w,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND,0,null,0);
-    return stroke;}
-  
-  private Color[] get3Colors(){
-    Random r=new Random();
-    List<Color> c=new ArrayList<Color>();
-    c.addAll(Arrays.asList(Palette.P_TOY_STORY_ADJUSTED2));
-    Color[] a=new Color[3];
-    a[0]=c.remove(r.nextInt(c.size()));
-    a[1]=c.remove(r.nextInt(c.size()));
-    a[2]=c.remove(r.nextInt(c.size()));
-    return a;}
-  
-  private BufferedImage getCharacterStrip(Color[] c3){
-    BufferedImage s=new BufferedImage(73,1200,BufferedImage.TYPE_INT_RGB);
-    Graphics2D g=s.createGraphics();
-    g.setRenderingHints(Renderer_Abstract.RENDERING_HINTS);
-    g.setPaint(c3[0]);
-    g.fillRect(0,0,73,1200);
-    //
-    g.setTransform(AffineTransform.getQuadrantRotateInstance(1));
-    //
-    g.setPaint(c3[1]);
-    g.setFont(getMMFont());
-    g.drawString(getMMString(),88,-10);
-    
-    return s;
-  }
-  
-  static final String CHAR="0123456789ABCDEF";
-  
-  private String getMMString(){
-    Random r=new Random();
-    StringBuffer a=new StringBuffer();
-    for(int i=0;i<31;i++)
-      a.append(CHAR.charAt(r.nextInt(CHAR.length())));
-    return a.toString();}
-  
-  private Font getMMFont(){
-    try{
-      GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
-      ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,new File("/home/john/.fonts/ShareTechMono-Regular.ttf")));
-    }catch(Exception x){
-      x.printStackTrace();}
-    Font f=new Font("Share Tech Mono",Font.PLAIN,65);
-    return f;}
-  
-  /*
-   * ################################
-   * MAIN
-   * ################################
-   */
-  
-//  public static final void main(String[] a){
-//    new FCGenerator_MartianMoney();}
   
 }

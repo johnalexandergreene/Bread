@@ -30,8 +30,56 @@ public class CM_SymmetricChaos_EggLevelTriplePaletteSplit extends HashMap<FPolyg
    */
   
   public CM_SymmetricChaos_EggLevelTriplePaletteSplit(ForsythiaComposition composition,Color[] palette){
-    initPalettes(palette);
-    doPolygonColors(composition);}
+    map(composition,palette);}
+  
+  /*
+   * ################################
+   * MAPPING METHODS
+   * ################################
+   */
+  
+  ForsythiaComposition composition;
+  Color[] palette;
+  
+  public void map(ForsythiaComposition composition,Color[] palette){
+    clear();
+    this.composition=composition;
+    this.palette=palette;
+    initSubpalettes();
+    doPolygonColors();}
+  
+  public void regenerate(){
+    map(composition,palette);}
+  
+  /*
+   * ################################
+   * SUBPALETTES
+   * ################################
+   */
+  
+  private Color[] sp0,sp1,sp2;
+  
+  private void initSubpalettes(){
+    int a=palette.length/3;
+    sp0=new Color[a];
+    sp1=new Color[a];
+    sp2=new Color[palette.length-a*2];
+    for(int i=0;i<palette.length;i++){
+      if(i<a){
+        sp0[i]=palette[i];
+      }else if(i>=a&&i<a*2){
+        sp1[i-a]=palette[i];
+      }else{
+        sp2[i-a*2]=palette[i];}}
+    //randomize the subpalette order
+    List<Color[]> r=new ArrayList<Color[]>();
+    r.add(sp0);
+    r.add(sp1);
+    r.add(sp2);
+    Collections.shuffle(r,new Random());
+    sp0=r.get(0);
+    sp1=r.get(1);
+    sp2=r.get(2);}
   
   /*
    * ################################
@@ -42,7 +90,7 @@ public class CM_SymmetricChaos_EggLevelTriplePaletteSplit extends HashMap<FPolyg
   public Color getColor(FPolygon p){
     return get(p);}
   
-  private void doPolygonColors(ForsythiaComposition composition){
+  private void doPolygonColors(){
     Random rnd=new Random();
     Map<FPolygonSignature,Color> colorbysig=new HashMap<FPolygonSignature,Color>();
     Iterator<TreeNode> i=composition.getLeafPolygonIterator();
@@ -62,14 +110,14 @@ public class CM_SymmetricChaos_EggLevelTriplePaletteSplit extends HashMap<FPolyg
         colorindex,
         di=eggdepth%3;
       if(di==0){
-        colorindex=rnd.nextInt(palette0.length);
-        color=palette0[colorindex];
+        colorindex=rnd.nextInt(sp0.length);
+        color=sp0[colorindex];
       }else if(di==1){
-        colorindex=rnd.nextInt(palette1.length);
-        color=palette1[colorindex];
+        colorindex=rnd.nextInt(sp1.length);
+        color=sp1[colorindex];
       }else{
-        colorindex=rnd.nextInt(palette2.length);
-        color=palette2[colorindex];}
+        colorindex=rnd.nextInt(sp2.length);
+        color=sp2[colorindex];}
       colorbysig.put(sig,color);}
     return color;}
   
@@ -86,35 +134,5 @@ public class CM_SymmetricChaos_EggLevelTriplePaletteSplit extends HashMap<FPolyg
           c++;}
       n=n.getParent();}
     return c;}
-  
-  /*
-   * ################################
-   * PALETTE
-   * ################################
-   */
-  
-  private Color[] palette0,palette1,palette2;
-  
-  private void initPalettes(Color[] palette){
-    int a=palette.length/3;
-    palette0=new Color[a];
-    palette1=new Color[a];
-    palette2=new Color[palette.length-a*2];
-    for(int i=0;i<palette.length;i++){
-      if(i<a){
-        palette0[i]=palette[i];
-      }else if(i>=a&&i<a*2){
-        palette1[i-a]=palette[i];
-      }else{
-        palette2[i-a*2]=palette[i];}}
-    //randomize the subpalette order
-    List<Color[]> r=new ArrayList<Color[]>();
-    r.add(palette0);
-    r.add(palette1);
-    r.add(palette2);
-    Collections.shuffle(r,new Random());
-    palette0=r.get(0);
-    palette1=r.get(1);
-    palette2=r.get(2);}
 
 }

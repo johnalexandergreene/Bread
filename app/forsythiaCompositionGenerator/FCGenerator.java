@@ -12,7 +12,7 @@ import javax.swing.JTextField;
 import org.fleen.bread.colorMap.CM_SymmetricChaos_EggLevelTriplePaletteSplit;
 import org.fleen.bread.colorMap.ColorMap;
 import org.fleen.bread.composer.Composer;
-import org.fleen.bread.composer.Composer002_SplitBoil_WithALittleNoiseNearTheRoot;
+import org.fleen.bread.composer.Composer002_SplitBoil_DoubleRootEntropy;
 import org.fleen.bread.export.RasterExporter;
 import org.fleen.bread.palette.Palette;
 import org.fleen.bread.renderer.R_SimpleStrokes;
@@ -54,14 +54,14 @@ public class FCGenerator{
 //  String grammar_file_path="/home/john/Desktop/stripegrammar/s003.grammar";
 //  String grammar_file_path="/home/john/Desktop/ge/nuther003.grammar";
 //  String grammar_file_path="/home/john/Desktop/ge/aa004.grammar";
-  String grammar_file_path="/home/john/Desktop/grammars/s008.grammar";
+  String grammar_file_path="/home/john/projects/code/Bread/src/org/fleen/bread/grammar/verynice_2018_01_06.grammar";
 //  String grammar_file_path="/home/john/Desktop/grammars/hexmandala001.grammar";
 //  String grammar_file_path="/home/john/Desktop/grammars/s011martianmoney.grammar";
 //  String grammar_file_path="/home/john/Desktop/moregrammars/triangley.grammar";
 //  String grammar_file_path="/home/john/Desktop/moregrammars/boxy.grammar";
   
   
-  Composer composer=new Composer002_SplitBoil_WithALittleNoiseNearTheRoot();
+  Composer composer=new Composer002_SplitBoil_DoubleRootEntropy();
 //  Composer composer=new Composer001_SplitBoil();
 
   

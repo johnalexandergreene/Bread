@@ -15,7 +15,7 @@ import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.strip
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain.StripeChain;
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.ui.UI;
 import org.fleen.bread.composer.Composer;
-import org.fleen.bread.composer.Composer002_SplitBoil_WithALittleNoiseNearTheRoot;
+import org.fleen.bread.composer.Composer002_SplitBoil_DoubleRootEntropy;
 import org.fleen.bread.export.RasterExporter;
 import org.fleen.bread.palette.Palette;
 import org.fleen.forsythia.core.grammar.FMetagon;
@@ -317,7 +317,7 @@ public class FSLAFGenerator{
   
   public double detaillimit=0.013;
   
-  public Composer composer=new Composer002_SplitBoil_WithALittleNoiseNearTheRoot();
+  public Composer composer=new Composer002_SplitBoil_DoubleRootEntropy();
   
   /*
    * ################################
@@ -557,7 +557,8 @@ public class FSLAFGenerator{
   
   private static final String 
 //    GRAMMARPATH="/home/john/Desktop/grammars/g008",
-  GRAMMARPATH="/home/john/projects/code/forsythiaGrammars/s008.grammar",
+//  GRAMMARPATH="/home/john/projects/code/forsythiaGrammars/s008.grammar",
+      GRAMMARPATH="/home/john/projects/code/Bread/src/org/fleen/bread/grammar/verynice_2018_01_06.grammar",
     EXPORTPATH="/home/john/Desktop/spinnerexport",
 //    INSERTPATH="/home/john/Desktop/foobert.png";
     INSERTPATH="/home/john/projects/graphics/spinner logo insert/i000_1280.png";
@@ -577,7 +578,7 @@ public class FSLAFGenerator{
     FSLAFGenerator g=new FSLAFGenerator(
       720,1280,54000,FLOWDIR_NORTH,32,GRAMMARPATH,
       EXPORTPATH,
-      0.008,Palette.P_TOY_STORY_ADJUSTED2,
+      0.008,Palette.P_GRACIE001,
       INSERTPATH,3,
       true);
     
