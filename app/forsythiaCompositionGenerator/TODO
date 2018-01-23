@@ -19,3 +19,48 @@ Do a better stroked renderer
   Instead of stroking each leaf polygon, thus stroking many segs multiple times, thus getting some rather thickened strokes
   gather all segs into a set, cull coincident segs,  and draw each one only once
   thus we get more uniform drawing.
+  
+################################
+NEW ORGANIZATION
+################################
+
+interface CompositionGenerator
+
+  generateComposition
+  
+  getImage(w,h,border,backgroundcolor,bordercolor)
+  
+  setComposer
+
+  setColorMapper 
+  
+  getSample
+
+abstract CompositionGenerator_Basic 
+  concrete instances of interface methods
+  import grammar 
+  export image
+  export whatever. Shapetree? 
+
+A front end
+
+Provides UI and whatever for a single compositon generator
+
+---
+
+We will have a number of composition generators
+each composition generator gets its own package
+in package
+  the CompositionGenerator instance, probably a subclass of CompositionGenerator_Basic
+  a PNG image, the sample image
+  all relevant classes. 
+    composer, renderer, etc
+    maybe subclasses that share stuff, maybe just local classes for max stability yet tweakability
+    maybe we just have a bunch of interfaces in the root package and all concrete 
+      instances in these composition generator packages  
+
+1 or more front ends
+
+
+
+
