@@ -12,7 +12,7 @@ import javax.swing.JTextField;
 import org.fleen.bread.colorMap.CM_SymmetricChaos_EggLevelTriplePaletteSplit;
 import org.fleen.bread.colorMap.ColorMap;
 import org.fleen.bread.composer.Composer;
-import org.fleen.bread.composer.Composer002_SplitBoil_DoubleRootEntropy;
+import org.fleen.bread.composer.Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient;
 import org.fleen.bread.export.RasterExporter;
 import org.fleen.bread.palette.Palette;
 import org.fleen.bread.renderer.R_SimpleStrokes;
@@ -61,7 +61,8 @@ public class FCGenerator{
 //  String grammar_file_path="/home/john/Desktop/moregrammars/boxy.grammar";
   
   
-  Composer composer=new Composer002_SplitBoil_DoubleRootEntropy();
+//  Composer composer=new Composer002_SplitBoil_DoubleRootEntropy();
+  Composer composer=new Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient();
 //  Composer composer=new Composer001_SplitBoil();
 
   
@@ -80,17 +81,17 @@ public class FCGenerator{
   
 //  float strokethickness=0.018f;
 //  float strokethickness=0.005f;
-//  float strokethickness=0.014f;
-  float strokethickness=0.005f;//for 20x30 print
+  float strokethickness=0.009f;
+//  float strokethickness=0.005f;//for 20x30 print
 //  float strokethickness=0.005f;
   
   
 //  double detaillimit=0.025;
 //  double detaillimit=0.07;//coarse, for the 4x6 prints
-//  double detaillimit=0.06;
+  double detaillimit=0.047;
 //  double detaillimit=0.12;//very coarse
 //  double detaillimit=0.23;//very very coarse
-  double detaillimit=0.03;//for 20x30 print
+//  double detaillimit=0.03;//for 20x30 print
   
   
   /*

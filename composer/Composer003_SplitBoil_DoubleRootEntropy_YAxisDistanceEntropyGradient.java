@@ -1,5 +1,6 @@
 package org.fleen.bread.composer;
 
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -12,9 +13,11 @@ import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 import org.fleen.forsythia.core.grammar.Jig;
 import org.fleen.forsythia.core.grammar.JigSection;
+import org.fleen.geom_2D.DPoint;
+import org.fleen.geom_2D.GD;
 import org.fleen.util.tree.TreeNodeIterator;
 
-public class Composer002_SplitBoil_DoubleRootEntropy extends Composer_Abstract{
+public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient extends Composer_Abstract{
   
   Random rnd=new Random();
   
@@ -29,6 +32,7 @@ public class Composer002_SplitBoil_DoubleRootEntropy extends Composer_Abstract{
   protected int buildcycleindex;
   
   protected void build(ForsythiaComposition composition,double detaillimit){
+    initArbitraryEntropy(composition);
     boolean creatednodes=true;
     buildcycleindex=0;
     while(creatednodes){
@@ -43,6 +47,16 @@ public class Composer002_SplitBoil_DoubleRootEntropy extends Composer_Abstract{
     for(FPolygon p:composition.getPolygons()){
       p.chorusindex=a;
       a++;}}
+  
+  static final int ARBITRARYENTROPYINDEXSTARTVAL=1000000;
+  int arbitraryentropychorusindex;
+  double arbitraryentropyyaxis,arbitraryentropydistancemax;
+  
+  private void initArbitraryEntropy(ForsythiaComposition composition){
+    arbitraryentropychorusindex=ARBITRARYENTROPYINDEXSTARTVAL;
+    Rectangle2D.Double b=composition.getRootPolygon().getDPolygon().getBounds();
+    arbitraryentropyyaxis=(b.getMaxY()+b.getMinY())/2;
+    arbitraryentropydistancemax=b.getMaxY()-b.getMinY();}
   
   /*
    * ################################
@@ -59,6 +73,7 @@ public class Composer002_SplitBoil_DoubleRootEntropy extends Composer_Abstract{
     ForsythiaGrammar grammar=composition.getGrammar();
     while(i.hasNext()){
       leaf=(FPolygon)i.next();
+      doArbitraryEntropy(leaf);
       if(isCapped(leaf))continue;
       jig=selectJig(grammar,leaf,detaillimit);
       if(jig==null){
@@ -68,6 +83,30 @@ public class Composer002_SplitBoil_DoubleRootEntropy extends Composer_Abstract{
         creatednodes=true;}}
     jigbypolygonsig.clear();
     return creatednodes;}
+  
+  /*
+   * do entropy at probability proportional to distance from yaxis
+   */
+  private void doArbitraryEntropy(FPolygon leaf){
+    DPoint p0=GD.getPoint_Mean(leaf.getDPolygon());
+    double 
+      dis=Math.abs(p0.y-arbitraryentropyyaxis),
+      ndis=dis/arbitraryentropydistancemax;
+    
+//    System.out.println("------------------------");
+//    System.out.println("arbitraryentropyyaxis="+arbitraryentropyyaxis);
+//    System.out.println("p0.y="+p0.y);
+//    System.out.println("dis="+dis);
+//    System.out.println("ndis="+ndis);
+    
+    ndis*=0.5;//looks pretty good. good constant. gonna try higher
+    
+      //go with natural probability first
+    if(rnd.nextDouble()<ndis){
+      leaf.chorusindex=arbitraryentropychorusindex;
+      arbitraryentropychorusindex++;}}
+  
+  
   
   /*
    * ################################

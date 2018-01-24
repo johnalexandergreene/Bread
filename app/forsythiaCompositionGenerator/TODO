@@ -21,6 +21,22 @@ Do a better stroked renderer
   thus we get more uniform drawing.
   
 ################################
+AN ENTROPY CONTROL STRATEGY
+################################
+
+L0 : maybe entropize 100%, maybe 50, maybe 0
+
+L1 : entropize 100%
+
+L2 : Entropize proportionally by distance from y-center-axis and/or center
+
+—-also
+
+Keep scale slightly coarse
+
+Maybe paste a bitmap or 3. Flies, skulls, etc
+  
+################################
 NEW ORGANIZATION
 ################################
 
