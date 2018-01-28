@@ -39,6 +39,7 @@ public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradien
       System.out.println("buildcycleindex="+buildcycleindex);
       if(buildcycleindex==0)entropize(composition);
       if(buildcycleindex==1)entropize(composition);
+      if(buildcycleindex==2)entropize(composition);
       buildcycleindex++;
       creatednodes=createNodes(composition,detaillimit);}}
   
@@ -99,8 +100,8 @@ public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradien
 //    System.out.println("dis="+dis);
 //    System.out.println("ndis="+ndis);
     
-    ndis*=0.5;//looks pretty good. good constant. gonna try higher
-    
+//    ndis*=0.5;//looks pretty good. good constant. gonna try lower, for a skinnier entropy band
+    ndis*=0.25;
       //go with natural probability first
     if(rnd.nextDouble()<ndis){
       leaf.chorusindex=arbitraryentropychorusindex;
