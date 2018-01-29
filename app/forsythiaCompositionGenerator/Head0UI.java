@@ -27,7 +27,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-public class UI_0 extends JFrame {
+public class Head0UI extends JFrame {
 
 	private static final long serialVersionUID = -2749846443106819716L;
 	
@@ -35,7 +35,7 @@ public class UI_0 extends JFrame {
 	
 	JPanel contentPane;
 	JPanel pancontrol;
-  Viewer panimage;
+  Head0Viewer panimage;
 	JTextField 
 	  txtinterval,txtexportsize;
 	JButton lblmode,lblstartstop;
@@ -50,7 +50,7 @@ public class UI_0 extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					UI_0 frame = new UI_0(null);
+					Head0UI frame = new Head0UI(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,7 +63,7 @@ public class UI_0 extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public UI_0(Head0 h){
+	public Head0UI(Head0 h){
 	  head=h;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 709);
@@ -125,8 +125,8 @@ public class UI_0 extends JFrame {
 		btnExport.setToolTipText("Export");
 		btnExport.addMouseListener(new MouseAdapter() {
 		  public void mouseClicked(MouseEvent e) {
-		    if(sampler.isExportModeManual())
-		      sampler.export();}});
+		    if(head.isExportModeManual())
+		      head.export();}});
 		btnExport.setForeground(new Color(135, 206, 250));
 		btnExport.setBackground(new Color(30, 144, 255));
 		btnExport.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -166,7 +166,7 @@ public class UI_0 extends JFrame {
 		lblmode.setToolTipText("Intermittant or Continuous");
 		lblmode.addMouseListener(new MouseAdapter() {
 		  public void mouseClicked(MouseEvent e) {
-		    sampler.toggleCreationMode();}});
+		    head.toggleCreationMode();}});
 		lblmode.setFont(new Font("DejaVu Sans Mono", Font.BOLD, 18));
 		
 		txtinterval = new JTextField();
@@ -174,7 +174,7 @@ public class UI_0 extends JFrame {
 		txtinterval.setBackground(new Color(175, 238, 238));
 		txtinterval.addKeyListener(new KeyAdapter() {
 		  public void keyReleased(KeyEvent e){
-		    sampler.setCreationInterval(txtinterval);}});
+		    head.setCreationInterval(txtinterval);}});
 		txtinterval.setFont(new Font("DejaVu Sans Mono", Font.BOLD, 18));
 		txtinterval.setText("500");
 		txtinterval.setColumns(10);
@@ -186,7 +186,7 @@ public class UI_0 extends JFrame {
 		lblstartstop.setForeground(new Color(255, 255, 255));
 		lblstartstop.addMouseListener(new MouseAdapter() {
 		  public void mouseClicked(MouseEvent e) {
-		    sampler.startStopCreation();}});
+		    head.startStopCreation();}});
 		lblstartstop.setFont(new Font("DejaVu Sans Mono", Font.BOLD, 28));
 		GroupLayout gl_pangenerate = new GroupLayout(pangenerate);
 		gl_pangenerate.setHorizontalGroup(
@@ -214,7 +214,7 @@ public class UI_0 extends JFrame {
 		pangenerate.setLayout(gl_pangenerate);
 		pancontrol.setLayout(gl_pancontrol);
 		
-		panimage = new Viewer(sampler);
+		panimage = new Head0Viewer(head);
 		panimage.setBorder(null);
 		panimage.setBackground(new Color(154, 205, 50));
 		panimage.addKeyListener(new KeyAdapter() {

@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.p0000_Printed18x30;
+package org.fleen.bread.app.forsythiaCompositionGenerator.p0000_Opaque18x30x300dpiWhiteStroke;
 
 import org.fleen.bread.app.forsythiaCompositionGenerator.FCGenerator2;
 
