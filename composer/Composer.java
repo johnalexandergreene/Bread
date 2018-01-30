@@ -9,10 +9,16 @@ import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 public interface Composer{
   
   //create a new composition
-  ForsythiaComposition compose(ForsythiaGrammar grammar,double detaillimit);
+//  ForsythiaComposition compose(ForsythiaGrammar grammar,double detaillimit);
+  
+  ForsythiaComposition compose();
+  
+//  void setGrammar(ForsythiaGrammar grammar);
+//  
+//  void setDetailLimit(double a);
   
   //build on an an existing composition
-  void compose(ForsythiaComposition c,double detaillimit);
+//  void compose(ForsythiaComposition c,double detaillimit);
   
   
   

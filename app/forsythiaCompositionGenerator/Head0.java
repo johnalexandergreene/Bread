@@ -24,7 +24,8 @@ public class Head0{
    * ################################
    */
   
-  public Head0(){
+  public Head0(ForsythiaCompositionImageGenerator g){
+    gen=g;
     initExport();
     initUI();}
   
@@ -105,13 +106,7 @@ public class Head0{
   
   ForsythiaCompositionImageGenerator gen=null;
   
-  public void setGen(ForsythiaCompositionImageGenerator g){
-    gen=g;}
-  
   public ForsythiaCompositionImageGenerator getGen(){
-    if(gen==null){
-      System.out.println("gen is null");
-      return null;}
     return gen;}
   
   /*
@@ -258,14 +253,5 @@ public class Head0{
     File f=new File(decodedpath);
     if(!f.isDirectory())f=f.getParentFile();
     return f;}
-  
-  /*
-   * ################################
-   * MAIN
-   * ################################
-   */
-  
-  public static final void main(String[] a){
-    new Head0();}
   
 }

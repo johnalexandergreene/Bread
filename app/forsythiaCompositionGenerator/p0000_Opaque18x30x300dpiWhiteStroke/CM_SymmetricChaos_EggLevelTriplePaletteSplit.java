@@ -1,4 +1,4 @@
-package org.fleen.bread.colorMap;
+package org.fleen.bread.app.forsythiaCompositionGenerator.p0000_Opaque18x30x300dpiWhiteStroke;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.fleen.bread.colorMap.ColorMap;
+import org.fleen.bread.colorMap.ColorMapper;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.FPolygonSignature;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;

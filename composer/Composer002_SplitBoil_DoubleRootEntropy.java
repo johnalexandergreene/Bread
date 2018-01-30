@@ -18,10 +18,11 @@ public class Composer002_SplitBoil_DoubleRootEntropy extends Composer_Abstract{
   
   Random rnd=new Random();
   
+
+  
   /*
    * ################################
-   * BUILD
-   * overriding the abstract here
+   * COMPOSE
    * at buildcycleindex 1 and 2 (ie polygon tree level 1 and 2) we entropize the chorus indices
    * ################################
    */
@@ -151,6 +152,5 @@ public class Composer002_SplitBoil_DoubleRootEntropy extends Composer_Abstract{
       if(s.tags.hasTag("egg"))
         return true;
     return false;}
-  
   
 }
