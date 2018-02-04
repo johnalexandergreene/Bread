@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.p0000_MartianMoney;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc1234_MartianMoney;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

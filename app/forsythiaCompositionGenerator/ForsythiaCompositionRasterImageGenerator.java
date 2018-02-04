@@ -2,7 +2,7 @@ package org.fleen.bread.app.forsythiaCompositionGenerator;
 
 import java.awt.image.BufferedImage;
 
-public interface ForsythiaCompositionImageGenerator{
+public interface ForsythiaCompositionRasterImageGenerator{
   
   void regenerateComposition();
   

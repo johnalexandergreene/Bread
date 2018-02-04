@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.p0000_Opaque18x30x300dpiWhiteStroke;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0001_18hexposter;
 
 import java.awt.Color;
 import java.util.ArrayList;

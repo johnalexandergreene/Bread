@@ -77,6 +77,17 @@ in package
 
 1 or more front ends
 
+################################
+generated raster image name format
+################################
+
+FC1234_20180204_0012
+
+FC = forsythia composition
+1234 is alg index
+20180204 is date created
+0012 is index within series
+
 
 
 

@@ -24,7 +24,7 @@ public class Head0{
    * ################################
    */
   
-  public Head0(ForsythiaCompositionImageGenerator g){
+  public Head0(ForsythiaCompositionRasterImageGenerator g){
     gen=g;
     initExport();
     initUI();}
@@ -85,14 +85,14 @@ public class Head0{
   int getExportHeight(){
     return exportheight;}
   
-  void setExportDir(String s){
+  public void setExportDir(String s){
     try{
       exportdir=new File(s);
     }catch(Exception x){}}
   
   void export(){
     System.out.println("#-#-#-EXPORT-#-#-#");
-    ForsythiaCompositionImageGenerator g=getGen();
+    ForsythiaCompositionRasterImageGenerator g=getGen();
     g.setImageDimensions(exportwidth,exportheight);
     BufferedImage exportimage=g.getImage();
     rasterexporter.setExportDir(exportdir);
@@ -104,9 +104,9 @@ public class Head0{
    * ################################
    */
   
-  ForsythiaCompositionImageGenerator gen=null;
+  ForsythiaCompositionRasterImageGenerator gen=null;
   
-  public ForsythiaCompositionImageGenerator getGen(){
+  public ForsythiaCompositionRasterImageGenerator getGen(){
     return gen;}
   
   /*
@@ -171,7 +171,7 @@ public class Head0{
   //INTERMITTANT CREATION
   
   private void doIntermittantCreation(){
-    ForsythiaCompositionImageGenerator g=getGen();
+    ForsythiaCompositionRasterImageGenerator g=getGen();
     g.regenerateComposition();
     g.regenerateColorMap();
     g.setImageDimensions(ui.panimage.getWidth(),ui.panimage.getHeight());
@@ -197,7 +197,7 @@ public class Head0{
         while(!stopcontinuouscreation){
           starttime=System.currentTimeMillis();
           //compose and render
-          ForsythiaCompositionImageGenerator g=getGen();
+          ForsythiaCompositionRasterImageGenerator g=getGen();
           g.regenerateComposition();
           g.regenerateColorMap();
           g.setImageDimensions(ui.panimage.getWidth(),ui.panimage.getHeight());

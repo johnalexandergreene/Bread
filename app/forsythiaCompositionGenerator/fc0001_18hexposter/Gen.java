@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.p0000_Opaque18x30x300dpiWhiteStroke;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0001_18hexposter;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -21,11 +21,11 @@ public class Gen extends FCG_Basic{
   public static final Color STROKECOLOR=Color.white;
   public static final float STROKETHICKNESS=0.009f;
   
-  protected Composer getComposer(){
-    Composer c=new Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient();
+  protected Composer getComposer(){//TODO ForsythiaCompositionGen?
+    Composer c=new FCGen003_SplitBoil_TotalSymmetry();
     return c;}
 
-  protected ColorMapper getColorMapper(){
+  protected ColorMapper getColorMapper(){//TODO ColorMapGen?
     ColorMapper m=new CM_SymmetricChaos_EggLevelTriplePaletteSplit();
     m.setPalette(Palette.P_GRACIE001);
     return m;}
