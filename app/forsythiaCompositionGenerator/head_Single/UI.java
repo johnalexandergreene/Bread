@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator;
+package org.fleen.bread.app.forsythiaCompositionGenerator.head_Single;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -27,15 +27,15 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-public class Head0UI extends JFrame {
+public class UI extends JFrame {
 
 	private static final long serialVersionUID = -2749846443106819716L;
 	
-	public Head0 head;
+	public Head_Single head;
 	
 	JPanel contentPane;
 	JPanel pancontrol;
-  Head0Viewer panimage;
+  Viewer panimage;
 	JTextField 
 	  txtinterval,txtexportsize;
 	JButton lblmode,lblstartstop;
@@ -50,7 +50,7 @@ public class Head0UI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Head0UI frame = new Head0UI(null);
+					UI frame = new UI(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,7 +63,7 @@ public class Head0UI extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public Head0UI(Head0 h){
+	public UI(Head_Single h){
 	  head=h;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 709);
@@ -214,7 +214,7 @@ public class Head0UI extends JFrame {
 		pangenerate.setLayout(gl_pangenerate);
 		pancontrol.setLayout(gl_pancontrol);
 		
-		panimage = new Head0Viewer(head);
+		panimage = new Viewer(head);
 		panimage.setBorder(null);
 		panimage.setBackground(new Color(154, 205, 50));
 		panimage.addKeyListener(new KeyAdapter() {

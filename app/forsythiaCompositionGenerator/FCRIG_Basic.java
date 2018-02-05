@@ -8,7 +8,7 @@ import org.fleen.bread.colorMap.ColorMapper;
 import org.fleen.bread.composer.Composer;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 
-public abstract class FCG_Basic implements ForsythiaCompositionRasterImageGenerator{
+public abstract class FCRIG_Basic implements ForsythiaCompositionRasterImageGenerator{
 
   /*
    * ################################

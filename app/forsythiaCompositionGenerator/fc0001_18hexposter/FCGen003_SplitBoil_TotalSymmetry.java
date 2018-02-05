@@ -56,7 +56,7 @@ public class FCGen003_SplitBoil_TotalSymmetry implements Composer{
    * ################################
    */
   
-  private static final double DETAILLIMIT=0.055;
+  private static final double DETAILLIMIT=0.075;
   
   /*
    * ################################

@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator;
+package org.fleen.bread.app.forsythiaCompositionGenerator.head_Single;
 
 import java.awt.EventQueue;
 import java.awt.image.BufferedImage;
@@ -7,6 +7,7 @@ import java.net.URLDecoder;
 
 import javax.swing.JTextField;
 
+import org.fleen.bread.app.forsythiaCompositionGenerator.ForsythiaCompositionRasterImageGenerator;
 import org.fleen.bread.export.RasterExporter;
 import org.fleen.forsythia.app.grammarEditor.GE;
 
@@ -14,7 +15,7 @@ import org.fleen.forsythia.app.grammarEditor.GE;
  * runs a UI and composition generator
  * provides automation and bitmap export services 
  */
-public class Head0{
+public class Head_Single{
   
   private static final String NAME="Fleen Bread 0.3";
   
@@ -24,7 +25,7 @@ public class Head0{
    * ################################
    */
   
-  public Head0(ForsythiaCompositionRasterImageGenerator g){
+  public Head_Single(ForsythiaCompositionRasterImageGenerator g){
     gen=g;
     initExport();
     initUI();}
@@ -35,14 +36,14 @@ public class Head0{
    * ################################
    */
   
-  public Head0UI ui;
+  public UI ui;
   BufferedImage uiviewerimage=null;
   
   protected void initUI(){
     EventQueue.invokeLater(new Runnable(){
       public void run(){
         try{
-          ui=new Head0UI(Head0.this);
+          ui=new UI(Head_Single.this);
           ui.setDefaultWindowBounds();
           ui.setVisible(true);
           ui.setTitle(NAME);
@@ -73,22 +74,23 @@ public class Head0{
   private void initExport(){
     exportdir=getLocalDir();}
   
-  void setExportWidth(int w){
-    exportwidth=w;}
-  
-  int getExportWidth(){
-    return exportwidth;}
-  
-  void setExportHeight(int h){
+  public void setExportImageDimensions(int w,int h){
+    exportwidth=w;
     exportheight=h;}
   
-  int getExportHeight(){
+  public int getExportWidth(){
+    return exportwidth;}
+  
+  public int getExportHeight(){
     return exportheight;}
   
   public void setExportDir(String s){
     try{
       exportdir=new File(s);
     }catch(Exception x){}}
+  
+  public File getExportDir(){
+    return exportdir;}
   
   void export(){
     System.out.println("#-#-#-EXPORT-#-#-#");

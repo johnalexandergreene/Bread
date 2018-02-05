@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.fc0000_18x30poster;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0000_poster_18x30;
 
 import java.awt.geom.Rectangle2D;
 import java.io.InputStream;
@@ -40,7 +40,7 @@ public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradien
    * ################################
    */
   
-  private static final String GRAMMARNAME="rectroot_2018_01_06.grammar";
+  private static final String GRAMMARNAME="a.grammar";
   ForsythiaGrammar grammar;
   
   private void initGrammar(){

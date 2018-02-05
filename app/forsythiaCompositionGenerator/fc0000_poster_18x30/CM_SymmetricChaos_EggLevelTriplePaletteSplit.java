@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.fc0000_18x30poster;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0000_poster_18x30;
 
 import java.awt.Color;
 import java.util.ArrayList;

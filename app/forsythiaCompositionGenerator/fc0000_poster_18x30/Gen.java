@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.fc0000_18x30poster;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0000_poster_18x30;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -9,14 +9,14 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-import org.fleen.bread.app.forsythiaCompositionGenerator.FCG_Basic;
+import org.fleen.bread.app.forsythiaCompositionGenerator.FCRIG_Basic;
 import org.fleen.bread.colorMap.ColorMapper;
 import org.fleen.bread.composer.Composer;
 import org.fleen.bread.palette.Palette;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 
-public class Gen extends FCG_Basic{
+public class Gen extends FCRIG_Basic{
 
   public static final Color STROKECOLOR=Color.white;
   public static final float STROKETHICKNESS=0.009f;
