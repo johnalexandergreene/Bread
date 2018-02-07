@@ -40,17 +40,18 @@ public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradien
    * ################################
    */
   
-  private static final String GRAMMARNAME="a.grammar";
+  private static final String GRAMMARNAME="b.grammar";
   ForsythiaGrammar grammar;
   
   private void initGrammar(){
+    System.out.println("LOAD GRAMMAR : "+GRAMMARNAME);
     try{
       InputStream a=Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient.class.getResourceAsStream(GRAMMARNAME);
       ObjectInputStream b=new ObjectInputStream(a);
       grammar=(ForsythiaGrammar)b.readObject();
       b.close();
     }catch(Exception e){
-      System.out.println("Load sample grammar failed.");
+      System.out.println("Load grammar failed.");
       e.printStackTrace();}}
   
   /*

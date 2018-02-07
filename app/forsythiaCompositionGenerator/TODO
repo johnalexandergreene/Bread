@@ -81,12 +81,21 @@ in package
 generated raster image name format
 ################################
 
-FC1234_20180204_0012
+FC1234_20180204_0012 FLEEN.ORG
 
 FC = forsythia composition
 1234 is alg index
 20180204 is date created
 0012 is index within series
+
+-- put the name (and fleen.org) at the bottom of the composition automatically
+
+###############################
+
+do big areas. ie, cap polygons at some level, just short of the leaf
+OR, delete some polygons post-build
+
+ 
 
 
 

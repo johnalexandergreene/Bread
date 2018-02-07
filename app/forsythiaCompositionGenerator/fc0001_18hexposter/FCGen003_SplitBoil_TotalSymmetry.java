@@ -37,7 +37,7 @@ public class FCGen003_SplitBoil_TotalSymmetry implements Composer{
    * ################################
    */
   
-  private static final String GRAMMARNAME="hexroot_2018_02_04.grammar";
+  private static final String GRAMMARNAME="hexmandala001.grammar";
   ForsythiaGrammar grammar;
   
   private void initGrammar(){
@@ -47,7 +47,7 @@ public class FCGen003_SplitBoil_TotalSymmetry implements Composer{
       grammar=(ForsythiaGrammar)b.readObject();
       b.close();
     }catch(Exception e){
-      System.out.println("Load sample grammar failed.");
+      System.out.println("Load grammar failed.");
       e.printStackTrace();}}
   
   /*
