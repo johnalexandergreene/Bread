@@ -11,5 +11,7 @@ public interface ForsythiaCompositionRasterImageGenerator{
   BufferedImage getImage();
   
   void setImageDimensions(int w,int h);
+  
+  void setBorderThickness(int t);
 
 }

@@ -61,13 +61,15 @@ public class Head_Single{
   
   private static final int 
     EXPORT_DEFAULT_WIDTH=1000,
-    EXPORT_DEFAULT_HEIGHT=1000;
+    EXPORT_DEFAULT_HEIGHT=1000,
+    EXPORT_DEFAULT_BORDERTHICKNESS=100;
   
   RasterExporter rasterexporter=new RasterExporter();
   
   int 
     exportwidth=EXPORT_DEFAULT_WIDTH,
-    exportheight=EXPORT_DEFAULT_HEIGHT;
+    exportheight=EXPORT_DEFAULT_HEIGHT,
+    exportborderthickness=EXPORT_DEFAULT_BORDERTHICKNESS;
   
   File exportdir;
   
@@ -77,6 +79,9 @@ public class Head_Single{
   public void setExportImageDimensions(int w,int h){
     exportwidth=w;
     exportheight=h;}
+  
+  public void setExportBorderThickness(int t){
+    exportborderthickness=t;}
   
   public int getExportWidth(){
     return exportwidth;}
@@ -96,6 +101,7 @@ public class Head_Single{
     System.out.println("#-#-#-EXPORT-#-#-#");
     ForsythiaCompositionRasterImageGenerator g=getGen();
     g.setImageDimensions(exportwidth,exportheight);
+    g.setBorderThickness(exportborderthickness);
     BufferedImage exportimage=g.getImage();
     rasterexporter.setExportDir(exportdir);
     rasterexporter.export(exportimage);}

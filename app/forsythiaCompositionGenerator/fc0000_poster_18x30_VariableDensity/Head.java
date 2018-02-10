@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.fc0000_poster_18x30;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0000_poster_18x30_VariableDensity;
 
 import org.fleen.bread.app.forsythiaCompositionGenerator.head_Single.Head_Single;
 
@@ -6,9 +6,9 @@ public class Head extends Head_Single{
   
   static final String EXPORTDIR="/home/john/Desktop/newstuff";
   static final int 
-  EXPORTIMAGEWIDTH=9095,
-  EXPORTIMAGEHEIGHT=5274,
-  BORDERTHICKNESS=32;
+    EXPORTIMAGEWIDTH=9095,
+    EXPORTIMAGEHEIGHT=5274,
+    BORDERTHICKNESS=32;
   
   Head(Gen g){
     super(g);
