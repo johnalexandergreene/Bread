@@ -1,0 +1,20 @@
+Transform from one Forsythia Composition (FC) to another.
+Get a bunch of incremental compositions. Thus create frames.
+
+Given FC0 and FC1
+
+For each polygon in FC0 get corresponding polygon in FC1
+
+Corresponding means
+  centroids are close
+  levels are close
+  maybe relationships with other polygons are similar
+  
+If there are leftover polygons then use a parent polygon instead and, I dunno, crossfade the lines
+
+from map of corresponding polygons get map of corresponding segs and points
+
+for each corresponding point-pair get incremental points along joining line
+
+That should do it.
+ 
