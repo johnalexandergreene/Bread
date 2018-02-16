@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.fc0000_poster_18x30_VariableDensity_BigAreaTextureFill;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0004_poster_18x30_Stamp;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -22,7 +22,7 @@ public class Gen extends FCRIG_Basic{
   public static final float STROKETHICKNESS=0.009f;
   
   protected Composer getComposer(){//TODO ForsythiaCompositionGen?
-    Composer c=new Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient_VariableDensity();
+    Composer c=new Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient();
     return c;}
 
   protected ColorMapper getColorMapper(){//TODO ColorMapGen?

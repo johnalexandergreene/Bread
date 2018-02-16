@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.fc0000_poster_18x30_VariableDensity_BigAreaTextureFill;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0002_poster_18x30_VariableDensity;
 
 import java.awt.geom.Rectangle2D;
 import java.io.InputStream;
