@@ -24,7 +24,7 @@ import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
  *  
  * 
  */
-public abstract class Composer_Abstract implements Composer{
+public abstract class Composer_Abstract implements ForsythiaCompositionGen{
   
   /*
    * ################################

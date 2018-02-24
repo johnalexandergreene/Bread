@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import org.fleen.bread.composer.Composer;
+import org.fleen.bread.composer.ForsythiaCompositionGen;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.FPolygonSignature;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
@@ -20,7 +20,7 @@ import org.fleen.forsythia.core.grammar.Jig;
 import org.fleen.forsythia.core.grammar.JigSection;
 import org.fleen.util.tree.TreeNodeIterator;
 
-public class FCGen003_SplitBoil_TotalSymmetry implements Composer{
+public class FCGen003_SplitBoil_TotalSymmetry implements ForsythiaCompositionGen{
   
   /*
    * ################################

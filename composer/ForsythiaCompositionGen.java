@@ -6,7 +6,7 @@ import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 /*
  * creates a tree of forsythia composition nodes
  */
-public interface Composer{
+public interface ForsythiaCompositionGen{
   
   //create a new composition
 //  ForsythiaComposition compose(ForsythiaGrammar grammar,double detaillimit);

@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import org.fleen.bread.composer.Composer;
+import org.fleen.bread.composer.ForsythiaCompositionGen;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.FPolygonSignature;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
@@ -23,7 +23,7 @@ import org.fleen.geom_2D.DPoint;
 import org.fleen.geom_2D.GD;
 import org.fleen.util.tree.TreeNodeIterator;
 
-public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient_VariableDensity implements Composer{
+public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient_VariableDensity implements ForsythiaCompositionGen{
   
   /*
    * ################################

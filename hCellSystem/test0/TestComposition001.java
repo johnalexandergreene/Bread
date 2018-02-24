@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
-import org.fleen.bread.composer.Composer;
+import org.fleen.bread.composer.ForsythiaCompositionGen;
 import org.fleen.bread.composer.Composer001_SplitBoil;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.FMetagon;
@@ -23,7 +23,7 @@ public class TestComposition001 extends ForsythiaComposition{
     initGrammar();
     FMetagon r=getRootMetagon();
     initTree(r);
-    Composer composer=new Composer001_SplitBoil();
+    ForsythiaCompositionGen composer=new Composer001_SplitBoil();
     composer.compose(this,DETAILLIMIT);}
   
   private FMetagon getRootMetagon(){

@@ -14,7 +14,7 @@ import java.util.Random;
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain.Stripe;
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain.StripeChain;
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.ui.UI;
-import org.fleen.bread.composer.Composer;
+import org.fleen.bread.composer.ForsythiaCompositionGen;
 import org.fleen.bread.composer.Composer002_SplitBoil_DoubleRootEntropy;
 import org.fleen.bread.export.RasterExporter;
 import org.fleen.bread.palette.Palette;
@@ -317,7 +317,7 @@ public class FSLAFGenerator{
   
   public double detaillimit=0.013;
   
-  public Composer composer=new Composer002_SplitBoil_DoubleRootEntropy();
+  public ForsythiaCompositionGen composer=new Composer002_SplitBoil_DoubleRootEntropy();
   
   /*
    * ################################

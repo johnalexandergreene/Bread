@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 
-public interface ColorMapper{
+public interface ColorMapGen{
   
   ColorMap getColorMap();
   

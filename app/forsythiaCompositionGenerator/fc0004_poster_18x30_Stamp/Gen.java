@@ -9,9 +9,11 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
+import javax.imageio.ImageIO;
+
 import org.fleen.bread.app.forsythiaCompositionGenerator.FCRIG_Basic;
-import org.fleen.bread.colorMap.ColorMapper;
-import org.fleen.bread.composer.Composer;
+import org.fleen.bread.colorMap.ColorMapGen;
+import org.fleen.bread.composer.ForsythiaCompositionGen;
 import org.fleen.bread.palette.Palette;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
@@ -21,12 +23,12 @@ public class Gen extends FCRIG_Basic{
   public static final Color STROKECOLOR=Color.white;
   public static final float STROKETHICKNESS=0.009f;
   
-  protected Composer getComposer(){//TODO ForsythiaCompositionGen?
-    Composer c=new Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient();
+  protected ForsythiaCompositionGen getComposer(){
+    ForsythiaCompositionGen c=new Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient();
     return c;}
 
-  protected ColorMapper getColorMapper(){//TODO ColorMapGen?
-    ColorMapper m=new CM_SymmetricChaos_EggLevelTriplePaletteSplit();
+  protected ColorMapGen getColorMapper(){
+    ColorMapGen m=new CM_SymmetricChaos_EggLevelTriplePaletteSplit();
     m.setPalette(Palette.P_GRACIE001);
     return m;}
   
@@ -63,6 +65,10 @@ public class Gen extends FCRIG_Basic{
     for(FPolygon p:composition.getLeafPolygons()){
       g.setPaint(colormap.getColor(p));
       g.fill(p.getDPolygon().getPath2D());}
+    //do stamps
+    for(FPolygon p:composition.getLeafPolygons())
+      if(p.hasTags("stamp"))
+        renderStamp(p,g);
     //stroke compsoiton polygons
     g.setPaint(STROKECOLOR);
     g.setStroke(
@@ -109,6 +115,34 @@ public class Gen extends FCRIG_Basic{
     transform.translate(xoff,yoff);
     //
     return transform;}
+  
+  /*
+   * ################################
+   * STAMP
+   * ################################
+   */
+  
+  BufferedImage fly=null;
+  
+  void renderStamp(FPolygon p,Graphics2D g){
+    System.out.println("rendering stamp");
+    if(fly==null)initFly();
+    //copy fly to work image
+    BufferedImage w=new BufferedImage(fly.getWidth(),fly.getHeight(),BufferedImage.TYPE_INT_RGB);
+    Graphics2D g0=w.createGraphics();
+    g0.drawImage(fly,0,0,null);
+    //get transform to center and orient fly
+    
+    
+  }
+  
+  void initFly(){
+    try{
+      ImageIO.read(Gen.class.getResource("fly000.png"));
+    }catch(Exception x){
+      System.out.println("COULDN'T LOAD FLY");
+      x.printStackTrace();}}
+  
   
   
   

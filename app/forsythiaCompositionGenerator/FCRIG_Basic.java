@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import org.fleen.bread.colorMap.ColorMap;
-import org.fleen.bread.colorMap.ColorMapper;
-import org.fleen.bread.composer.Composer;
+import org.fleen.bread.colorMap.ColorMapGen;
+import org.fleen.bread.composer.ForsythiaCompositionGen;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 
 public abstract class FCRIG_Basic implements ForsythiaCompositionRasterImageGenerator{
@@ -18,7 +18,7 @@ public abstract class FCRIG_Basic implements ForsythiaCompositionRasterImageGene
   
   protected ForsythiaComposition composition=null;
   
-  protected abstract Composer getComposer();
+  protected abstract ForsythiaCompositionGen getComposer();
 
   public void regenerateComposition(){
     composition=getComposer().compose();}
@@ -31,10 +31,10 @@ public abstract class FCRIG_Basic implements ForsythiaCompositionRasterImageGene
   
   protected ColorMap colormap=null;
 
-  protected abstract ColorMapper getColorMapper();
+  protected abstract ColorMapGen getColorMapper();
 
   public void regenerateColorMap(){
-    ColorMapper m=getColorMapper();
+    ColorMapGen m=getColorMapper();
     m.setComposition(composition);
     colormap=m.getColorMap();}
 

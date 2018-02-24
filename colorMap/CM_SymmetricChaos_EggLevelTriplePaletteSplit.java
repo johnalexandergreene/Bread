@@ -21,7 +21,7 @@ import org.fleen.util.tree.TreeNode;
  * this looks good with strokes
  */
 @SuppressWarnings("serial")
-public class CM_SymmetricChaos_EggLevelTriplePaletteSplit extends HashMap<FPolygon,Color> implements ColorMapper,ColorMap{
+public class CM_SymmetricChaos_EggLevelTriplePaletteSplit extends HashMap<FPolygon,Color> implements ColorMapGen,ColorMap{
   
   /*
    * ################################

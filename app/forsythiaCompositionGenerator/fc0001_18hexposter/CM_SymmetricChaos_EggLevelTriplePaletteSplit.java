@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.fleen.bread.colorMap.ColorMap;
-import org.fleen.bread.colorMap.ColorMapper;
+import org.fleen.bread.colorMap.ColorMapGen;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.FPolygonSignature;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
@@ -23,7 +23,7 @@ import org.fleen.util.tree.TreeNode;
  * this looks good with strokes
  */
 @SuppressWarnings("serial")
-public class CM_SymmetricChaos_EggLevelTriplePaletteSplit extends HashMap<FPolygon,Color> implements ColorMapper,ColorMap{
+public class CM_SymmetricChaos_EggLevelTriplePaletteSplit extends HashMap<FPolygon,Color> implements ColorMapGen,ColorMap{
   
   /*
    * ################################

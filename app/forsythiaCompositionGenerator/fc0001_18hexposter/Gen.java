@@ -10,8 +10,8 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import org.fleen.bread.app.forsythiaCompositionGenerator.FCRIG_Basic;
-import org.fleen.bread.colorMap.ColorMapper;
-import org.fleen.bread.composer.Composer;
+import org.fleen.bread.colorMap.ColorMapGen;
+import org.fleen.bread.composer.ForsythiaCompositionGen;
 import org.fleen.bread.palette.Palette;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
@@ -21,12 +21,12 @@ public class Gen extends FCRIG_Basic{
   public static final Color STROKECOLOR=Color.white;
   public static final float STROKETHICKNESS=0.009f;
   
-  protected Composer getComposer(){//TODO ForsythiaCompositionGen?
-    Composer c=new FCGen003_SplitBoil_TotalSymmetry();
+  protected ForsythiaCompositionGen getComposer(){//TODO ForsythiaCompositionGen?
+    ForsythiaCompositionGen c=new FCGen003_SplitBoil_TotalSymmetry();
     return c;}
 
-  protected ColorMapper getColorMapper(){//TODO ColorMapGen?
-    ColorMapper m=new CM_SymmetricChaos_EggLevelTriplePaletteSplit();
+  protected ColorMapGen getColorMapper(){//TODO ColorMapGen?
+    ColorMapGen m=new CM_SymmetricChaos_EggLevelTriplePaletteSplit();
     m.setPalette(Palette.P_GRACIE001);
     return m;}
   

@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import org.fleen.bread.composer.Composer;
+import org.fleen.bread.composer.ForsythiaCompositionGen;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.FPolygonSignature;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
@@ -23,7 +23,7 @@ import org.fleen.geom_2D.DPoint;
 import org.fleen.geom_2D.GD;
 import org.fleen.util.tree.TreeNodeIterator;
 
-public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient implements Composer{
+public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient implements ForsythiaCompositionGen{
   
   /*
    * ################################
@@ -40,7 +40,7 @@ public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradien
    * ################################
    */
   
-  private static final String GRAMMARNAME="b.grammar";
+  private static final String GRAMMARNAME="a.grammar";
   ForsythiaGrammar grammar;
   
   private void initGrammar(){
@@ -119,6 +119,7 @@ public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradien
     while(i.hasNext()){
       leaf=(FPolygon)i.next();
       doArbitraryEntropy(leaf);
+      doArbitraryStampCap(leaf,detaillimit);
       if(isCapped(leaf))continue;
       jig=selectJig(grammar,leaf,detaillimit);
       if(jig==null){
@@ -128,6 +129,24 @@ public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradien
         creatednodes=true;}}
     jigbypolygonsig.clear();
     return creatednodes;}
+  
+  private Set<FPolygonSignature> stampcapped=new HashSet<FPolygonSignature>();
+  static final double STAMPCAPLIMITFACTOR=5.0;
+  private void doArbitraryStampCap(FPolygon leaf,double detaillimit){
+    //chorus
+    if(stampcapped.contains(leaf.getSignature()))
+      doStampCap(leaf);
+    //test
+    double limit=detaillimit*STAMPCAPLIMITFACTOR;
+    if(leaf.getDetailSize()<limit)return;
+    if(leaf.hasTags("hexagon")){
+      if(rnd.nextDouble()<0.5){
+        stampcapped.add(leaf.getSignature());
+        doStampCap(leaf);}}}
+  
+  private void doStampCap(FPolygon leaf){
+    cap(leaf);
+    leaf.addTags("stamp");}
   
   /*
    * do entropy at probability proportional to distance from yaxis
