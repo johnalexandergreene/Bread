@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -17,6 +18,8 @@ import org.fleen.bread.composer.ForsythiaCompositionGen;
 import org.fleen.bread.palette.Palette;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
+import org.fleen.geom_2D.DPolygon;
+import org.fleen.geom_2D.GD;
 
 public class Gen extends FCRIG_Basic{
 
@@ -54,7 +57,8 @@ public class Gen extends FCRIG_Basic{
   public BufferedImage getImage(){
     BufferedImage i=new BufferedImage(imagewidth,imageheight,BufferedImage.TYPE_INT_RGB);
     AffineTransform t=getTransform(imagewidth,imageheight,composition);
-    Graphics2D g=i.createGraphics();
+    Graphics2D g=i.createGraphics(),g0=i.createGraphics();
+    g0.setRenderingHints(RENDERING_HINTS);
     //fill background, this also does the border
     g.setPaint(backgroundandborder);
     g.fillRect(0,0,imagewidth,imageheight);
@@ -68,7 +72,7 @@ public class Gen extends FCRIG_Basic{
     //do stamps
     for(FPolygon p:composition.getLeafPolygons())
       if(p.hasTags("stamp"))
-        renderStamp(p,g);
+        renderStamp(p,g,g0);
     //stroke compsoiton polygons
     g.setPaint(STROKECOLOR);
     g.setStroke(
@@ -119,26 +123,82 @@ public class Gen extends FCRIG_Basic{
   /*
    * ################################
    * STAMP
+   * given a polygon
+   * consider the untransformed image
+   * get center point for polygon (using image transform)
+   * get scale and rotate
+   * drawimage onto a fresh untransformed graphics2D
+   * we do it this way to get a max quality bitmap that we can do whatever blending function with 
+   * 
+   *  
+   * 
+   * 
    * ################################
    */
   
   BufferedImage fly=null;
   
-  void renderStamp(FPolygon p,Graphics2D g){
-    System.out.println("rendering stamp");
-    if(fly==null)initFly();
-    //copy fly to work image
-    BufferedImage w=new BufferedImage(fly.getWidth(),fly.getHeight(),BufferedImage.TYPE_INT_RGB);
-    Graphics2D g0=w.createGraphics();
-    g0.drawImage(fly,0,0,null);
-    //get transform to center and orient fly
+  void renderStamp(FPolygon fhex,Graphics2D g,Graphics2D gfresh){
+    DPolygon hex=fhex.getDPolygon();
+    AffineTransform t=g.getTransform();
+    //get real polygon metrics
+    //center
+    double[] hexcenter=GD.getCentroid2D(hex.getPointsAsDoubles());
+    t.transform(hexcenter,0,hexcenter,0,1);
+    //radius
+    double[] a=hex.getPointsAsDoubles()[0];
+    t.transform(a,0,a,0,1);
+    double hexradius=GD.getDistance_PointPoint(hexcenter[0],hexcenter[1],a[0],a[1]);
+    //forward
+    double hexforward=GD.normalizeDirection(GD.getDirection_PointPoint(hexcenter[0],hexcenter[1],a[0],a[1])*GD.PI);
+    //drawfly
+    drawFly(gfresh,hexcenter,hexradius,hexforward);
+    
+    
+    
+//    Path2D.Double zz=new Path2D.Double();
+//    zz.moveTo(hexcenter[0],hexcenter[1]);
+//    zz.lineTo(hexcenter[0],hexcenter[1]);
+//    g0.setStroke(new BasicStroke(12.0f));
+//    g0.setPaint(Color.red);
+//    g0.draw(zz);
+    
+
     
     
   }
   
+  static final double FLYSCALE=1.0;
+  
+  private void drawFly(Graphics2D g,double[] hexcenter,double hexradius,double hexforward){
+    BufferedImage i=getScaledAndRotatedImage(hexradius,hexforward);
+    AffineTransform t=getCenterTransform(i,hexcenter);
+    g.drawImage(i,t,null);}
+  
+  
+  
+  BufferedImage getScaledAndRotatedImage(double hexradius,double hexforward){
+    if(fly==null)initFly();
+    int w=fly.getWidth(),h=fly.getHeight();
+    double s=(hexradius/w)*FLYSCALE;
+    AffineTransform t=AffineTransform.getScaleInstance(s,s);
+    //
+    BufferedImage i=new BufferedImage((int)(w*s),(int)(h*s),BufferedImage.TYPE_INT_RGB);
+    Graphics2D g=i.createGraphics();
+    g.drawImage(fly,t,null);
+    //
+    return i;}
+  
+  AffineTransform getCenterTransform(BufferedImage i,double[] hexcenter){
+    double 
+      icx=((double)i.getWidth())/2,
+      icy=((double)i.getHeight())/2;
+    AffineTransform t=AffineTransform.getTranslateInstance(hexcenter[0]-icx,hexcenter[1]-icy);
+    return t;}
+  
   void initFly(){
     try{
-      ImageIO.read(Gen.class.getResource("fly000.png"));
+      fly=ImageIO.read(Gen.class.getResource("fly000.png"));
     }catch(Exception x){
       System.out.println("COULDN'T LOAD FLY");
       x.printStackTrace();}}
