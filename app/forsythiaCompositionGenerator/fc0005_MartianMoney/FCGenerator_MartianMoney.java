@@ -307,104 +307,104 @@ public class FCGenerator_MartianMoney{
 //    rasterexporter.setExportDir(exportdir);
 //    rasterexporter.export(exportimage);}
 //  
-//  /*
-//   * ++++++++++++++++++++++++++++++++
-//   * MARTIAN MONEY
-//   * 4x6 print
-//   * 1800wx1200h
-//   * composition fills 1727x1200
-//   * which leaves 63x1200 on the end
-//   * which we fill with a nice random hexadecimal string
-//   * font is something mono and techno
-//   * 2 nonmatching colors from our palette comprise the textcolor and background color
-//   * ++++++++++++++++++++++++++++++++
-//   */
-////  private void export(File exportdir,int w,int h){
-////    System.out.println(">>>EXPORT MARTIAN MONEY<<<");
-////    BufferedImage exportimage=getMartianMoneyImage();
-////    rasterexporter.setExportDir(exportdir);
-////    rasterexporter.export(exportimage);}
-//  
-//  private BufferedImage getMartianMoneyImage(){
-//    if(colormap==null)
-//      colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
-//    BufferedImage c=renderer.createImage(1728,1200,composition,colormap);
-//    //
-//    BufferedImage m=new BufferedImage(1800,1200,BufferedImage.TYPE_INT_RGB);
-//    Graphics2D g=m.createGraphics();
-//    g.setRenderingHints(Renderer_Abstract.RENDERING_HINTS);
-//    g.drawImage(c,null,null);
-//    //
-//    Color[] c3=get3Colors();
-//    //
-//    BufferedImage s=getCharacterStrip(c3);
-//    g.drawImage(s,1727,0,null);
-//    //
-//    drawMars(g,c3[2]);
-//    //
-//    return m;}
-//  
-//  private void drawMars(Graphics2D g,Color c){
-//    int x=1736,y=22;
-//    g.setStroke(createStroke(8f));
-//    g.setPaint(c);
-//    g.drawOval(x,y,30,30);
-//    Path2D.Double a=new Path2D.Double();
-//    a.moveTo(x+27,y+27);
-//    a.lineTo(x+45,y+45);
-//    a.lineTo(x+45,y+25);
-//    a.moveTo(x+45,y+45);
-//    a.lineTo(x+25,y+45);
-//    g.draw(a);}
-//  
-//  private Stroke createStroke(float w){
-//    Stroke stroke=new BasicStroke(w,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND,0,null,0);
-//    return stroke;}
-//  
-//  private Color[] get3Colors(){
-//    Random r=new Random();
-//    List<Color> c=new ArrayList<Color>();
-//    c.addAll(Arrays.asList(Palette.P_TOY_STORY_ADJUSTED2));
-//    Color[] a=new Color[3];
-//    a[0]=c.remove(r.nextInt(c.size()));
-//    a[1]=c.remove(r.nextInt(c.size()));
-//    a[2]=c.remove(r.nextInt(c.size()));
-//    return a;}
-//  
-//  private BufferedImage getCharacterStrip(Color[] c3){
-//    BufferedImage s=new BufferedImage(73,1200,BufferedImage.TYPE_INT_RGB);
-//    Graphics2D g=s.createGraphics();
-//    g.setRenderingHints(Renderer_Abstract.RENDERING_HINTS);
-//    g.setPaint(c3[0]);
-//    g.fillRect(0,0,73,1200);
-//    //
-//    g.setTransform(AffineTransform.getQuadrantRotateInstance(1));
-//    //
-//    g.setPaint(c3[1]);
-//    g.setFont(getMMFont());
-//    g.drawString(getMMString(),88,-10);
-//    
-//    return s;
-//  }
-//  
-//  static final String CHAR="0123456789ABCDEF";
-//  
-//  private String getMMString(){
-//    Random r=new Random();
-//    StringBuffer a=new StringBuffer();
-//    for(int i=0;i<31;i++)
-//      a.append(CHAR.charAt(r.nextInt(CHAR.length())));
-//    return a.toString();}
-//  
-//  private Font getMMFont(){
-//    try{
-//      GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
-//      ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,new File("/home/john/.fonts/ShareTechMono-Regular.ttf")));
-//    }catch(Exception x){
-//      x.printStackTrace();}
-//    Font f=new Font("Share Tech Mono",Font.PLAIN,65);
-//    return f;}
-//  
+  /*
+   * ++++++++++++++++++++++++++++++++
+   * MARTIAN MONEY
+   * 4x6 print
+   * 1800wx1200h
+   * composition fills 1727x1200
+   * which leaves 63x1200 on the end
+   * which we fill with a nice random hexadecimal string
+   * font is something mono and techno
+   * 2 nonmatching colors from our palette comprise the textcolor and background color
+   * ++++++++++++++++++++++++++++++++
+   */
+//  private void export(File exportdir,int w,int h){
+//    System.out.println(">>>EXPORT MARTIAN MONEY<<<");
+//    BufferedImage exportimage=getMartianMoneyImage();
+//    rasterexporter.setExportDir(exportdir);
+//    rasterexporter.export(exportimage);}
+  
+  private BufferedImage getMartianMoneyImage(){
+    if(colormap==null)
+      colormap=new CM_SymmetricChaos(composition,Palette.P_TOY_STORY_ADJUSTED2);
+    BufferedImage c=renderer.createImage(1728,1200,composition,colormap);
+    //
+    BufferedImage m=new BufferedImage(1800,1200,BufferedImage.TYPE_INT_RGB);
+    Graphics2D g=m.createGraphics();
+    g.setRenderingHints(Renderer_Abstract.RENDERING_HINTS);
+    g.drawImage(c,null,null);
+    //
+    Color[] c3=get3Colors();
+    //
+    BufferedImage s=getCharacterStrip(c3);
+    g.drawImage(s,1727,0,null);
+    //
+    drawMars(g,c3[2]);
+    //
+    return m;}
+  
+  private void drawMars(Graphics2D g,Color c){
+    int x=1736,y=22;
+    g.setStroke(createStroke(8f));
+    g.setPaint(c);
+    g.drawOval(x,y,30,30);
+    Path2D.Double a=new Path2D.Double();
+    a.moveTo(x+27,y+27);
+    a.lineTo(x+45,y+45);
+    a.lineTo(x+45,y+25);
+    a.moveTo(x+45,y+45);
+    a.lineTo(x+25,y+45);
+    g.draw(a);}
+  
+  private Stroke createStroke(float w){
+    Stroke stroke=new BasicStroke(w,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND,0,null,0);
+    return stroke;}
+  
+  private Color[] get3Colors(){
+    Random r=new Random();
+    List<Color> c=new ArrayList<Color>();
+    c.addAll(Arrays.asList(Palette.P_TOY_STORY_ADJUSTED2));
+    Color[] a=new Color[3];
+    a[0]=c.remove(r.nextInt(c.size()));
+    a[1]=c.remove(r.nextInt(c.size()));
+    a[2]=c.remove(r.nextInt(c.size()));
+    return a;}
+  
+  private BufferedImage getCharacterStrip(Color[] c3){
+    BufferedImage s=new BufferedImage(73,1200,BufferedImage.TYPE_INT_RGB);
+    Graphics2D g=s.createGraphics();
+    g.setRenderingHints(Renderer_Abstract.RENDERING_HINTS);
+    g.setPaint(c3[0]);
+    g.fillRect(0,0,73,1200);
+    //
+    g.setTransform(AffineTransform.getQuadrantRotateInstance(1));
+    //
+    g.setPaint(c3[1]);
+    g.setFont(getMMFont());
+    g.drawString(getMMString(),88,-10);
+    
+    return s;
+  }
+  
+  static final String CHAR="0123456789ABCDEF";
+  
+  private String getMMString(){
+    Random r=new Random();
+    StringBuffer a=new StringBuffer();
+    for(int i=0;i<31;i++)
+      a.append(CHAR.charAt(r.nextInt(CHAR.length())));
+    return a.toString();}
+  
+  private Font getMMFont(){
+    try{
+      GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+      ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,new File("/home/john/.fonts/ShareTechMono-Regular.ttf")));
+    }catch(Exception x){
+      x.printStackTrace();}
+    Font f=new Font("Share Tech Mono",Font.PLAIN,65);
+    return f;}
+  
   /*
    * ################################
    * MAIN
