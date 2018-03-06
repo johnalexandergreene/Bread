@@ -137,6 +137,15 @@ public class Palette{
       new Color(97,97,97),
       new Color(97,97,97),};
   
+  public static final Color[] P_GRACIELESSGRAY=new Color[]{
+      new Color(255,115,115),
+      new Color(255,177,132),
+      new Color(255,222,132),
+      new Color(129,228,249),
+      new Color(223,163,249),
+      new Color(228,255,165),
+      new Color(165,230,124)};
+  
   public static final Color[] P_CRUDERAINBOW=new Color[]{
       new Color(248,77,64),
       new Color(248,155,64),
