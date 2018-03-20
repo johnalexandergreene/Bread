@@ -56,29 +56,29 @@ public class Gen extends FCRIG_Basic{
   
   public BufferedImage getImage(){
     BufferedImage i=new BufferedImage(imagewidth,imageheight,BufferedImage.TYPE_INT_RGB);
-    AffineTransform t=getTransform(imagewidth,imageheight,composition);
-    Graphics2D g=i.createGraphics(),g0=i.createGraphics();
-    g0.setRenderingHints(RENDERING_HINTS);
+    AffineTransform tpolygon=getPolygonTransform(imagewidth,imageheight,composition);
     //fill background, this also does the border
-    g.setPaint(backgroundandborder);
-    g.fillRect(0,0,imagewidth,imageheight);
-    //
-    g.setRenderingHints(RENDERING_HINTS);
-    g.setTransform(t);
-    //fill composition polygons
+    Graphics2D gclean=i.createGraphics();
+    gclean.setRenderingHints(RENDERING_HINTS);
+    gclean.setPaint(backgroundandborder);
+    gclean.fillRect(0,0,imagewidth,imageheight);
+    //fill polygons
+    Graphics2D gpolygon=i.createGraphics();
+    gpolygon.setTransform(tpolygon);
+    gpolygon.setRenderingHints(RENDERING_HINTS);
     for(FPolygon p:composition.getLeafPolygons()){
-      g.setPaint(colormap.getColor(p));
-      g.fill(p.getDPolygon().getPath2D());}
+      gpolygon.setPaint(colormap.getColor(p));
+      gpolygon.fill(p.getDPolygon().getPath2D());}
     //do stamps
     for(FPolygon p:composition.getLeafPolygons())
       if(p.hasTags("stamp"))
-        renderStamp(p,g,g0);
-    //stroke compsoiton polygons
-    g.setPaint(STROKECOLOR);
-    g.setStroke(
+        renderStamp(p,gpolygon,gclean);
+    //stroke polygons
+    gpolygon.setPaint(STROKECOLOR);
+    gpolygon.setStroke(
       new BasicStroke(STROKETHICKNESS,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_ROUND,0,null,0));
     for(FPolygon p:composition.getLeafPolygons())
-      g.draw(p.getDPolygon().getPath2D());
+      gpolygon.draw(p.getDPolygon().getPath2D());
     //
     return i;}
   
@@ -89,7 +89,7 @@ public class Gen extends FCRIG_Basic{
    * ################################
    */
   
-  private AffineTransform getTransform(int width,int height,ForsythiaComposition composition){
+  private AffineTransform getPolygonTransform(int width,int height,ForsythiaComposition composition){
     //get all the relevant metrics
     Rectangle2D.Double compositionbounds=composition.getRootPolygon().getDPolygon().getBounds();
     double
@@ -138,21 +138,22 @@ public class Gen extends FCRIG_Basic{
   
   BufferedImage fly=null;
   
-  void renderStamp(FPolygon fhex,Graphics2D g,Graphics2D gfresh){
+  void renderStamp(FPolygon fhex,Graphics2D gpolygon,Graphics2D gclean){
     DPolygon hex=fhex.getDPolygon();
-    AffineTransform t=g.getTransform();
+    AffineTransform tpolygon=gpolygon.getTransform();
     //get real polygon metrics
+    double[][] hp=hex.getPointsAsDoubles();
+    double[] p0=hp[0],p3=hp[3];
+    tpolygon.transform(p0,0,p0,0,1);
+    tpolygon.transform(p3,0,p3,0,1);
     //center
-    double[] hexcenter=GD.getCentroid2D(hex.getPointsAsDoubles());
-    t.transform(hexcenter,0,hexcenter,0,1);
+    double[] hexcenter=GD.getPoint_Mid2Points(p0[0],p0[1],p3[0],p3[1]);
     //radius
-    double[] a=hex.getPointsAsDoubles()[0];
-    t.transform(a,0,a,0,1);
-    double hexradius=GD.getDistance_PointPoint(hexcenter[0],hexcenter[1],a[0],a[1]);
-    //forward
-    double hexforward=GD.normalizeDirection(GD.getDirection_PointPoint(hexcenter[0],hexcenter[1],a[0],a[1])*GD.PI);
+    double hexradius=GD.getDistance_PointPoint(p0[0],p0[1],p3[0],p3[1]);
+    //forward (flip for cartesian-screen coor conversion)
+    double hexforward=GD.normalizeDirection(GD.getDirection_PointPoint(hexcenter[0],hexcenter[1],p0[0],p0[1])+GD.PI);
     //drawfly
-    drawFly(gfresh,hexcenter,hexradius,hexforward);
+    drawFly(gclean,hexcenter,hexradius,hexforward,fhex);
     
     
     
@@ -168,9 +169,9 @@ public class Gen extends FCRIG_Basic{
     
   }
   
-  static final double FLYSCALE=1.0;
+  static final double FLYSCALE=0.5;
   
-  private void drawFly(Graphics2D g,double[] hexcenter,double hexradius,double hexforward){
+  private void drawFly(Graphics2D g,double[] hexcenter,double hexradius,double hexforward,FPolygon fhex){
     BufferedImage i=getScaledAndRotatedImage(hexradius,hexforward);
     AffineTransform t=getCenterTransform(i,hexcenter);
     g.drawImage(i,t,null);}

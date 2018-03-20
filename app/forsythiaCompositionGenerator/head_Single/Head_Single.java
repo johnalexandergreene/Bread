@@ -47,6 +47,7 @@ public class Head_Single{
           ui.setDefaultWindowBounds();
           ui.setVisible(true);
           ui.setTitle(NAME);
+//          ui.setTitle(getClass().getCanonicalName());
          }catch(Exception e){
            e.printStackTrace();}}});}
   
