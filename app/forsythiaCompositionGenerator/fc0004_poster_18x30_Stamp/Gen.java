@@ -18,6 +18,7 @@ import org.fleen.bread.composer.ForsythiaCompositionGen;
 import org.fleen.bread.palette.Palette;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
+import org.fleen.geom_2D.DPoint;
 import org.fleen.geom_2D.DPolygon;
 import org.fleen.geom_2D.GD;
 
@@ -54,9 +55,11 @@ public class Gen extends FCRIG_Basic{
     RENDERING_HINTS.put(
       RenderingHints.KEY_STROKE_CONTROL,RenderingHints.VALUE_STROKE_NORMALIZE);}
   
+  AffineTransform tpolygon;
+  
   public BufferedImage getImage(){
     BufferedImage i=new BufferedImage(imagewidth,imageheight,BufferedImage.TYPE_INT_RGB);
-    AffineTransform tpolygon=getPolygonTransform(imagewidth,imageheight,composition);
+    tpolygon=getPolygonTransform(imagewidth,imageheight,composition);
     //fill background, this also does the border
     Graphics2D gclean=i.createGraphics();
     gclean.setRenderingHints(RENDERING_HINTS);
@@ -169,20 +172,38 @@ public class Gen extends FCRIG_Basic{
     
   }
   
-  static final double FLYSCALE=0.5;
+  static final double FLYSCALE=1.0;
   
   private void drawFly(Graphics2D g,double[] hexcenter,double hexradius,double hexforward,FPolygon fhex){
     BufferedImage i=getScaledAndRotatedImage(hexradius,hexforward);
     AffineTransform t=getCenterTransform(i,hexcenter);
-    g.drawImage(i,t,null);}
+    g.setClip(getClipPath(fhex));
+    g.drawImage(i,t,null);
+    g.setClip(null);}
   
-  
+  private Path2D getClipPath(FPolygon fhex){
+    DPolygon dpolygon=fhex.getDPolygon();
+    Path2D.Double path=new Path2D.Double();
+    double[] p0=new double[2];
+    boolean moved=false;
+    for(DPoint p:dpolygon){
+      p0[0]=p.x;
+      p0[1]=p.y;
+      tpolygon.transform(p0,0,p0,0,1);
+      if(!moved){
+        path.moveTo(p0[0],p0[1]);
+        moved=true;
+      }else{
+        path.lineTo(p0[0],p0[1]);}}
+    path.closePath();
+    return path;}
   
   BufferedImage getScaledAndRotatedImage(double hexradius,double hexforward){
     if(fly==null)initFly();
     int w=fly.getWidth(),h=fly.getHeight();
     double s=(hexradius/w)*FLYSCALE;
     AffineTransform t=AffineTransform.getScaleInstance(s,s);
+    t.rotate(hexforward,w/2,h/2);
     //
     BufferedImage i=new BufferedImage((int)(w*s),(int)(h*s),BufferedImage.TYPE_INT_RGB);
     Graphics2D g=i.createGraphics();
