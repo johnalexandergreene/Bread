@@ -156,23 +156,9 @@ public class Gen extends FCRIG_Basic{
     //forward (flip for cartesian-screen coor conversion)
     double hexforward=GD.normalizeDirection(GD.getDirection_PointPoint(hexcenter[0],hexcenter[1],p0[0],p0[1])+GD.PI);
     //drawfly
-    drawFly(gclean,hexcenter,hexradius,hexforward,fhex);
-    
-    
-    
-//    Path2D.Double zz=new Path2D.Double();
-//    zz.moveTo(hexcenter[0],hexcenter[1]);
-//    zz.lineTo(hexcenter[0],hexcenter[1]);
-//    g0.setStroke(new BasicStroke(12.0f));
-//    g0.setPaint(Color.red);
-//    g0.draw(zz);
-    
-
-    
-    
-  }
+    drawFly(gclean,hexcenter,hexradius,hexforward,fhex);}
   
-  static final double FLYSCALE=1.0;
+  static final double FLYSCALE=1.13;
   
   private void drawFly(Graphics2D g,double[] hexcenter,double hexradius,double hexforward,FPolygon fhex){
     BufferedImage i=getScaledAndRotatedImage(hexradius,hexforward);
@@ -220,7 +206,8 @@ public class Gen extends FCRIG_Basic{
   
   void initFly(){
     try{
-      fly=ImageIO.read(Gen.class.getResource("fly000.png"));
+//      fly=ImageIO.read(Gen.class.getResource("fly000.png"));
+      fly=ImageIO.read(Gen.class.getResource("yellowfly.png"));
     }catch(Exception x){
       System.out.println("COULDN'T LOAD FLY");
       x.printStackTrace();}}
