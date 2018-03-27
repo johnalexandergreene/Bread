@@ -36,7 +36,7 @@ public class FCGen003_SplitBoil_TotalSymmetry implements ForsythiaCompositionGen
    * ################################
    */
   
-  private static final String GRAMMARNAME="hexroot_2018_02_04.grammar";
+  private static final String GRAMMARNAME="hex001.grammar";
   ForsythiaGrammar grammar;
   
   private void initGrammar(){
@@ -56,7 +56,7 @@ public class FCGen003_SplitBoil_TotalSymmetry implements ForsythiaCompositionGen
    */
   
 //  private static final double DETAILLIMIT=0.075;
-  private static final double DETAILLIMIT=0.065;
+  private static final double DETAILLIMIT=0.085;
   
   /*
    * ################################
