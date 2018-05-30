@@ -141,8 +141,8 @@ while(notdone){
   ForsythiaComposition composition;
   
   private void initComposition(){
-//    composition=new TestComposition000();
-    composition=new TestComposition001();
+    composition=new TestComposition000();
+//    composition=new TestComposition001();
     }
   
   /*
