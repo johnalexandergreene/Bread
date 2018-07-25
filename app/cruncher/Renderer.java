@@ -18,7 +18,7 @@ public class Renderer{
     new Color(0,146,232),
     new Color(254,178,213)};
   
-  public static final Color[] GGG=new Color[]{
+  public static final Color[] GRAYSCALE=new Color[]{
       new Color(0,0,0),
       new Color(16,16,16),
       new Color(32,32,32),
@@ -34,6 +34,31 @@ public class Renderer{
       new Color(192,192,192),
       new Color(208,208,208),
       };
+  
+  public static final Color[] RAINBOW=new Color[]{
+      new Color(251,77,77),
+      new Color(251,77,134),
+      new Color(251,77,192),
+      new Color(251,77,249),
+      new Color(192,77,251),
+      new Color(134,77,251),
+      new Color(77,77,251),
+      new Color(77,134,251),
+      new Color(77,192,251),
+      new Color(77,249,251),
+      new Color(77,251,192),
+      new Color(77,251,77),
+      new Color(192,251,77),
+      new Color(249,251,77),
+      new Color(251,192,77),
+      new Color(251,134,77),
+      new Color(251,77,77)
+      };
+  
+  public static final Color[] SHARPIE=new Color[]{
+      new Color(255,255,0),
+      new Color(0,0,0),
+      new Color(255,255,255)};
   
   Cruncher cruncher;
   static final int CELLSPAN=5;
@@ -52,7 +77,7 @@ public class Renderer{
     for(int x=0;x<imagespan;x++){
       for(int y=0;y<imagespan;y++){
         pixelval=cruncher.grid[x/CELLSPAN][y/CELLSPAN];
-        c=GGG[pixelval%GGG.length];
+        c=RAINBOW[pixelval%RAINBOW.length];
         image.setRGB(x,y,c.getRGB());}}
     return image;}
 
