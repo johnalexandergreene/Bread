@@ -60,8 +60,21 @@ public class Renderer{
       new Color(0,0,0),
       new Color(255,255,255)};
   
+  public static final Color[] SHARPIE2=new Color[]{
+      new Color(255,0,0),
+      new Color(255,255,0),
+      new Color(0,255,0),
+      new Color(0,255,255),
+      new Color(0,0,255)};
+  
+  public static final Color[] SHARPIE3=new Color[]{
+      new Color(0,0,0),
+      new Color(212,194,159)};
+  
   Cruncher cruncher;
   static final int CELLSPAN=5;
+  
+  Color[] palette=SHARPIE3;
   
   
   Renderer(Cruncher cruncher){
@@ -77,7 +90,7 @@ public class Renderer{
     for(int x=0;x<imagespan;x++){
       for(int y=0;y<imagespan;y++){
         pixelval=cruncher.grid[x/CELLSPAN][y/CELLSPAN];
-        c=RAINBOW[pixelval%RAINBOW.length];
+        c=palette[pixelval%palette.length];
         image.setRGB(x,y,c.getRGB());}}
     return image;}
 

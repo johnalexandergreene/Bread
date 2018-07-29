@@ -7,14 +7,14 @@ import org.fleen.bread.export.RasterExporter;
 /*
  * 120x120 grid
  */
-public class Cruncher{
+public class Cruncher2{
   
   static final String EXPORTDIR="/home/john/Desktop/newstuff";
   
   UI ui;
   static final int GRIDSPAN=120;//lots of factors
   int incrementindex;
-  static final int DURATION=300;
+  static final int DURATION=500;
       
   static final double SCALE=0.001;
   
@@ -29,7 +29,7 @@ public class Cruncher{
         Thread.sleep(60);
       }catch(Exception x){}
       increment();
-      export();
+//      export();
       ui.repaint();}
     
     
@@ -47,11 +47,10 @@ public class Cruncher{
 //      factor=position*SCALE;
     double 
 //    position=Math.abs(((double)(incrementindex))/((double)DURATION)-0.5)*2.0+TOFFSET,
-      factor=((DURATION-incrementindex))*SCALE;
-//    factor=(incrementindex+TOFFSET)*SCALE;
+      factor=((DURATION-incrementindex)+TOFFSET)*SCALE;
     for(int x=0;x<GRIDSPAN;x++){
       for(int y=0;y<GRIDSPAN;y++){
-        grid[x][y]=(int)(((x^y)*((x*x)&y))*factor);}}}
+        grid[x][y]=(int)(((x^y)*factor));}}}
   
 //  void increment(){
 //    double 

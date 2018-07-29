@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.fc0000_poster_18x30;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0014_poster_18x30_boxy;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -19,7 +19,7 @@ import org.fleen.forsythia.core.composition.ForsythiaComposition;
 public class Gen extends FCRIG_Basic{
 
   public static final Color STROKECOLOR=Color.white;
-  public static final float STROKETHICKNESS=0.009f;
+  public static final float STROKETHICKNESS=0.007f;
   
   protected ForsythiaCompositionGen getComposer(){//TODO ForsythiaCompositionGen?
     ForsythiaCompositionGen c=new Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient();
