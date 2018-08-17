@@ -9,12 +9,17 @@ public class Palette{
    * down palette. rich, earthy
    * beth dislikes it
    */
-  static final Color[] P_THOUGHT_PROVOKING=new Color[]{
+  public static final Color[] P_THOUGHT_PROVOKING=new Color[]{
       new Color(236,208,120),
       new Color(217,91,67),
       new Color(192,41,66),
       new Color(84,36,55),
       new Color(83,119,122),
+    };
+  
+  public static final Color[] P_BW=new Color[]{
+      new Color(0,0,0),
+      new Color(255,255,255),
     };
 
   /*
@@ -22,7 +27,7 @@ public class Palette{
    * really juicy, bright, candy. 
    * Beth gives it a big thumbs up.
    */
-  static final Color[] P_WANDERLUST_GLAMPING=new Color[]{
+  public static final Color[] P_WANDERLUST_GLAMPING=new Color[]{
     new Color(1,24,107),
     new Color(64,203,200),
     new Color(203,54,166),

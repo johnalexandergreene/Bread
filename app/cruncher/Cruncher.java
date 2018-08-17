@@ -16,9 +16,9 @@ public class Cruncher{
   int incrementindex;
   static final int DURATION=300;
       
-  static final double SCALE=0.001;
+  static final double SCALE=0.1;
   
-  static final int TOFFSET=10000;
+  static final int TOFFSET=0;
   
   int[][] grid=new int[GRIDSPAN][GRIDSPAN];
   
@@ -29,7 +29,7 @@ public class Cruncher{
         Thread.sleep(60);
       }catch(Exception x){}
       increment();
-      export();
+//      export();
       ui.repaint();}
     
     
@@ -42,16 +42,22 @@ public class Cruncher{
     exporter.export(ui.renderer.getImage());}
 
   void increment(){
-//    double 
-//      position=Math.abs(((double)(incrementindex))/((double)DURATION)-0.5)*2.0+TOFFSET,
-//      factor=position*SCALE;
-    double 
-//    position=Math.abs(((double)(incrementindex))/((double)DURATION)-0.5)*2.0+TOFFSET,
-      factor=((DURATION-incrementindex))*SCALE;
-//    factor=(incrementindex+TOFFSET)*SCALE;
+    double factor=(incrementindex+TOFFSET)*SCALE;
     for(int x=0;x<GRIDSPAN;x++){
       for(int y=0;y<GRIDSPAN;y++){
-        grid[x][y]=(int)(((x^y)*((x*x)&y))*factor);}}}
+        grid[x][y]=(int)((x|y)*(x&y)*factor);}}}
+  
+//  void increment(){
+////    double 
+////      position=Math.abs(((double)(incrementindex))/((double)DURATION)-0.5)*2.0+TOFFSET,
+////      factor=position*SCALE;
+//    double 
+////    position=Math.abs(((double)(incrementindex))/((double)DURATION)-0.5)*2.0+TOFFSET,
+//      factor=((DURATION-incrementindex))*SCALE;
+////    factor=(incrementindex+TOFFSET)*SCALE;
+//    for(int x=0;x<GRIDSPAN;x++){
+//      for(int y=0;y<GRIDSPAN;y++){
+//        grid[x][y]=(int)(((x^y)*((x*x)&y))*factor);}}}
   
 //  void increment(){
 //    double 

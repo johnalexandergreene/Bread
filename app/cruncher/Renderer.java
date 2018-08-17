@@ -74,7 +74,7 @@ public class Renderer{
   Cruncher cruncher;
   static final int CELLSPAN=5;
   
-  Color[] palette=SHARPIE3;
+  Color[] palette=SHARPIE;
   
   
   Renderer(Cruncher cruncher){
@@ -90,6 +90,7 @@ public class Renderer{
     for(int x=0;x<imagespan;x++){
       for(int y=0;y<imagespan;y++){
         pixelval=cruncher.grid[x/CELLSPAN][y/CELLSPAN];
+        pixelval=Math.abs(pixelval);
         c=palette[pixelval%palette.length];
         image.setRGB(x,y,c.getRGB());}}
     return image;}
