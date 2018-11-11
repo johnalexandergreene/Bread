@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.fc0009_priscilla_2018_04_13;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0016_poster_18x30_BW_slightlycoarser;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -18,26 +18,18 @@ import org.fleen.forsythia.core.composition.ForsythiaComposition;
 
 public class Gen extends FCRIG_Basic{
 
-  static final Color[] PALETTE={
-      new Color(125,47,97),
-      new Color(76,143,185),
-      new Color(142,41,21),
-//      new Color(175,178,183),
-      new Color(123,146,38),
-//      new Color(90,104,42),
-      new Color(199,166,13)
-  };
-  
-  public static final Color STROKECOLOR=Color.white;
-  public static final float STROKETHICKNESS=0.012f;
+  public static final Color STROKECOLOR=new Color(128,128,128);
+  public static final float STROKETHICKNESS=0.003f;
   
   protected ForsythiaCompositionGen getComposer(){//TODO ForsythiaCompositionGen?
     ForsythiaCompositionGen c=new Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient();
     return c;}
 
   protected ColorMapGen getColorMapper(){//TODO ColorMapGen?
-    ColorMapGen m=new CM_SymmetricChaos_EggLevelTriplePaletteSplit();
-    m.setPalette(PALETTE);
+    ColorMapGen m=new CM_SymmetricChaos_EggLevelBW();
+    m.setPalette(Palette.P_BW);
+//    m.setPalette(Palette.P_PORCO_ROSSO_TRIPLESPLIT);
+    
     return m;}
   
   public static final HashMap<RenderingHints.Key,Object> RENDERING_HINTS=

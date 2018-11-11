@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.fc0009_priscilla_2018_04_13;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0017_poster_18x30_hexmandala;
 
 import java.awt.geom.Rectangle2D;
 import java.io.InputStream;
@@ -40,7 +40,7 @@ public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradien
    * ################################
    */
   
-  private static final String GRAMMARNAME="b.grammar";
+  private static final String GRAMMARNAME="hm004.grammar";
   ForsythiaGrammar grammar;
   
   private void initGrammar(){
@@ -60,7 +60,7 @@ public class Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradien
    * ################################
    */
   
-  private static final double DETAILLIMIT=0.06;
+  private static final double DETAILLIMIT=0.023;
   
   /*
    * ################################

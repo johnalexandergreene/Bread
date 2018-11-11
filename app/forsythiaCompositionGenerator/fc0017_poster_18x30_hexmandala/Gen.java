@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.fc0015_poster_18x30_BW;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0017_poster_18x30_hexmandala;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -18,16 +18,16 @@ import org.fleen.forsythia.core.composition.ForsythiaComposition;
 
 public class Gen extends FCRIG_Basic{
 
-  public static final Color STROKECOLOR=new Color(128,128,128);
-  public static final float STROKETHICKNESS=0.002f;
+  public static final Color STROKECOLOR=Color.white;
+  public static final float STROKETHICKNESS=0.009f;
   
   protected ForsythiaCompositionGen getComposer(){//TODO ForsythiaCompositionGen?
     ForsythiaCompositionGen c=new Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient();
     return c;}
 
   protected ColorMapGen getColorMapper(){//TODO ColorMapGen?
-    ColorMapGen m=new CM_SymmetricChaos_EggLevelBW();
-    m.setPalette(Palette.P_BW);
+    ColorMapGen m=new CM_SymmetricChaos_EggLevelTriplePaletteSplit();
+    m.setPalette(Palette.P_GRACIE001);
 //    m.setPalette(Palette.P_PORCO_ROSSO_TRIPLESPLIT);
     
     return m;}

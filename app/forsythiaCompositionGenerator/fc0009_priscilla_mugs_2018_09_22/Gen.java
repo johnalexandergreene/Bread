@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.fc0015_poster_18x30_BW;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0009_priscilla_mugs_2018_09_22;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -18,18 +18,60 @@ import org.fleen.forsythia.core.composition.ForsythiaComposition;
 
 public class Gen extends FCRIG_Basic{
 
-  public static final Color STROKECOLOR=new Color(128,128,128);
-  public static final float STROKETHICKNESS=0.002f;
+  //VERY PURPLE
+  static final Color[] PALETTE0={
+      new Color(82, 43,114),
+      new Color(148,118,171),
+      new Color(113, 76,143),
+      new Color(56, 19, 86),
+      new Color(33,  4, 57),
+      new Color(254,102,238)//ACCENT
+  };
+  
+  //LIGHT PURPLE
+  static final Color[] PALETTE1={
+      new Color(152,123,180),
+      new Color(210,196,224),
+      new Color(182,160,204),
+      new Color(125, 92,160),
+      new Color(102, 64,140),
+      new Color(255,169,105)//ACCENT
+  };
+  
+  //LIGHT LAVENDER
+  static final Color[] PALETTE2={
+      new Color(141,128,183),
+      new Color(205,199,225),
+      new Color(174,164,206),
+      new Color(112, 96,163),
+      new Color( 86, 69,142),
+      new Color(128,128,255)//ACCENT
+  };
+  
+  //UNNAMED
+  static final Color[] PALETTE3={
+      new Color( 58, 50,118),
+      new Color(132,126,177),
+      new Color( 91, 83,147),
+      new Color( 32, 24, 88),
+      new Color( 14,  8, 59),
+      new Color(128,255,128)//ACCENT
+  };
+  
+  
+  static Color[] PALETTE=PALETTE3;
+  
+  
+  public static final Color STROKECOLOR=Color.white;
+  public static final float STROKETHICKNESS=0.02f;
   
   protected ForsythiaCompositionGen getComposer(){//TODO ForsythiaCompositionGen?
     ForsythiaCompositionGen c=new Composer003_SplitBoil_DoubleRootEntropy_YAxisDistanceEntropyGradient();
     return c;}
 
   protected ColorMapGen getColorMapper(){//TODO ColorMapGen?
-    ColorMapGen m=new CM_SymmetricChaos_EggLevelBW();
-    m.setPalette(Palette.P_BW);
-//    m.setPalette(Palette.P_PORCO_ROSSO_TRIPLESPLIT);
-    
+    ColorMapGen m=new CM_SymmetricChaos_EggLevelTriplePaletteSplit();
+    m.setPalette(PALETTE);
     return m;}
   
   public static final HashMap<RenderingHints.Key,Object> RENDERING_HINTS=

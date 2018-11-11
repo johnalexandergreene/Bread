@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.fc0009_priscilla_2018_04_13;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0009_priscilla_mugs_2018_09_22;
 
 import org.fleen.bread.app.forsythiaCompositionGenerator.head_Single.Head_Single;
 
@@ -6,9 +6,9 @@ public class Head extends Head_Single{
   
   static final String EXPORTDIR="/home/john/Desktop/newstuff";
   static final int 
-  EXPORTIMAGEWIDTH=3000,
-  EXPORTIMAGEHEIGHT=2250,
-  BORDERTHICKNESS=32;
+  EXPORTIMAGEWIDTH=1050,
+  EXPORTIMAGEHEIGHT=2403,
+  BORDERTHICKNESS=8;
   
   Head(Gen g){
     super(g);

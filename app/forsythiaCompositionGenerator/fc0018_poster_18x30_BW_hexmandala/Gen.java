@@ -1,4 +1,4 @@
-package org.fleen.bread.app.forsythiaCompositionGenerator.fc0015_poster_18x30_BW;
+package org.fleen.bread.app.forsythiaCompositionGenerator.fc0018_poster_18x30_BW_hexmandala;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

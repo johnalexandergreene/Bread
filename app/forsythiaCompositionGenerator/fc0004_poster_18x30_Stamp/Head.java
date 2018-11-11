@@ -40,8 +40,10 @@ public class Head extends Head_Single{
   
   static final String EXPORTDIR="/home/john/Desktop/newstuff";
   static final int 
-  EXPORTIMAGEWIDTH=9095,
-  EXPORTIMAGEHEIGHT=5274,
+//  EXPORTIMAGEWIDTH=9095,
+//  EXPORTIMAGEHEIGHT=5274,
+  EXPORTIMAGEWIDTH=2000,
+  EXPORTIMAGEHEIGHT=1000,
   BORDERTHICKNESS=32;
   
   Head(Gen g){
