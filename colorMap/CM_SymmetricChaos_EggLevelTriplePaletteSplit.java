@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.fleen.forsythia.app.compositionGenerator.colorMap.CM_SymmetricChaos_EggLevelTriplePaletteSplit;
+import org.fleen.forsythia.app.compositionGenerator.colorMap.ColorMap;
+import org.fleen.forsythia.app.compositionGenerator.colorMap.ColorMapGen;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.FPolygonSignature;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;

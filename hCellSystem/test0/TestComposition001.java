@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
-import org.fleen.bread.composer.ForsythiaCompositionGen;
-import org.fleen.bread.composer.Composer001_SplitBoil;
+import org.fleen.forsythia.app.compositionGenerator.composer.Composer001_SplitBoil;
+import org.fleen.forsythia.app.compositionGenerator.composer.ForsythiaCompositionGen;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.FMetagon;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;

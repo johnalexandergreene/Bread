@@ -3,10 +3,10 @@ package org.fleen.bread.app.longGarden.stripeChain;
 import java.util.List;
 import java.util.Random;
 
-import org.fleen.bread.colorMap.CM_SymmetricChaos_EggLevelDoublePaletteSplit;
-import org.fleen.bread.colorMap.ColorMap;
-import org.fleen.bread.composer.ForsythiaCompositionGen;
-import org.fleen.bread.composer.Composer002_SplitBoil_DoubleRootEntropy;
+import org.fleen.forsythia.app.compositionGenerator.colorMap.CM_SymmetricChaos_EggLevelDoublePaletteSplit;
+import org.fleen.forsythia.app.compositionGenerator.colorMap.ColorMap;
+import org.fleen.forsythia.app.compositionGenerator.composer.Composer002_SplitBoil_DoubleRootEntropy;
+import org.fleen.forsythia.app.compositionGenerator.composer.ForsythiaCompositionGen;
 import org.fleen.forsythia.core.composition.FGridRoot;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;

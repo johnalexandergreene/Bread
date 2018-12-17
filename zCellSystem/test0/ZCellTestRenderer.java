@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.fleen.bread.palette.Palette;
 import org.fleen.bread.zCellSystem.ZCSMT_FPolygonArea;
 import org.fleen.bread.zCellSystem.ZCSMT_FPolygonBoiledEdge;
 import org.fleen.bread.zCellSystem.ZCSMappedThing;
 import org.fleen.bread.zCellSystem.ZCSMappedThingPresence;
 import org.fleen.bread.zCellSystem.ZCell;
 import org.fleen.bread.zCellSystem.ZCellSystem;
+import org.fleen.forsythia.app.compositionGenerator.Palette;
 import org.fleen.forsythia.core.composition.FPolygonSignature;
 
 /*

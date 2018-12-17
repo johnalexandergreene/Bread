@@ -14,10 +14,10 @@ import java.util.Random;
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain.Stripe;
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain.StripeChain;
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.ui.UI;
-import org.fleen.bread.composer.ForsythiaCompositionGen;
-import org.fleen.bread.composer.Composer002_SplitBoil_DoubleRootEntropy;
-import org.fleen.bread.export.RasterExporter;
-import org.fleen.bread.palette.Palette;
+import org.fleen.forsythia.app.compositionGenerator.Palette;
+import org.fleen.forsythia.app.compositionGenerator.RasterExporter;
+import org.fleen.forsythia.app.compositionGenerator.composer.Composer002_SplitBoil_DoubleRootEntropy;
+import org.fleen.forsythia.app.compositionGenerator.composer.ForsythiaCompositionGen;
 import org.fleen.forsythia.core.grammar.FMetagon;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 

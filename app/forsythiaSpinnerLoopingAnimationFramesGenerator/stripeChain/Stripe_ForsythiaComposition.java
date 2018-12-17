@@ -3,8 +3,8 @@ package org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stri
 import java.util.List;
 import java.util.Random;
 
-import org.fleen.bread.colorMap.ColorMap;
-import org.fleen.bread.colorMap.CM_SymmetricChaos_EggLevelDoublePaletteSplit;
+import org.fleen.forsythia.app.compositionGenerator.colorMap.CM_SymmetricChaos_EggLevelDoublePaletteSplit;
+import org.fleen.forsythia.app.compositionGenerator.colorMap.ColorMap;
 import org.fleen.forsythia.core.composition.FGridRoot;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;

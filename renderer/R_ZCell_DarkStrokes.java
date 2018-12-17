@@ -5,10 +5,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import org.fleen.bread.colorMap.ColorMap;
 import org.fleen.bread.zCellSystem.ZCSMappedThingPresence;
 import org.fleen.bread.zCellSystem.ZCell;
 import org.fleen.bread.zCellSystem.ZCellSystem;
+import org.fleen.forsythia.app.compositionGenerator.colorMap.ColorMap;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 

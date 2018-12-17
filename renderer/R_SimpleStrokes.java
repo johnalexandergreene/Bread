@@ -9,7 +9,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-import org.fleen.bread.colorMap.ColorMap;
+import org.fleen.forsythia.app.compositionGenerator.colorMap.ColorMap;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 

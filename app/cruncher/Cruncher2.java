@@ -2,7 +2,7 @@ package org.fleen.bread.app.cruncher;
 
 import java.io.File;
 
-import org.fleen.bread.export.RasterExporter;
+import org.fleen.forsythia.app.compositionGenerator.RasterExporter;
 
 /*
  * 120x120 grid

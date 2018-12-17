@@ -11,7 +11,7 @@ import java.util.Random;
 
 import org.fleen.bread.hCellSystem.HCell;
 import org.fleen.bread.hCellSystem.HCellSystem;
-import org.fleen.bread.palette.Palette;
+import org.fleen.forsythia.app.compositionGenerator.Palette;
 
 /*
  * convert each cell to a pixel
