@@ -19,14 +19,12 @@ public class TestComposition000 extends ForsythiaComposition{
     initGrammar();
     FMetagon rm=gleanRootMetagon(grammar);
     initTree(rm);
-    Jig j=grammar.getJigs(rm).get(0);
+    Jig j=grammar.getRandomJig(rm,null,100);
     j.createNodes(getRootPolygon());}
   
   private FMetagon gleanRootMetagon(ForsythiaGrammar grammar){
-    for(FMetagon m:grammar.getMetagons()){
-      if(m.hasTags("root"))
-        return m;}
-    throw new IllegalArgumentException("exception in root metagon acquirement");}
+    FMetagon m=grammar.getRandomMetagon(new String[]{"root"});
+    return m;}
   
   private void initGrammar(){
     File file=new File(GRAMMARPATH);

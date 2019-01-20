@@ -88,5 +88,14 @@ public class HCSMappedThing implements Tagged{
   
   public void removeTags(List<String> tags){
     tagmanager.removeTags(tags);}
+
+  public boolean hasTag(String tag){
+    return tagmanager.hasTag(tag);}
+
+  public void addTag(String tag){
+    tagmanager.addTags(tag);}
+
+  public void removeTag(String tag){
+    tagmanager.removeTags(tag);}
   
 }
