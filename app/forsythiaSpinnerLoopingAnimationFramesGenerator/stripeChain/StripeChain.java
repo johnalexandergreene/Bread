@@ -13,7 +13,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.FSLAFGenerator;
+import org.fleen.forsythia.app.spinner.core.SpinnerOLD;
+import org.fleen.forsythia.app.spinner.core.Stripe;
+import org.fleen.forsythia.app.spinner.core.Stripe_ForsythiaComposition;
+import org.fleen.forsythia.app.spinner.core.Stripe_Header;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.util.tree.TreeNode;
 
@@ -29,10 +32,10 @@ public class StripeChain extends LinkedList<Stripe>{
    * ################################
    */
   
-  public StripeChain(FSLAFGenerator generator){
+  public StripeChain(SpinnerOLD generator){
     this.generator=generator;}
   
-  public StripeChain(FSLAFGenerator generator,List<Stripe> stripes){
+  public StripeChain(SpinnerOLD generator,List<Stripe> stripes){
     this(generator);
     addAll(stripes);}
   
@@ -44,7 +47,7 @@ public class StripeChain extends LinkedList<Stripe>{
    * ################################
    */
   
-  public FSLAFGenerator generator;
+  public SpinnerOLD generator;
   
   /*
    * ################################
@@ -62,7 +65,7 @@ public class StripeChain extends LinkedList<Stripe>{
   public void addInsertStripe(String path){
     if(path==null)return;
     invalidateImage();
-    Stripe s=new Stripe_Insert(this,path);
+    Stripe s=new Stripe_Header(this,path);
     generator.stripewidthsum+=s.getImageWidth();
     add(s);}
   
@@ -296,10 +299,10 @@ public class StripeChain extends LinkedList<Stripe>{
   
   private void renderInsert(Graphics2D g){
     for(Stripe stripe:this)
-      if(stripe instanceof Stripe_Insert)
-        renderInsert(g,(Stripe_Insert)stripe);}
+      if(stripe instanceof Stripe_Header)
+        renderInsert(g,(Stripe_Header)stripe);}
   
-  private void renderInsert(Graphics2D g,Stripe_Insert stripe){
+  private void renderInsert(Graphics2D g,Stripe_Header stripe){
     AffineTransform t=AffineTransform.getTranslateInstance(stripe.getImageX(),0);
     g.drawImage(stripe.image,t,null);}
   

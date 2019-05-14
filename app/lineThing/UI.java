@@ -1,4 +1,4 @@
-package org.fleen.bread.fuh;
+package org.fleen.bread.app.lineThing;
 
 import javax.swing.JFrame;
 

@@ -5,6 +5,8 @@ import java.util.Random;
 
 import org.fleen.forsythia.app.compositionGenerator.colorMap.CM_SymmetricChaos_EggLevelDoublePaletteSplit;
 import org.fleen.forsythia.app.compositionGenerator.colorMap.ColorMap;
+import org.fleen.forsythia.app.spinner.core.Stripe;
+import org.fleen.forsythia.app.spinner.core.StripeChainWithMovingViewport;
 import org.fleen.forsythia.core.composition.FGridRoot;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
@@ -26,7 +28,7 @@ public class Stripe_ForsythiaComposition implements Stripe{
    * ################################
    */
   
-  public Stripe_ForsythiaComposition(StripeChain chain){
+  public Stripe_ForsythiaComposition(StripeChainWithMovingViewport chain){
     this.chain=chain;
     initComposition();
     initColorMap();}
@@ -38,7 +40,7 @@ public class Stripe_ForsythiaComposition implements Stripe{
    * ################################
    */
   
-  StripeChain chain;
+  StripeChainWithMovingViewport chain;
   
   /*
    * ################################

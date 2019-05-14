@@ -6,12 +6,15 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.fleen.forsythia.app.spinner.core.Stripe;
+import org.fleen.forsythia.app.spinner.core.StripeChainWithMovingViewport;
+
 /*
  * load an appropriately sized and oriented image from a PNG file and use it for a stripe
  */
 public class Stripe_Insert implements Stripe{
   
-  public Stripe_Insert(StripeChain chain,String path){
+  public Stripe_Insert(StripeChainWithMovingViewport chain,String path){
     this.chain=chain;
     initImage(path);}
 
@@ -21,7 +24,7 @@ public class Stripe_Insert implements Stripe{
    * ################################
    */
   
-  StripeChain chain;
+  StripeChainWithMovingViewport chain;
   
   /*
    * ################################

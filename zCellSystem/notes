@@ -1,0 +1,14 @@
+ZCELLSYSTEM
+
+It's a system of cells.
+each cell can hold an arbitrary number of presences, each with an arbitrary intensity level
+presence is the presence of a polygon. Where is the polygon relative to the cell.
+A presence object has 
+  a polygon (the polygon that is present)
+  a value in range [0,1] (how present) 
+
+If the cell is well inside the polygon then that polygon has presence=1 for that cell
+If the cell is well outside the polygon, presence=0? 
+Near the edge but inside : 0<presence<0.5
+
+ 

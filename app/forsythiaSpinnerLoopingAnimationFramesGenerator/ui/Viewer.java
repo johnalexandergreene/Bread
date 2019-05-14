@@ -8,14 +8,14 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.JPanel;
 
-import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.FSLAFGenerator;
+import org.fleen.forsythia.app.spinner.core.SpinnerOLD;
 
 @SuppressWarnings("serial")
 public class Viewer extends JPanel{
   
-  FSLAFGenerator gen;
+  SpinnerOLD gen;
   
-  public Viewer(FSLAFGenerator gen){
+  public Viewer(SpinnerOLD gen){
     this.gen=gen;}
   
   private static final AffineTransform NICEOFFSET=AffineTransform.getTranslateInstance(700,10);
@@ -25,9 +25,9 @@ public class Viewer extends JPanel{
     if(gen==null||gen.frame==null)return;
     Graphics2D g2=(Graphics2D)g;
     //
-    if(FSLAFGenerator.TEST)paintChainForTest(g2);
+    if(SpinnerOLD.TEST)paintChainForTest(g2);
     g2.drawImage(gen.frame,NICEOFFSET,null);
-    if(FSLAFGenerator.TEST)paintFrameForTest(g2);
+    if(SpinnerOLD.TEST)paintFrameForTest(g2);
     }
   
   private void paintChainForTest(Graphics2D g){

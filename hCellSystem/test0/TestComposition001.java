@@ -13,7 +13,7 @@ import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 @SuppressWarnings("serial")
 public class TestComposition001 extends ForsythiaComposition{
   
-  static final String GRAMMARNAME="a000.grammar";
+  static final String GRAMMARNAME="a011.grammar";
   
   static final double DETAILLIMIT=0.1;
   

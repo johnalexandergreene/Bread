@@ -39,9 +39,9 @@ public class HCellTestRenderer{
     RENDERING_HINTS.put(
       RenderingHints.KEY_STROKE_CONTROL,RenderingHints.VALUE_STROKE_PURE);}
   
-  HCellTest test;
+  HCellTest_ForsythiaThing test;
   
-  public HCellTestRenderer(HCellTest test){
+  public HCellTestRenderer(HCellTest_ForsythiaThing test){
     this.test=test;}
   
   /*

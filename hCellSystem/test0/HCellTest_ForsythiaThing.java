@@ -15,7 +15,7 @@ import org.fleen.bread.hCellSystem.Rule;
 import org.fleen.forsythia.core.composition.FPolygon;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 
-public class HCellTest{
+public class HCellTest_ForsythiaThing{
 
   /*
    * ################################
@@ -56,7 +56,7 @@ while(notdone){
   flipflop=!flipflop;
    */
   
-  HCellTest(){
+  HCellTest_ForsythiaThing(){
     initUI();
     initRenderer();
     //
@@ -245,7 +245,7 @@ while(notdone){
    */
   
   public static final void main(String[] a){
-    HCellTest t=new HCellTest();
+    HCellTest_ForsythiaThing t=new HCellTest_ForsythiaThing();
     t.run();}
   
 }

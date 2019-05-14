@@ -1,4 +1,4 @@
-package org.fleen.bread.fuh;
+package org.fleen.bread.app.cellMovementTest;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

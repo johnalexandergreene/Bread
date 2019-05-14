@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.FMetagon;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
-import org.fleen.forsythia.core.grammar.Jig;
+import org.fleen.forsythia.core.grammar.FJig;
 
 @SuppressWarnings("serial")
 public class TestComposition000 extends ForsythiaComposition{
@@ -19,7 +19,7 @@ public class TestComposition000 extends ForsythiaComposition{
     initGrammar();
     FMetagon rm=gleanRootMetagon(grammar);
     initTree(rm);
-    Jig j=grammar.getRandomJig(rm,null,100);
+    FJig j=grammar.getRandomJig(rm,null,100);
     j.createNodes(getRootPolygon());}
   
   private FMetagon gleanRootMetagon(ForsythiaGrammar grammar){

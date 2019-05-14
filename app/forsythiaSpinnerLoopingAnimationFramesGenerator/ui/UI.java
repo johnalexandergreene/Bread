@@ -4,13 +4,13 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.FSLAFGenerator;
+import org.fleen.forsythia.app.spinner.core.SpinnerOLD;
 
 public class UI extends JFrame {
 
 	private static final long serialVersionUID = -2749846443106819716L;
 	
-	FSLAFGenerator generator;
+	SpinnerOLD generator;
   public Viewer viewer;
 
 	public static void main(String[] args) {
@@ -26,7 +26,7 @@ public class UI extends JFrame {
 		});
 	}
 
-	public UI(FSLAFGenerator generator){
+	public UI(SpinnerOLD generator){
 	  this.generator=generator;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		setExtendedState(MAXIMIZED_BOTH);

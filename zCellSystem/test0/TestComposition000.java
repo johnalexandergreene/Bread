@@ -7,12 +7,14 @@ import java.io.ObjectInputStream;
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.FMetagon;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
-import org.fleen.forsythia.core.grammar.Jig;
+import org.fleen.forsythia.core.grammar.FJig;
 
 @SuppressWarnings("serial")
 public class TestComposition000 extends ForsythiaComposition{
   
   static final String GRAMMARPATH="/home/john/Desktop/grammars/rdtest.grammar";
+  
+  static final String GRAMMARPATH000="/home/john/projects/code/Forsythia/src/org/fleen/forsythia/grammars/a011.grammar";
   
   public TestComposition000(){
     super();
@@ -20,7 +22,7 @@ public class TestComposition000 extends ForsythiaComposition{
     initGrammar();
     FMetagon rm=gleanRootMetagon(grammar);
     initTree(rm);
-    Jig j=grammar.getJigs(rm).get(0);
+    FJig j=grammar.getJigs(rm).get(0);
     j.createNodes(getRootPolygon());
     System.out.println("polygoncount="+getPolygons().size());}
   
@@ -31,7 +33,7 @@ public class TestComposition000 extends ForsythiaComposition{
     throw new IllegalArgumentException("exception is root metagon acquirement");}
   
   private void initGrammar(){
-    File file=new File(GRAMMARPATH);
+    File file=new File(GRAMMARPATH000);
     FileInputStream fis;
     ObjectInputStream ois;
     ForsythiaGrammar g=null;

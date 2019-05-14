@@ -11,13 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain.Stripe;
-import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.stripeChain.StripeChain;
 import org.fleen.bread.app.forsythiaSpinnerLoopingAnimationFramesGenerator.ui.UI;
 import org.fleen.forsythia.app.compositionGenerator.Palette;
 import org.fleen.forsythia.app.compositionGenerator.RasterExporter;
 import org.fleen.forsythia.app.compositionGenerator.composer.Composer002_SplitBoil_DoubleRootEntropy;
 import org.fleen.forsythia.app.compositionGenerator.composer.ForsythiaCompositionGen;
+import org.fleen.forsythia.app.spinner.core.SpinnerOLD;
+import org.fleen.forsythia.app.spinner.core.Stripe;
+import org.fleen.forsythia.app.spinner.core.StripeChainWithMovingViewport;
 import org.fleen.forsythia.core.grammar.FMetagon;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
 
@@ -90,7 +91,7 @@ public class FSLAFGenerator{
    * ################################
    */
   
-  public StripeChain chain;
+  public StripeChainWithMovingViewport chain;
   
   /*
    * terminus is a strip of stripes comprising the start and end of our loop
@@ -101,7 +102,7 @@ public class FSLAFGenerator{
   
   private void initChain(){
     //create the chain
-    chain=new StripeChain(this);
+    chain=new StripeChainWithMovingViewport(this);
     chain.addRandomForsythiaCompositionStripeToEnd();//add a composition stripe
     chain.addInsertStripe(insertpath);//add an insert stripe
     while(chain.getImageWidth()<=viewportwidth+edgerange+edgerange)

@@ -9,7 +9,7 @@ import org.fleen.forsythia.app.compositionGenerator.composer.ForsythiaCompositio
 import org.fleen.forsythia.core.composition.ForsythiaComposition;
 import org.fleen.forsythia.core.grammar.FMetagon;
 import org.fleen.forsythia.core.grammar.ForsythiaGrammar;
-import org.fleen.forsythia.core.grammar.Jig;
+import org.fleen.forsythia.core.grammar.FJig;
 
 @SuppressWarnings("serial")
 public class TestComposition001 extends ForsythiaComposition{
