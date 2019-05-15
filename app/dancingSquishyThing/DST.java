@@ -117,30 +117,30 @@ public class DST{
       cell=cellfield[x][y],
       live=getLive(x,y);
     if(cell==DEAD){
-      if(live>3)
+      if(live>4)
         return LIVE;
       else
         return DEAD;
     }else{//cell==LIVE
-      if(live>6)
-        return DEAD;
+      if(live>0&&live<8)
+        return LIVE;
       else
-        return LIVE;}}
+        return DEAD;}}
   
   int doRule1(int x,int y){
     int 
       cell=cellfield[x][y],
       live=getLive(x,y);
     if(cell==DEAD){
-      if(live>2)
+      if(live>2&&live<7)
         return LIVE;
       else
         return DEAD;
     }else{//cell==LIVE
-      if(live>7)
-        return DEAD;
+      if(live>2&&live<8)
+        return LIVE;
       else
-        return LIVE;}}
+        return DEAD;}}
   
 
   

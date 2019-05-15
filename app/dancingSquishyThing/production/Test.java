@@ -64,8 +64,15 @@ public class Test{
   
   public static final void main(String[] a){
     Test test=new Test();
-    for(int i=0;i<100;i++){
+    int k;
+    for(int i=0;i<300;i++){
       test.dst.advanceState();
+      k=i%70;
+      if(k>35){
+        test.dst.radius++;
+      }else{
+        test.dst.radius--;
+      }
 //      System.out.println("DANCING SQUISHY THING : "+test.dst);
      try{
       Thread.sleep(100);
