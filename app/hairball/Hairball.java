@@ -1,6 +1,7 @@
 package org.fleen.bread.app.hairball;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -30,15 +31,64 @@ public class Hairball{
   Cell reference;
   
   //chain init is a circle of cells
-  static final int INITCHAINCELLCOUNT=100;
-  static final double INITCHAINRADIUS=20;
+  static final int INITCHAINCELLCOUNT=99;
+  static final double INITCHAINRADIUS=222;
   
   private void initChain(){
+    double
+      dir,
+      dirincrement=GD.PI2/INITCHAINCELLCOUNT;
+    double[] p;
+    Cell c,cprior=null;
     for(int i=0;i<INITCHAINCELLCOUNT;i++){
-      
-    }
+      dir=i*dirincrement;
+      p=GD.getPoint_PointDirectionInterval(0,0,dir,INITCHAINRADIUS);
+      c=new Cell(p);
+      if(i==0){
+        reference=c;
+      }else if(i<(INITCHAINCELLCOUNT-1)){
+        cprior.n1=c;
+        c.n0=cprior;
+      }else{
+        cprior.n1=c;
+        c.n0=cprior;
+        c.n1=reference;
+        reference.n0=c;}
+      cprior=c;}
+    System.out.println("CHAIN INITITIALIZED");
+    System.out.println("chain size = "+getChainSize());}
+  
+  public int getChainSize(){
+    Iterator<Cell> i=getCellIterator();
+    int a=0;
+    while(i.hasNext()){
+      i.next();
+      a++;}
+    return a;}
+  
+  public Iterator<Cell> getCellIterator(){
+    return new CellIterator();}
+  
+  class CellIterator implements Iterator<Cell>{
     
-  }
+    boolean hasiterated=false;
+    Cell present=reference;
+
+    public boolean hasNext(){
+      if(present.n0==present||present.n1==present)
+        throw new IllegalArgumentException("DEGENERATE!");
+      //
+      return !(hasiterated&&(present.n1==reference));}
+
+    public Cell next(){
+      if(!hasiterated){
+        hasiterated=true;
+        return present;
+      }else{
+        present=present.n1;
+        return present;}}
+
+    public void remove(){}}
   
   /*
    * ################################
@@ -59,7 +109,79 @@ public class Hairball{
    * ################################
    */
   
-  void runAutomaton(){}
+  /*
+   * randomly move a cell relative to its neighbors to make a kink or unkink
+   * 
+   * then
+   * 
+   * check distance between cells
+   * if the distance between 2 cells is too large, create a new cell between them
+   * if a cell's neighbors are too close, center it or remove it.
+   * if we remove a cell and that cell is the reference, get its neighor for a new reference 
+   */
+  void runAutomaton(){
+    randomKink();
+    fillGaps();
+    
+    
+    
+  }
+  
+  void randomKink(){
+    List<double[]> newlocations=new ArrayList<double[]>();
+    Iterator<Cell> i=getCellIterator();
+    Cell c;
+    while(i.hasNext()){
+      c=i.next();
+      newlocations.add(getNewLocation(c));}
+    //
+    i=getCellIterator();
+    int a=0;
+    while(i.hasNext()){
+      c=i.next();
+      c.setLocation(newlocations.get(a));
+      a++;}}
+  
+  Random rnd=new Random();
+  
+  static final double KINKFACTOR0=0.3,KINKFACTOR1=0.9;
+  
+  double[] getNewLocation(Cell c){
+    double dir=GD.getDirection_PointPoint(c.n0.x,c.n0.y,c.n1.x,c.n1.y);
+    if(rnd.nextBoolean())
+      dir=GD.normalizeDirection(dir+GD.HALFPI);
+    else
+      dir=GD.normalizeDirection(dir-GD.HALFPI);
+    double dis=GD.getDistance_PointPoint(c.n0.x,c.n0.y,c.n1.x,c.n1.y);
+    double f=rnd.nextDouble()*(KINKFACTOR1-KINKFACTOR0)+KINKFACTOR0;
+    dis*=f;
+    double[] l=GD.getPoint_PointDirectionInterval(c.x,c.y,dir,dis);
+    return l;}
+  
+  static final double MINGAP=44;
+  
+  void fillGaps(){
+    Iterator<Cell> i=getCellIterator();
+    List<Cell> needfill=new ArrayList<Cell>();
+    Cell c;
+    double dis;
+    while(i.hasNext()){
+      c=i.next();
+      dis=GD.getDistance_PointPoint(c.x,c.y,c.n1.x,c.n1.y);
+      if(dis>MINGAP)
+        needfill.add(c);}
+    //
+    for(Cell a:needfill)
+      fillGap(a);}
+  
+  void fillGap(Cell c){
+    double[] a=GD.getPoint_Mid2Points(c.x,c.y,c.n1.x,c.n1.y);
+    Cell b=new Cell(a),d;
+    d=c.n1;
+    c.n1=b;
+    b.n0=c;
+    b.n1=d;
+    d.n0=b;}
   
   /*
    * ################################

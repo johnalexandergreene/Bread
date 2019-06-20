@@ -38,7 +38,7 @@ public class Test{
    * ################################
    */
       
-  static final String EXPORT="/home/john/Desktop/dst_export";
+  static final String EXPORT="/home/john/Desktop/hairball_export";
   
   public File exportdir=new File(EXPORT);
   
@@ -68,7 +68,7 @@ public class Test{
     for(int i=0;i<300;i++){
       test.hairball.advanceState();
      try{
-      Thread.sleep(100);
+      Thread.sleep(10);
      }catch(Exception x){};}}
     
 }
