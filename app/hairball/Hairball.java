@@ -1,11 +1,14 @@
 package org.fleen.bread.app.hairball;
 
+import java.awt.geom.Path2D;
+import java.awt.geom.Path2D.Double;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 import org.fleen.bread.app.hairball.production.HairballObserver;
+import org.fleen.geom_2D.CurveSmoother_Closed;
 import org.fleen.geom_2D.GD;
 
 public class Hairball{
@@ -31,8 +34,8 @@ public class Hairball{
   Cell reference;
   
   //chain init is a circle of cells
-  static final int INITCHAINCELLCOUNT=99;
-  static final double INITCHAINRADIUS=222;
+  static final int INITCHAINCELLCOUNT=12;
+  static final double INITCHAINRADIUS=111;
   
   private void initChain(){
     double
@@ -89,6 +92,37 @@ public class Hairball{
         return present;}}
 
     public void remove(){}}
+  
+  /*
+   * ################################
+   * SMOOTHED PATH
+   * ################################
+   */
+  
+  static final int SMOOTHNESS=2;
+  CurveSmoother_Closed smoother=new CurveSmoother_Closed();
+  
+  public Path2D getSmoothedPath(){
+    List<double[]> 
+      p=getPoints(),
+      sp=smoother.getSmoothedPolygon(p,SMOOTHNESS);
+    Path2D path=new Path2D.Double();
+    double[] a=sp.get(0);
+    path.moveTo(a[0],a[1]);
+    for(int i=1;i<sp.size();i++){
+      a=sp.get(i);
+      path.lineTo(a[0],a[1]);}
+    path.closePath();
+    return path;}
+  
+  List<double[]> getPoints(){
+    List<double[]> points=new ArrayList<double[]>();
+    Iterator<Cell> i=getCellIterator();
+    Cell c;
+    while(i.hasNext()){
+      c=i.next();
+      points.add(new double[]{c.x,c.y});}
+    return points;}
   
   /*
    * ################################

@@ -55,18 +55,19 @@ public class Renderer{
     g.setRenderingHints(RENDERING_HINTS);
     g.setTransform(AffineTransform.getTranslateInstance(MARGIN-bounds[0],MARGIN-bounds[2]));
     //
-    Iterator<Cell> i=test.hairball.getCellIterator();
-    Cell c;
-    Path2D path=new Path2D.Double();
-    c=i.next();
-    path.moveTo(c.x,c.y);
-    while(i.hasNext()){
-      c=i.next();
-      path.lineTo(c.x,c.y);}
-    path.closePath();
+//    Iterator<Cell> i=test.hairball.getCellIterator();
+//    Cell c;
+//    Path2D path=new Path2D.Double();
+//    c=i.next();
+//    path.moveTo(c.x,c.y);
+//    while(i.hasNext()){
+//      c=i.next();
+//      path.lineTo(c.x,c.y);}
+//    path.closePath();
+    
     g.setStroke(new BasicStroke(2.0f));
     g.setPaint(Color.black);
-    g.draw(path);
+    g.draw(test.hairball.getSmoothedPath());
   
   }
   
