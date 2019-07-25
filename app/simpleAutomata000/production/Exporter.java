@@ -1,4 +1,4 @@
-package org.fleen.bread.app.hairball.production;
+package org.fleen.bread.app.simpleAutomata000.production;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -24,14 +24,9 @@ public class Exporter{
   private static final double INCHES_IN_A_METER=39.3700787;
   private static final int DPI=300;
   
-//  public void export(){
-//    File file=getExportFile(test.exportdir,test.hairball.age);
-//    write(test.renderer.image,file);}
-  
-  //test render for export. broken
   public void export(){
-    File file=getExportFile(test.exportdir,test.hairball.age);
-    write(test.renderer.renderForExport(600,600),file);}
+    File file=getExportFile(test.exportdir,test.sa.age);
+    write(test.getExportImage(),file);}
   
   private File getExportFile(File exportdir,int index){
     String s = String.format("%1$05d",index);

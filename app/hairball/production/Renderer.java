@@ -42,6 +42,7 @@ public class Renderer{
   BufferedImage image;
   static final int MARGIN=22;
   
+  //sizes image to fit form
   void render(){
     double[] bounds=getHairballBounds();
     int 
@@ -55,21 +56,42 @@ public class Renderer{
     g.setRenderingHints(RENDERING_HINTS);
     g.setTransform(AffineTransform.getTranslateInstance(MARGIN-bounds[0],MARGIN-bounds[2]));
     //
-//    Iterator<Cell> i=test.hairball.getCellIterator();
-//    Cell c;
-//    Path2D path=new Path2D.Double();
-//    c=i.next();
-//    path.moveTo(c.x,c.y);
-//    while(i.hasNext()){
-//      c=i.next();
-//      path.lineTo(c.x,c.y);}
-//    path.closePath();
-    
+    g.setStroke(new BasicStroke(2.0f));
+    g.setPaint(Color.black);
+    g.draw(test.hairball.getSmoothedPath());}
+  
+  //centers and fits rendered form to fit specified image dimensions 
+  //doesn't cache
+  BufferedImage renderForExport(int w,int h){
+    BufferedImage exportimage=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
+    Graphics2D g=exportimage.createGraphics();
+    g.setPaint(Color.white);
+    g.fillRect(0,0,w,h);
+    g.setRenderingHints(RENDERING_HINTS);
+    g.setTransform(getCenterAndFitTransform(w,h));
+    //
     g.setStroke(new BasicStroke(2.0f));
     g.setPaint(Color.black);
     g.draw(test.hairball.getSmoothedPath());
+    //
+    return exportimage;}
   
-  }
+  private AffineTransform getCenterAndFitTransform(int w,int h){
+    double[] hbounds=getHairballBounds();
+    int 
+      hbw=(int)(hbounds[1]-hbounds[0])+MARGIN*2,
+      hbh=(int)(hbounds[3]-hbounds[2])+MARGIN*2;
+    //
+    double scale=w/hbw;
+    
+    
+    //
+    AffineTransform t=AffineTransform.getScaleInstance(scale,scale);
+    //
+    AffineTransform translate=AffineTransform.getTranslateInstance((w/2)-hbounds[0]*scale,(h/2)-hbounds[2]*scale);
+//    t.concatenate(translate);
+    //
+    return t;}
   
   private double[] getHairballBounds(){
     double xmin=Double.MAX_VALUE,xmax=Double.MIN_VALUE,ymin=xmin,ymax=xmax;

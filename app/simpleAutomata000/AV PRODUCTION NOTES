@@ -1,0 +1,62 @@
+ 
+
+############################################
+COMPILE INTO VIDEO THEN ATTACH AUDIO
+
+ffmpeg -r 60 -f image2 -s 1280x720 -i %05d.png -vcodec libx264 -crf 25  -pix_fmt yuv420p -tune animation video.mkv
+
+ffmpeg -i video.mkv -i audio.wav -c copy audiovideo.mkv
+
+
+##############################################
+----------------------------------------------------------------------
+DOING CREDITS
+I think we're just gonna skip that or do it programmatically
+
+
+ffmpeg -r 60 -loop 1 -i whelmercredits.png -c:v libx264 -t 3 -pix_fmt yuv420p -vf scale=720:720 whelmercredits.mkv
+
+
+ffmpeg -r 60 -loop 1 -i whelmercredits.png -c:v libx264 -t 3 -pix_fmt yuv420p -vf scale=1280:720 -crf 25 -tune animation whelmercredits.mkv
+
+
+CREATE LOOP WITH BLANK SOUND because concatenate needs something to work
+
+ffmpeg -r 60 -loop 1 -i whelmercredits.png -f lavfi -i anullsrc=channel_layout=5.1:sample_rate=48000 -t 3 -c:v libx264 -t 3 -pix_fmt yuv420p -vf  scale=1280:720 -crf 25 -tune animation whelmercredits.mkv
+
+
+-t 3 seconds
+
+for creating 5second-ish lengths of image-video for credits or whatever
+At the beginning I figured we'd do 4 seconds of something like 
+
+     Whelmer
+   2019/01/02
+  by John Greene
+    FLEEN.ORG
+    
+And then at the end 2 seconds of
+ 
+       END
+       
+Or something like that
+
+-----------------------------------------------------------------------------
+then concactenate the video files like this
+
+whelmercredits.mkv
+whelmer.mkv
+whelmerend.mkv
+
+ffmpeg -i "concat:whelmercredits.mkv|whelmer.mkv|whelmerend.mkv" -c copy concatenated.mkv
+
+ffmpeg -i whelmercredits.mkv -i whelmer.mkv -filter_complex "[0:v:0] [0:a:0] [1:v:0] [1:a:0] concat=n=2:v=1:a=1 [v] [a]" -map "[v]" -map "[a]" concatenated.mkv
+
+
+FUCK IT, DO IT PROGRAMATICALLY
+
+    
+
+    
+    
+  

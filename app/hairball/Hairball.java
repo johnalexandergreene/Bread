@@ -178,7 +178,7 @@ public class Hairball{
   
   Random rnd=new Random();
   
-  static final double KINKFACTOR0=0.3,KINKFACTOR1=0.9;
+  static final double KINKFACTOR0=0.1,KINKFACTOR1=0.3;
   
   double[] getNewLocation(Cell c){
     double dir=GD.getDirection_PointPoint(c.n0.x,c.n0.y,c.n1.x,c.n1.y);
