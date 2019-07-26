@@ -1,12 +1,11 @@
-package org.fleen.bread.app.simpleAutomata000;
+package org.fleen.bread.app.simpleAutomata001;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.fleen.bread.app.dancingSquishyThing.production.DSTObserver;
-import org.fleen.bread.app.simpleAutomata000.production.SAObserver;
-import org.fleen.geom_2D.GD;
+import org.fleen.bread.app.simpleAutomata001.production.SAObserver;
+import org.fleen.bread.app.simpleAutomata001.production.Test;
 
 /*
  * at every increment
@@ -127,15 +126,28 @@ public class SA{
       c=cellfield[x][y],
       s=getNeighborSum(x,y),
       r=0;
-    if(x==0){
-      return random.nextInt(CELLVALUERANGE);
-    }else if(x>0&&y%2==0&&s%2==0){
-      r=getNeighborW(x,y);
-    }else if(s%2==0){
-      r=getNeighborSE(x,y);
-    }else{
-      r=c;
-    }
+    r=c;
+    //
+    if(x%4>1){
+      r=getNeighborS(x,y);
+    }else if(y%4>1){
+      r=getNeighborW(x,y);}
+    if(s>3&&r>1)
+      r+=s;
+    
+    r+=(age+x+y)%4;
+    
+    if((random.nextDouble()*(Test.DURATION/3))<age)
+      r+=age%3;
+    
+    
+    if((random.nextDouble()*(Test.DURATION))<age&&s>0)
+      r=s+((x*y)%4);
+      
+    
+    
+    
+    
     return r;}
 
   
