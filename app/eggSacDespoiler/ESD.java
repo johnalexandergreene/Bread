@@ -1,9 +1,9 @@
-package org.fleen.bread.app.radiantWavyThrobber;
+package org.fleen.bread.app.eggSacDespoiler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fleen.bread.app.radiantWavyThrobber.production.RWTObserver;
+import org.fleen.bread.app.eggSacDespoiler.production.ESDObserver;
 import org.fleen.geom_2D.GD;
 
 /*
@@ -13,13 +13,13 @@ import org.fleen.geom_2D.GD;
  * it moves in a pattern
  *   Like 
  */
-public class RWT{
+public class ESD{
   
   public static final double 
     WIDTH=700,
     HEIGHT=700;
   
-  public RWT(){
+  public ESD(){
     initEmitters();
   }
   
@@ -54,10 +54,10 @@ public class RWT{
    * ################################
    */
   
-  public List<RWTObserver> observers=new ArrayList<RWTObserver>();
+  public List<ESDObserver> observers=new ArrayList<ESDObserver>();
   
   void notifyObservers(){
-    for(RWTObserver a:observers)
+    for(ESDObserver a:observers)
       a.advanced();}
   
 

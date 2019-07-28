@@ -1,4 +1,4 @@
-package org.fleen.bread.app.radiantWavyThrobber.production;
+package org.fleen.bread.app.eggSacDespoiler.production;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -8,9 +8,9 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.List;
 
-import org.fleen.bread.app.radiantWavyThrobber.Emitter;
-import org.fleen.bread.app.radiantWavyThrobber.RWT;
-import org.fleen.bread.app.radiantWavyThrobber.Ring;
+import org.fleen.bread.app.eggSacDespoiler.Emitter;
+import org.fleen.bread.app.eggSacDespoiler.ESD;
+import org.fleen.bread.app.eggSacDespoiler.Ring;
 
 public class Renderer{
   
@@ -41,8 +41,8 @@ public class Renderer{
   
   void render(){
     int 
-      w=(int)RWT.WIDTH,
-      h=(int)RWT.HEIGHT;
+      w=(int)ESD.WIDTH,
+      h=(int)ESD.HEIGHT;
     image=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
     Graphics2D g=image.createGraphics();
     g.setRenderingHints(RENDERING_HINTS);

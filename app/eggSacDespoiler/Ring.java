@@ -1,4 +1,4 @@
-package org.fleen.bread.app.radiantWavyThrobber;
+package org.fleen.bread.app.eggSacDespoiler;
 
 import java.awt.geom.Path2D;
 

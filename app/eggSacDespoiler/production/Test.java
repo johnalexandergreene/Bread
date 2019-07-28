@@ -1,11 +1,11 @@
-package org.fleen.bread.app.radiantWavyThrobber.production;
+package org.fleen.bread.app.eggSacDespoiler.production;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-import org.fleen.bread.app.radiantWavyThrobber.RWT;
+import org.fleen.bread.app.eggSacDespoiler.ESD;
 
 
 public class Test{
@@ -17,7 +17,7 @@ public class Test{
    */
   
   Test(){
-    rwt=new RWT();
+    rwt=new ESD();
     rwt.observers.add(observer);
     ui=new UI(this);
     renderer=new Renderer(this);
@@ -29,7 +29,7 @@ public class Test{
    * ################################
    */
   
-  RWTObserver observer=new RWTObserver(){
+  ESDObserver observer=new ESDObserver(){
     public void advanced(){
       renderer.render();
       ui.repaint();
@@ -51,7 +51,7 @@ public class Test{
    * ################################
    */
   
-  RWT rwt;
+  ESD rwt;
   UI ui; 
   Renderer renderer;
   Exporter exporter;

@@ -1,4 +1,4 @@
-package org.fleen.bread.app.radiantWavyThrobber.production;
+package org.fleen.bread.app.hairyParasite.production;
 
 import javax.swing.JFrame;
 

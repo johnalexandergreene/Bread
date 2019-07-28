@@ -1,4 +1,4 @@
-package org.fleen.bread.app.radiantWavyThrobber;
+package org.fleen.bread.app.eggSacDespoiler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,14 +7,14 @@ import org.fleen.geom_2D.GD;
 
 public class Emitter{
   
-  public Emitter(RWT rwt,double x,double y,double d){
+  public Emitter(ESD rwt,double x,double y,double d){
     this.rwt=rwt;
     ix=x;
     iy=y;
     idir=d;
   }
   
-  RWT rwt;
+  ESD rwt;
   double ix,iy,idir;
   
   static final double MAXTHROWFACTOR=0.27;
@@ -23,7 +23,7 @@ public class Emitter{
     double 
       a=(((double)(rwt.age%300))/300)*GD.PI2,
       b=GD.sin(a),
-      c=b*RWT.WIDTH*MAXTHROWFACTOR;
+      c=b*ESD.WIDTH*MAXTHROWFACTOR;
     double[] d=GD.getPoint_PointDirectionInterval(ix,iy,getDir(),c);
     return d;}
   

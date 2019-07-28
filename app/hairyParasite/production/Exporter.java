@@ -1,4 +1,4 @@
-package org.fleen.bread.app.radiantWavyThrobber.production;
+package org.fleen.bread.app.hairyParasite.production;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -25,7 +25,7 @@ public class Exporter{
   private static final int DPI=300;
   
   public void export(){
-    File file=getExportFile(test.exportdir,test.rwt.age);
+    File file=getExportFile(test.exportdir,test.hp.age);
     write(test.getExportImage(),file);}
   
   private File getExportFile(File exportdir,int index){
