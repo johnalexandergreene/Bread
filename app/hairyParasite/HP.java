@@ -29,10 +29,8 @@ public class HP{
   public void advanceState(){
     age++;
     if(age==0)init();
-    
-    //test
-    spine.initBase();
-    
+    spine.shiver();
+    //hairs.wiggle
     notifyObservers();}
   
   void init(){

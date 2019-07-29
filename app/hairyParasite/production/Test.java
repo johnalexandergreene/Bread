@@ -89,7 +89,7 @@ public class Test{
     for(int i=0;i<DURATION;i++){
       test.hp.advanceState();
       try{
-        Thread.sleep(1000);
+        Thread.sleep(100);
       }catch(Exception x){};}}
     
 }

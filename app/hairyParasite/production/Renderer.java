@@ -5,11 +5,12 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import org.fleen.bread.app.hairyParasite.HP;
+import org.fleen.geom_2D.DPoint;
 
 /*
  * keep centered!
@@ -63,7 +64,17 @@ public class Renderer{
     g.setPaint(Color.black);
     g.setStroke(new BasicStroke((float)(STROKE0/t.getScaleX())));
     //
-    g.draw(test.hp.spine.getBasePath());;}
+    renderSpineBase(g);}
+  
+  static final double ES=9;
+  
+  void renderSpineBase(Graphics2D g){
+    System.out.println("render spine base");
+    double s=g.getTransform().getScaleX();
+    g.draw(test.hp.spine.getRefinedPath());
+//    for(DPoint a:test.hp.spine.getBase())
+//      g.fill(new Ellipse2D.Double(a.x-ES/(2*s),a.y-ES/(2*s),ES/s,ES/s));
+  }
   
   AffineTransform getCenterAndFitTransform(double w,double h){
     w-=(PADDING*2);
@@ -88,11 +99,11 @@ public class Renderer{
     sbbxmax=Double.MIN_VALUE;
     sbbymin=sbbxmin;
     sbbymax=sbbxmax;
-    for(double[] a:test.hp.spine.base){
-      if(a[0]<sbbxmin)sbbxmin=a[0];
-      if(a[0]>sbbxmax)sbbxmax=a[0];
-      if(a[1]<sbbymin)sbbymin=a[1];
-      if(a[1]>sbbymax)sbbymax=a[1];}
+    for(DPoint a:test.hp.spine.getBase()){
+      if(a.x<sbbxmin)sbbxmin=a.x;
+      if(a.x>sbbxmax)sbbxmax=a.x;
+      if(a.y<sbbymin)sbbymin=a.y;
+      if(a.y>sbbymax)sbbymax=a.y;}
     sbbw=sbbxmax-sbbxmin;
     sbbh=sbbymax-sbbymin;}
   
