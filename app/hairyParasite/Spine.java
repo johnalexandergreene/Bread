@@ -14,14 +14,15 @@ import org.fleen.geom_2D.GD;
  * an open curve describing a bit of squirm
  * Not complex. Fundamentally just a few points.
  * Then elaborated into a proper squirm via split-tweak
- * it wil have a random wiggle program. Moderate wiggle and fast spastic jerks
+ * it will have a random wiggle program. Moderate wiggle and fast spastic jerks
  * 
- * A seg : p0 and p1. An implied direction : p0 -> p1 
- * A series of forward vectors (we use direction offsets)
- * A series of reverse vectors
+ * Torso. Basically a seg, p0 and p1. And an implied direction : p0 -> p1. And some stuff for handling twitches 
+ * 2 chains of Joints. One extending forward, the other extending backward.
+ *   A Joint is a vector + some other stuff for controlling twitch
  * 
- * Twiddling the points gives us one kind of movement
- * Wiggling the vectors gives us another
+ * Twitching the Torso gives us one kind of movement
+ * Twitching the Joints gives us another
+ * Combined I think we should get a nice spastic jerky writhe  
  * 
  */
 public class Spine{
@@ -33,14 +34,13 @@ public class Spine{
    */
   
   Spine(){
-    initBase();}
+    init();}
   
   /*
    * ################################
    * GEOMETRY
-   * Spine
-   *   wider towards the middle
-   *   squirmier towards the ends
+   * wider towards the middle
+   * squirmier towards the ends
    * ################################
    */
   
@@ -59,16 +59,16 @@ public class Spine{
   //defines the central seg
   DPoint p0,p1;
   //defines the respective squirmy processes 
-  List<DVector> 
+  List<Joint> 
     vforward,
     vbackward;
   
-  public void initBase(){
+  public void init(){
     System.out.println("init base");
     p0=new DPoint(0,0);
     initP1();
-    vforward=initVectors();
-    vbackward=initVectors();}
+    vforward=initJoints();
+    vbackward=initJoints();}
   
   /*
    * offset from p0
@@ -84,32 +84,13 @@ public class Spine{
     if(i<JOINTLENGTHMIN)i=JOINTLENGTHMIN;
     p1=new DPoint(GD.getPoint_PointDirectionInterval(p0.x,p0.y,d,i));}
     
-  List<DVector> initVectors(){
-    List<DVector> vectors=new ArrayList<DVector>();
-    double
-      a=rnd.nextInt(MAXSQUIRMLENGTH-MINSQUIRMLENGTH)+MINSQUIRMLENGTH,
-      length,
-      lengthnoiselevel,
-      directionnoiselevel;
+  List<Joint> initJoints(){
+    List<Joint> joints=new ArrayList<Joint>();
+    double a=rnd.nextInt(MAXSQUIRMLENGTH-MINSQUIRMLENGTH)+MINSQUIRMLENGTH;
     for(int i=0;i<a;i++){
-      length=BASEJOINTLENGTH;
-      lengthnoiselevel=SQUIRMLENGTHNOISELEVEL;
-      directionnoiselevel=SQUIRMDIRECTIONNOISELEVEL;
-      vectors.add(createDVector(length,lengthnoiselevel,directionnoiselevel));}
+      joints.add(new Joint(this,i));}
     //
-    return vectors;}
-  
-  DVector createDVector(double length,double lengthnoiselevel,double directionnoiselevel){
-    double 
-      lengthnoise=rnd.nextDouble()*lengthnoiselevel,
-      directionnoise=rnd.nextDouble()*directionnoiselevel;
-    if(rnd.nextBoolean())lengthnoise*=-1;
-    double adjustedlength=length*(1.0+lengthnoise);
-    if(adjustedlength<JOINTLENGTHMIN)
-      adjustedlength=JOINTLENGTHMIN;
-    if(rnd.nextBoolean())directionnoise*=-1;
-    double direction=GD.normalizeDirection(directionnoise*GD.PI);
-    return new DVector(direction,adjustedlength);}
+    return joints;}
   
   public List<DPoint> getBase(){
     List<DPoint> base=new ArrayList<DPoint>(2+vforward.size()+vbackward.size());
@@ -119,17 +100,17 @@ public class Spine{
     DPoint pnew=new DPoint(p1.x,p1.y);
     double dir=p0.getDirection(p1);
     double[] a;
-    for(DVector v:vforward){
-      dir=GD.normalizeDirection(dir+v.direction);
-      a=GD.getPoint_PointDirectionInterval(pnew.x,pnew.y,dir,v.magnitude);
+    for(Joint joint:vforward){
+      dir=GD.normalizeDirection(dir+joint.directiondelta);
+      a=GD.getPoint_PointDirectionInterval(pnew.x,pnew.y,dir,joint.length);
       pnew=new DPoint(a);
       base.add(pnew);}
     //
     pnew=new DPoint(p0.x,p0.y);
     dir=p1.getDirection(p0);
-    for(DVector v:vbackward){
-      dir=GD.normalizeDirection(dir+v.direction);
-      a=GD.getPoint_PointDirectionInterval(pnew.x,pnew.y,dir,v.magnitude);
+    for(Joint joint:vbackward){
+      dir=GD.normalizeDirection(dir+joint.directiondelta);
+      a=GD.getPoint_PointDirectionInterval(pnew.x,pnew.y,dir,joint.length);
       pnew=new DPoint(a);
       base.add(0,pnew);}
     return base;}
@@ -187,14 +168,14 @@ public class Spine{
    */
   
   static final double 
-    P0P1SHIFTVECTORMAGMIN=0.01,
-    P0P1SHIFTVECTORMAGMAX=0.2;
+    P0P1SHIFTVECTORMAGMIN=0.0001,
+    P0P1SHIFTVECTORMAGMAX=0.002;
   
   public void shiver(){
-    shiftP0P1();
-    wiggleSquirms();}
+    twitchTorso();
+    twitchJoints();}
   
-  void shiftP0P1(){
+  void twitchTorso(){
     DVector 
       v0=new DVector(
         rnd.nextDouble()*GD.PI2,
@@ -210,38 +191,15 @@ public class Spine{
       p0=newp0;
       p1=newp1;}}
   
-  static final 
-    double MAXANGLEOFFSET=GD.PI*0.4,
-    ANGLENOISE=0.15,
-    LENGTHNOISE=0.05;
+  void twitchJoints(){
+    for(Joint joint:vforward)
+      joint.twitch();
+    for(Joint joint:vbackward)
+      joint.twitch();
+    
+  }
   
   
-  void wiggleSquirms(){
-    double a,n;
-    for(DVector v:vforward){
-      n=rnd.nextDouble()*ANGLENOISE*GD.PI;
-      if(rnd.nextBoolean())n*=-1;
-      a=v.direction+n;
-      if(a<MAXANGLEOFFSET&&a>-MAXANGLEOFFSET)
-        v.direction=a;
-      //
-      n=rnd.nextDouble()*LENGTHNOISE;
-      if(rnd.nextBoolean())n*=-1;
-      a=v.magnitude*(1.0+n);
-      if(a<JOINTLENGTHMAX&&a>JOINTLENGTHMIN)
-        v.magnitude=a;}
-    //
-    for(DVector v:vbackward){
-      n=rnd.nextDouble()*ANGLENOISE*GD.PI;
-      if(rnd.nextBoolean())n*=-1;
-      a=v.direction+n;
-      if(a<MAXANGLEOFFSET&&a>-MAXANGLEOFFSET)
-        v.direction=a;
-      //
-      n=rnd.nextDouble()*LENGTHNOISE;
-      if(rnd.nextBoolean())n*=-1;
-      a=v.magnitude*(1.0+n);
-      if(a<JOINTLENGTHMAX&&a>JOINTLENGTHMIN)
-        v.magnitude=a;}}
+  
   
 }

@@ -33,7 +33,7 @@ public class Test{
     public void advanced(){
       renderer.render();
       ui.repaint();
-//      exporter.export();
+      exporter.export();
       }};
       
   /*
