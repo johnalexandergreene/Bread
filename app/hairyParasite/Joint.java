@@ -14,21 +14,17 @@ public class Joint{
    * ################################
    */
   
-  public Joint(Spine spine,int index){
-    this.spine=spine;
-    this.index=index;
-    initLength();
+  public Joint(double length){
+    this.length=length;
     createDirectionDeltaDeltas();
     createLengthDeltas();}
   
   /*
    * ################################
-   * STUFF
+   * UTIL
    * ################################
    */
   
-  Spine spine;
-  int index;
   Random rnd=new Random();
   
   /*
@@ -41,10 +37,11 @@ public class Joint{
     DDLISTRANGEMIN=20,
     DDLISTRANGEMAX=100;
   static final double
-    DDAMPLITUDERANGEMIN=0.002,
-    DDAMPLITUDERANGEMAX=0.03,
-    DDPERIODRANGEMIN=4,
-    DDPERIODRANGEMAX=18;
+    DDAMPLITUDERANGEMIN=0.01,
+    DDAMPLITUDERANGEMAX=0.04,
+    DDPERIODRANGEMIN=2,
+    DDPERIODRANGEMAX=16,
+    DDNOISEPROBABILITY=0.3;
   
   int directiondeltadeltaindex;
   
@@ -61,20 +58,29 @@ public class Joint{
   void createDirectionDeltaDeltas(){
     int ddlen=(int)(rnd.nextDouble()*(DDLISTRANGEMAX-DDLISTRANGEMIN)+DDLISTRANGEMIN);
     directiondeltadeltas=new ArrayList<Double>(ddlen);
+    //first we do 4 random waves : sine, cosine, invsine and inversecosine
+    //scaled with our factors 
+    //and combine them
+    //
+    //first do the factors for amplitude and period
     double 
       af0=getDDAmplitudeFactor(),
       af1=getDDAmplitudeFactor(),
       af2=getDDAmplitudeFactor(),
+      af3=getDDAmplitudeFactor(),
       pf0=getDDPeriodFactor(),
       pf1=getDDPeriodFactor(),
-      pf2=getDDPeriodFactor();
-    double a,d0,d1,d2,d;
+      pf2=getDDPeriodFactor(),
+      pf3=getDDPeriodFactor();
+    double a,d0,d1,d2,d3,d4,d;
     for(int i=0;i<ddlen;i++){
       a=((double)i)/((double)ddlen);
       d0=Math.sin(a*GD.PI2*pf0)*af0;
-      d1=Math.sin(a*GD.PI2*pf1)*af1;
-      d2=Math.sin(a*GD.PI2*pf2)*af2;
-      d=d0+d1+d2;
+      d1=-Math.sin(a*GD.PI2*pf1)*af1;
+      d2=Math.cos(a*GD.PI2*pf2)*af2;
+      d3=-Math.cos(a*GD.PI2*pf3)*af3;
+      d4=getDDNoise();
+      d=d0+d1+d2+d3+d4;
       directiondeltadeltas.add(d);}}
   
   double getDDAmplitudeFactor(){
@@ -84,6 +90,14 @@ public class Joint{
   double getDDPeriodFactor(){
     double f=rnd.nextDouble()*(DDPERIODRANGEMAX-DDPERIODRANGEMIN)+DDPERIODRANGEMIN;
     return f;}
+  
+  double getDDNoise(){
+    double n=0;
+    if(rnd.nextDouble()<DDNOISEPROBABILITY){
+      n=rnd.nextDouble()*(DDAMPLITUDERANGEMAX-DDAMPLITUDERANGEMIN)+DDAMPLITUDERANGEMIN;
+      if(rnd.nextBoolean())
+        n*=-1;}
+    return n;}
   
   /*
    * ################################
@@ -101,11 +115,6 @@ public class Joint{
     LDPERIODRANGEMAX=12;
   
   public double length;
-  
-  void initLength(){
-    //test
-    length=0.5;
-  }
   
   int lengthdeltaindex;
   

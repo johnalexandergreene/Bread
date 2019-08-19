@@ -38,86 +38,80 @@ public class Spine{
   
   /*
    * ################################
-   * GEOMETRY
+   * TORSO, HEAD AND TAIL
    * wider towards the middle
    * squirmier towards the ends
    * ################################
    */
   
-  static final int
-    MINSQUIRMLENGTH=4,
-    MAXSQUIRMLENGTH=7;
+  public static final int
+    HEADLENGTH=5,
+    TAILLENGTH=5;
   static final double 
-    BASEJOINTLENGTH=1.0,
-    JOINTLENGTHMIN=BASEJOINTLENGTH*0.5,
-    JOINTLENGTHMAX=BASEJOINTLENGTH*1.5,
+    TORSOBASELENGTH=1.0,
+    JOINTLENGTHMIN=TORSOBASELENGTH*0.5,
+    JOINTLENGTHMAX=TORSOBASELENGTH*1.5,
     P1INITOFFSETNOISE=0.1,
     SQUIRMDIRECTIONNOISELEVEL=0.2,
     SQUIRMLENGTHNOISELEVEL=0.2;
   
   Random rnd=new Random();
-  //defines the central seg
-  DPoint p0,p1;
+  //torso
+  Torso torso;
   //defines the respective squirmy processes 
-  List<Joint> 
-    vforward,
-    vbackward;
+  List<Joint> head,tail;
   
   public void init(){
-    System.out.println("init base");
-    p0=new DPoint(0,0);
-    initP1();
-    vforward=initJoints();
-    vbackward=initJoints();}
+    System.out.println("init torso");
+    torso=new Torso();
+    System.out.println("init head");
+    head=new ArrayList<Joint>();
+    for(int i=0;i<HEADLENGTH;i++)
+      head.add(new Joint(getJointLength(i,HEADLENGTH)));
+    System.out.println("init tail");
+    tail=new ArrayList<Joint>();
+    for(int i=0;i<TAILLENGTH;i++)
+      tail.add(new Joint(getJointLength(i,TAILLENGTH)));}
+  
+  private double getJointLength(int index,int maxindex){
+    double 
+      a=maxindex-index,
+      b=a/((double)maxindex);
+    return b;}
   
   /*
-   * offset from p0
-   * direction is random
-   * interval is BASEJOINTLENGTH+noise
+   * ################################
+   * BASE FIGURE
+   * A polyseg comprised of the tail, torso and head points
+   * ################################
    */
-  void initP1(){
-    double 
-      d=rnd.nextDouble()*GD.PI2,
-      noise=rnd.nextDouble()*P1INITOFFSETNOISE;
-    if(rnd.nextBoolean())noise*=-1;
-    double i=(1.0+noise)*BASEJOINTLENGTH;
-    if(i<JOINTLENGTHMIN)i=JOINTLENGTHMIN;
-    p1=new DPoint(GD.getPoint_PointDirectionInterval(p0.x,p0.y,d,i));}
-    
-  List<Joint> initJoints(){
-    List<Joint> joints=new ArrayList<Joint>();
-    double a=rnd.nextInt(MAXSQUIRMLENGTH-MINSQUIRMLENGTH)+MINSQUIRMLENGTH;
-    for(int i=0;i<a;i++){
-      joints.add(new Joint(this,i));}
-    //
-    return joints;}
   
-  public List<DPoint> getBase(){
-    List<DPoint> base=new ArrayList<DPoint>(2+vforward.size()+vbackward.size());
-    base.add(p0);
-    base.add(p1);
+  public List<DPoint> getBaseFigure(){
+    List<DPoint> base=new ArrayList<DPoint>(2+head.size()+tail.size());
+    base.add(torso.p0);
+    base.add(torso.p1);
     //
-    DPoint pnew=new DPoint(p1.x,p1.y);
-    double dir=p0.getDirection(p1);
+    DPoint pnew=new DPoint(torso.p1);
+    double dir=torso.p0.getDirection(torso.p1);
     double[] a;
-    for(Joint joint:vforward){
+    for(Joint joint:head){
       dir=GD.normalizeDirection(dir+joint.directiondelta);
       a=GD.getPoint_PointDirectionInterval(pnew.x,pnew.y,dir,joint.length);
       pnew=new DPoint(a);
       base.add(pnew);}
     //
-    pnew=new DPoint(p0.x,p0.y);
-    dir=p1.getDirection(p0);
-    for(Joint joint:vbackward){
+    pnew=new DPoint(torso.p0);
+    dir=torso.p1.getDirection(torso.p0);
+    for(Joint joint:tail){
       dir=GD.normalizeDirection(dir+joint.directiondelta);
       a=GD.getPoint_PointDirectionInterval(pnew.x,pnew.y,dir,joint.length);
       pnew=new DPoint(a);
       base.add(0,pnew);}
     return base;}
   
-  public Path2D getBasePath(){
+  public Path2D getBaseFigurePath(){
     Path2D path=new Path2D.Double();
-    List<DPoint> base=getBase();
+    List<DPoint> base=getBaseFigure();
     DPoint p=base.get(0);
     path.moveTo(p.x,p.y);
     for(int i=1;i<base.size();i++){
@@ -127,14 +121,14 @@ public class Spine{
   
   /*
    * ################################
-   * SMOOTHED GEOMETRY
+   * SMOOTHED FIGURE
    * ################################
    */
   
   static final int SMOOTHNESS=3;
   
-  public List<DPoint> getSmoothedBase(){
-    List<DPoint> base=getBase();
+  public List<DPoint> getSmoothedFigure(){
+    List<DPoint> base=getBaseFigure();
     double[][] base0=new double[base.size()][2];
     DPoint dp;
     for(int i=0;i<base.size();i++){
@@ -149,9 +143,9 @@ public class Spine{
       b.add(new DPoint(d));
     return b;}
   
-  public Path2D getRefinedPath(){
+  public Path2D getSmoothedFigurePath(){
     Path2D path=new Path2D.Double();
-    List<DPoint> smoothbase=getSmoothedBase();
+    List<DPoint> smoothbase=getSmoothedFigure();
     DPoint p=smoothbase.get(0);
     path.moveTo(p.x,p.y);
     for(int i=1;i<smoothbase.size();i++){
@@ -161,45 +155,15 @@ public class Spine{
   
   /*
    * ################################
-   * MOVE
-   * Shift p0 and p1
-   * twiddle the vectors
+   * TWITCH
    * ################################
    */
   
-  static final double 
-    P0P1SHIFTVECTORMAGMIN=0.0001,
-    P0P1SHIFTVECTORMAGMAX=0.002;
-  
-  public void shiver(){
-    twitchTorso();
-    twitchJoints();}
-  
-  void twitchTorso(){
-    DVector 
-      v0=new DVector(
-        rnd.nextDouble()*GD.PI2,
-        rnd.nextDouble()*(P0P1SHIFTVECTORMAGMAX-P0P1SHIFTVECTORMAGMIN)+P0P1SHIFTVECTORMAGMIN),
-      v1=new DVector(
-        rnd.nextDouble()*GD.PI2,
-        rnd.nextDouble()*(P0P1SHIFTVECTORMAGMAX-P0P1SHIFTVECTORMAGMIN)+P0P1SHIFTVECTORMAGMIN);
-    DPoint 
-      newp0=p0.getPoint(v0),
-      newp1=p1.getPoint(v1);
-    double d=newp0.getDistance(newp1);
-    if(d<JOINTLENGTHMAX&&d>JOINTLENGTHMIN){
-      p0=newp0;
-      p1=newp1;}}
-  
-  void twitchJoints(){
-    for(Joint joint:vforward)
+  public void twitch(){
+    torso.twitch();
+    for(Joint joint:head)
       joint.twitch();
-    for(Joint joint:vbackward)
-      joint.twitch();
-    
-  }
-  
-  
-  
+    for(Joint joint:tail)
+      joint.twitch();}
   
 }

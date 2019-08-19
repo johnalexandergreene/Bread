@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fleen.bread.app.hairyParasite.production.HPObserver;
+import org.fleen.geom_2D.DPoint;
 
 /*
  * A moving pattern of Emitters.
@@ -29,13 +30,14 @@ public class HP{
   public void advanceState(){
     age++;
     if(age==0)init();
-    spine.shiver();
-    //hairs.wiggle
+    spine.twitch();
+    for(Hair hair:hairs)
+      hair.twitch();
     notifyObservers();}
   
   void init(){
     spine=new Spine();
-  }
+    createHairs();}
   
   /*
    * ################################
@@ -44,7 +46,37 @@ public class HP{
    */
   
   public Spine spine;
+  public List<Hair> hairs;
   
+  void createHairs(){
+    hairs=new ArrayList<Hair>();
+    createTransverseHairs();
+    createHeadHairs();
+    createTailHairs();}
+  
+  void createTransverseHairs(){
+    List<DPoint> sf=spine.getSmoothedFigure();
+    double sflength=getPolySegLength(sf);
+    System.out.println("sflength="+sflength);
+    
+  }
+  
+  void createHeadHairs(){
+    
+  }
+  
+  void createTailHairs(){
+    
+  }
+  
+  double getPolySegLength(List<DPoint> polyseg){
+    double a=0;
+    DPoint p0,p1;
+    for(int i=0;i<polyseg.size()-1;i++){
+      p0=polyseg.get(i);
+      p1=polyseg.get(i+1);
+      a+=p0.getDistance(p1);}
+    return a;}
   
   
   

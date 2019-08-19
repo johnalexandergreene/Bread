@@ -71,7 +71,7 @@ public class Renderer{
   void renderSpineBase(Graphics2D g){
     System.out.println("render spine base");
     double s=g.getTransform().getScaleX();
-    g.draw(test.hp.spine.getRefinedPath());
+    g.draw(test.hp.spine.getSmoothedFigurePath());
 //    for(DPoint a:test.hp.spine.getBase())
 //      g.fill(new Ellipse2D.Double(a.x-ES/(2*s),a.y-ES/(2*s),ES/s,ES/s));
   }
@@ -99,7 +99,7 @@ public class Renderer{
     sbbxmax=Double.MIN_VALUE;
     sbbymin=sbbxmin;
     sbbymax=sbbxmax;
-    for(DPoint a:test.hp.spine.getBase()){
+    for(DPoint a:test.hp.spine.getBaseFigure()){
       if(a.x<sbbxmin)sbbxmin=a.x;
       if(a.x>sbbxmax)sbbxmax=a.x;
       if(a.y<sbbymin)sbbymin=a.y;
