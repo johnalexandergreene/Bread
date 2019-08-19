@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
+import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
@@ -45,7 +45,7 @@ public class Renderer{
   
   Test test;
   BufferedImage image;
-  static final double STROKE0=4;
+  static final double STROKE0=1;
   static final int PADDING=30;//pixels
   
   void render(){
@@ -64,17 +64,23 @@ public class Renderer{
     g.setPaint(Color.black);
     g.setStroke(new BasicStroke((float)(STROKE0/t.getScaleX())));
     //
-    renderSpineBase(g);}
+    renderSpine(g);
+    renderHairs(g);}
   
-  static final double ES=9;
-  
-  void renderSpineBase(Graphics2D g){
-    System.out.println("render spine base");
+  void renderSpine(Graphics2D g){
+    System.out.println("render spine");
+    g.setPaint(Color.black);
     double s=g.getTransform().getScaleX();
-    g.draw(test.hp.spine.getSmoothedFigurePath());
-//    for(DPoint a:test.hp.spine.getBase())
-//      g.fill(new Ellipse2D.Double(a.x-ES/(2*s),a.y-ES/(2*s),ES/s,ES/s));
-  }
+    g.setStroke(new BasicStroke((float)(STROKE0/s)));
+    g.draw(test.hp.spine.getSmoothedFigurePath());}
+  
+  void renderHairs(Graphics2D g){
+    System.out.println("render hairs");
+    g.setPaint(Color.red);
+    double s=g.getTransform().getScaleX();
+    g.setStroke(new BasicStroke((float)(STROKE0/s)));
+    for(Path2D path:test.hp.getHairPaths()){
+      g.draw(path);}}
   
   AffineTransform getCenterAndFitTransform(double w,double h){
     w-=(PADDING*2);
