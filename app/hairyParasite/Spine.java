@@ -59,19 +59,19 @@ public class Spine{
   //torso
   Torso torso;
   //defines the respective squirmy processes 
-  List<Joint> head,tail;
+  List<SpineJoint> head,tail;
   
   public void init(){
     System.out.println("init torso");
     torso=new Torso();
     System.out.println("init head");
-    head=new ArrayList<Joint>();
+    head=new ArrayList<SpineJoint>();
     for(int i=0;i<HEADLENGTH;i++)
-      head.add(new Joint(getJointLength(i,HEADLENGTH)));
+      head.add(new SpineJoint(getJointLength(i,HEADLENGTH)));
     System.out.println("init tail");
-    tail=new ArrayList<Joint>();
+    tail=new ArrayList<SpineJoint>();
     for(int i=0;i<TAILLENGTH;i++)
-      tail.add(new Joint(getJointLength(i,TAILLENGTH)));}
+      tail.add(new SpineJoint(getJointLength(i,TAILLENGTH)));}
   
   private double getJointLength(int index,int maxindex){
     double 
@@ -94,7 +94,7 @@ public class Spine{
     DPoint pnew=new DPoint(torso.p1);
     double dir=torso.p0.getDirection(torso.p1);
     double[] a;
-    for(Joint joint:head){
+    for(SpineJoint joint:head){
       dir=GD.normalizeDirection(dir+joint.directiondelta);
       a=GD.getPoint_PointDirectionInterval(pnew.x,pnew.y,dir,joint.length);
       pnew=new DPoint(a);
@@ -102,7 +102,7 @@ public class Spine{
     //
     pnew=new DPoint(torso.p0);
     dir=torso.p1.getDirection(torso.p0);
-    for(Joint joint:tail){
+    for(SpineJoint joint:tail){
       dir=GD.normalizeDirection(dir+joint.directiondelta);
       a=GD.getPoint_PointDirectionInterval(pnew.x,pnew.y,dir,joint.length);
       pnew=new DPoint(a);
@@ -161,9 +161,9 @@ public class Spine{
   
   public void twitch(){
     torso.twitch();
-    for(Joint joint:head)
+    for(SpineJoint joint:head)
       joint.twitch();
-    for(Joint joint:tail)
+    for(SpineJoint joint:tail)
       joint.twitch();}
   
 }

@@ -1,5 +1,8 @@
 package org.fleen.bread.app.hairyParasite;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Hair{
   
   /*
@@ -12,8 +15,7 @@ public class Hair{
     this.location=location;
     this.type=type;
     this.polarity=polarity;
-    //init();
-  }
+    init();}
   
   /*
    * ################################
@@ -29,6 +31,18 @@ public class Hair{
   int type;
   boolean polarity;//pertains to transverse only
   
+  List<HairJoint> joints;
+  
+  void init(){
+    joints=new ArrayList<HairJoint>();
+    joints.add(new HairJoint(0.2));
+    joints.add(new HairJoint(0.2));
+    joints.add(new HairJoint(0.2));
+    joints.add(new HairJoint(0.2));
+    joints.add(new HairJoint(0.2));
+    
+  }
+  
   /*
    * ################################
    * TWITCH
@@ -40,7 +54,8 @@ public class Hair{
    * polarity is pointing leftish or rightish
    */
   public void twitch(){
-    
+    for(HairJoint j:joints)
+      j.twitch();
   }
   
 

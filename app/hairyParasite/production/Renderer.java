@@ -46,7 +46,7 @@ public class Renderer{
   Test test;
   BufferedImage image;
   static final double STROKE0=1;
-  static final int PADDING=30;//pixels
+  static final int PADDING=130;//pixels
   
   void render(){
     System.out.println("render");
@@ -64,7 +64,7 @@ public class Renderer{
     g.setPaint(Color.black);
     g.setStroke(new BasicStroke((float)(STROKE0/t.getScaleX())));
     //
-    renderSpine(g);
+//    renderSpine(g);
     renderHairs(g);}
   
   void renderSpine(Graphics2D g){
@@ -76,10 +76,10 @@ public class Renderer{
   
   void renderHairs(Graphics2D g){
     System.out.println("render hairs");
-    g.setPaint(Color.red);
+    g.setPaint(Color.black);
     double s=g.getTransform().getScaleX();
     g.setStroke(new BasicStroke((float)(STROKE0/s)));
-    for(Path2D path:test.hp.getHairPaths()){
+    for(Path2D path:test.hp.getSmoothedHairPaths()){
       g.draw(path);}}
   
   AffineTransform getCenterAndFitTransform(double w,double h){

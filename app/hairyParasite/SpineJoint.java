@@ -6,7 +6,7 @@ import java.util.Random;
 
 import org.fleen.geom_2D.GD;
 
-public class Joint{
+public class SpineJoint{
   
   /*
    * ################################
@@ -14,7 +14,7 @@ public class Joint{
    * ################################
    */
   
-  public Joint(double length){
+  public SpineJoint(double length){
     this.length=length;
     createDirectionDeltaDeltas();
     createLengthDeltas();}
@@ -132,16 +132,19 @@ public class Joint{
       af0=getLDAmplitudeFactor(),
       af1=getLDAmplitudeFactor(),
       af2=getLDAmplitudeFactor(),
+      af3=getLDAmplitudeFactor(),
       pf0=getLDPeriodFactor(),
       pf1=getLDPeriodFactor(),
-      pf2=getLDPeriodFactor();
-    double a,d0,d1,d2,d;
+      pf2=getLDPeriodFactor(),
+      pf3=getLDPeriodFactor();
+    double a,d0,d1,d2,d3,d;
     for(int i=0;i<ldlen;i++){
       a=((double)i)/((double)ldlen);
       d0=Math.sin(a*GD.PI2*pf0)*af0;
-      d1=Math.sin(a*GD.PI2*pf1)*af1;
-      d2=Math.sin(a*GD.PI2*pf2)*af2;
-      d=d0+d1+d2;
+      d1=-Math.sin(a*GD.PI2*pf1)*af1;
+      d2=Math.cos(a*GD.PI2*pf2)*af2;
+      d3=-Math.cos(a*GD.PI2*pf3)*af3;
+      d=d0+d1+d2+d3;
       lengthdeltas.add(d);}}
   
   double getLDAmplitudeFactor(){

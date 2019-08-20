@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.fleen.bread.app.hairyParasite.production.HPObserver;
+import org.fleen.geom_2D.CurveSmoother_Open;
 import org.fleen.geom_2D.DPoint;
 import org.fleen.geom_2D.GD;
 
@@ -81,7 +82,7 @@ public class HP{
       a+=p0.getDistance(p1);}
     return a;}
   
-  public List<Path2D> getHairPaths(){
+  public List<Path2D> getSmoothedHairPaths(){
     List<DPoint> sf=spine.getSmoothedFigure();
     double sflength=getSmoothedFigureLength(sf);
     List<Path2D> paths=new ArrayList<Path2D>();
@@ -90,21 +91,64 @@ public class HP{
     for(Hair hair:hairs){
       sfoffset=sflength*hair.location;
       hairstartandforward=getPointAndForwardOnSmoothedFigure(sf,sflength,sfoffset);
-      paths.add(getHairPath(hair,hairstartandforward));}
+      paths.add(getSmoothedHairPath(hair,hairstartandforward));}
     return paths;}
   
-  Path2D getHairPath(Hair hair,double[] hairstartandforward){
+  Path2D getSmoothedHairPath(Hair hair,double[] hairstartandforward){
+    List<DPoint> figure=getSmoothedHairFigure(hair,hairstartandforward);
     Path2D path=new Path2D.Double();
-    double basedir=hairstartandforward[2];
-    if(hair.polarity)
-      basedir=GD.normalizeDirection(basedir+GD.HALFPI);
-    else
-      basedir=GD.normalizeDirection(basedir-GD.HALFPI);
-    //test
-    path.moveTo(hairstartandforward[0],hairstartandforward[1]);
-    double[] p1=GD.getPoint_PointDirectionInterval(hairstartandforward[0],hairstartandforward[1],basedir,0.3);
-    path.lineTo(p1[0],p1[1]);
+    DPoint p=figure.get(0);
+    path.moveTo(p.x,p.y);
+    for(int i=1;i<figure.size();i++){
+      p=figure.get(i);
+      path.lineTo(p.x,p.y);}
     return path;}
+  
+  List<DPoint> getHairFigure(Hair hair,double[] hairstartandforward){
+    List<DPoint> figure=new ArrayList<DPoint>();
+    double dir=hairstartandforward[2];
+    if(hair.polarity)
+      dir=GD.normalizeDirection(dir+GD.HALFPI);
+    else
+      dir=GD.normalizeDirection(dir-GD.HALFPI);
+    double[] p=new double[]{hairstartandforward[0],hairstartandforward[1]};
+    figure.add(new DPoint(p[0],p[1]));
+    for(HairJoint j:hair.joints){
+      dir=GD.normalizeDirection(dir+j.directiondelta);
+      p=GD.getPoint_PointDirectionInterval(p[0],p[1],dir,j.length);
+      figure.add(new DPoint(p[0],p[1]));}
+    return figure;}
+  
+  static final int SMOOTHNESS=3;
+  
+  public List<DPoint> getSmoothedHairFigure(Hair hair,double[] hairstartandforward){
+    List<DPoint> base=getHairFigure(hair,hairstartandforward);
+    double[][] base0=new double[base.size()][2];
+    DPoint dp;
+    for(int i=0;i<base.size();i++){
+      dp=base.get(i);
+      base0[i][0]=dp.x;
+      base0[i][1]=dp.y;}
+    //
+    double[][] a=new CurveSmoother_Open().getSmoothedOpenCurve(base0,SMOOTHNESS);
+    //
+    List<DPoint> b=new ArrayList<DPoint>();
+    for(double[] d:a)
+      b.add(new DPoint(d));
+    return b;}
+  
+//  Path2D getHairPath(Hair hair,double[] hairstartandforward){
+//    Path2D path=new Path2D.Double();
+//    double basedir=hairstartandforward[2];
+//    if(hair.polarity)
+//      basedir=GD.normalizeDirection(basedir+GD.HALFPI);
+//    else
+//      basedir=GD.normalizeDirection(basedir-GD.HALFPI);
+//    //test
+//    path.moveTo(hairstartandforward[0],hairstartandforward[1]);
+//    double[] p1=GD.getPoint_PointDirectionInterval(hairstartandforward[0],hairstartandforward[1],basedir,0.8);
+//    path.lineTo(p1[0],p1[1]);
+//    return path;}
   
   /*
    * given our polyseg, its precalculated length and an offset
