@@ -41,53 +41,64 @@ public class Renderer{
       
   void render(){
     int 
-      w=(int)test.rmodel.width,
-      h=(int)test.rmodel.height;
+      w=(int)test.fuzzballsystem.width,
+      h=(int)test.fuzzballsystem.height;
     image=new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
+//    renderFuzzballEdges(w,h);
+    renderGrid(w,h);
+    }
+  
+  /*
+   * ################################
+   * RENDER GRID
+   * ################################
+   */
+  
+  void renderGrid(int w,int h){
+    Color c;
+    for(int x=0;x<w;x++){
+      for(int y=0;y<h;y++){
+        int i=test.fuzzballsystem.grid[x][y];
+        c=getColor(i);
+        image.setRGB(x,y,c.getRGB());}}}
+  
+  static final Color[] TEST={
+    new Color(255,0,0),
+    new Color(255,255,0),
+    new Color(0,255,0),
+    new Color(0,255,255),
+    new Color(0,0,255),
+    new Color(255,0,255)};
+  
+  Color getColor(int i){
+    Color a=TEST[i%TEST.length];
+    return a;}
+  
+  /*
+   * ################################
+   * RENDER FUZZBALL EDGES
+   * ################################
+   */
+  
+  void renderFuzzballEdges(int w,int h){
     Graphics2D g=image.createGraphics();
     g.setRenderingHints(RENDERING_HINTS);
     g.setPaint(Color.white);
     g.fillRect(0,0,w,h);
-    g.setPaint(Color.orange);
+    g.setPaint(Color.black);
     g.setStroke(new BasicStroke(3.0f));
-    for(PCircle p:test.rmodel.circles){
-//      renderCircleImage(g,p);
-      renderCircle(g,p);
-      }}
+    for(Fuzzball p:test.fuzzballsystem.fuzzballs)
+      renderFuzzball(g,p);}
   
-  void renderCircle(Graphics2D g,PCircle p){
+  void renderFuzzball(Graphics2D g,Fuzzball p){
     Ellipse2D.Double e=getEllipse2D(p);
-    g.draw(e);
-  }
+    g.draw(e);}
   
-  void renderCircleImage(Graphics2D g,PCircle p){
-    Ellipse2D.Double e=getEllipse2D(p);
-    g.setClip(e);
-    BufferedImage f=getFillImage(e);
-    if(f!=null)
-    g.drawImage(f,AffineTransform.getTranslateInstance(e.x,e.y),null);
-    g.setClip(null);
-    }
-  
-  BufferedImage getFillImage(Ellipse2D.Double e){
-    int 
-      w=(int)e.width,
-      h=(int)e.height;
-    if(w<1||h<1)return null;
-    BufferedImage f=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
-    for(int x=0;x<w;x++){
-      for(int y=0;y<h;y++){
-        System.out.println("w="+w+" h="+h);
-        f.setRGB(x,y,(x*y)%256);}}
-    return f;}
-  
-  Ellipse2D.Double getEllipse2D(PCircle p){
+  Ellipse2D.Double getEllipse2D(Fuzzball p){
     double r;
     Ellipse2D.Double e;
-    DPoint center;
-    r=p.getRadius();
-    center=p.getCenter();
-    e=new Ellipse2D.Double(center.x-r,center.y-r,r*2,r*2);
+    r=p.radius;
+    e=new Ellipse2D.Double(p.x-r,p.y-r,r*2,r*2);
     return e;}
 
 }

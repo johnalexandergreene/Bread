@@ -6,6 +6,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class Test{
+ 
+  public static final int 
+    WIDTH=100,
+    HEIGHT=100,
+    FRAMECOUNT=1800;
   
   /*
    * ################################
@@ -14,11 +19,34 @@ public class Test{
    */
   
   Test(){
-    rmodel=new RModel(SPAN,SPAN);
-    rmodel.observers.add(observer);
+    fuzzballsystem=new FuzzballSystem(WIDTH,HEIGHT,observer);
     ui=new UI(this);
     renderer=new Renderer(this);
     exporter=new Exporter(this);}
+  
+  /*
+   * ################################
+   * FUZZBALLSYSTEM
+   * ################################
+   */
+  
+  FuzzballSystem fuzzballsystem;
+  
+  /*
+   * ################################
+   * UI
+   * ################################
+   */
+  
+  UI ui;
+  
+  /*
+   * ################################
+   * RENDERER
+   * ################################
+   */
+ 
+  Renderer renderer;
   
   /*
    * ################################
@@ -26,11 +54,12 @@ public class Test{
    * ################################
    */
   
-  RModelObserver observer=new RModelObserver(){
+  FuzzballSystemObserver observer=new FuzzballSystemObserver(){
     public void advanced(){
       renderer.render();
       ui.repaint();
-//      exporter.export();
+      //rendersoundframe
+      exporter.exportVideoFrame();
       }};
       
   /*
@@ -39,8 +68,8 @@ public class Test{
    * ################################
    */
       
-  static final String EXPORTDIR="/home/john/Desktop/rmodel_export";
-  static final double EXPORTSCALE=1.6;
+  static final String EXPORTDIR="/home/john/Desktop/fuzzballexport";
+  static final double EXPORTSCALE=7;
   static final AffineTransform EXPORTTRANSFORM=AffineTransform.getScaleInstance(EXPORTSCALE,EXPORTSCALE);
   public File exportdir=new File(EXPORTDIR);
   Exporter exporter;
@@ -53,17 +82,7 @@ public class Test{
     Graphics2D g=a.createGraphics();
     g.drawImage(renderer.image,EXPORTTRANSFORM,null);
     return a;}
-  
-  /*
-   * ################################
-   * RMODEL, UI, RENDERER AND EXPORTER
-   * ################################
-   */
-  
-  RModel rmodel;
-  UI ui; 
-  Renderer renderer;
-  
+
   /*
    * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
    * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -74,15 +93,13 @@ public class Test{
    * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
    */
   
-  public static final int SPAN=400,FRAMECOUNT=1440;
-  
   public static final void main(String[] a){
     Test test=new Test();
     for(int i=0;i<FRAMECOUNT;i++){
-      test.rmodel.advanceState();
-      System.out.println("RMODEL : "+test.rmodel);
+      test.fuzzballsystem.advance();
+//      System.out.println("FBS : "+test.fuzzballsystem);
      try{
-      Thread.sleep(20);
+//      Thread.sleep(20);
      }catch(Exception x){};}}
     
 }

@@ -24,8 +24,8 @@ public class Exporter{
   private static final double INCHES_IN_A_METER=39.3700787;
   private static final int DPI=300;
   
-  public void export(){
-    File file=getExportFile(test.exportdir,test.rmodel.age);
+  public void exportVideoFrame(){
+    File file=getExportFile(test.exportdir,test.fuzzballsystem.age);
     write(test.getImageForExport(),file);}
   
   private File getExportFile(File exportdir,int index){

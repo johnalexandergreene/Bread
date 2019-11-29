@@ -220,10 +220,10 @@ public class RModel{
    * ################################
    */
   
-  public List<RModelObserver> observers=new ArrayList<RModelObserver>();
+  public List<FuzzballSystemObserver> observers=new ArrayList<FuzzballSystemObserver>();
   
   void notifyObservers(){
-    for(RModelObserver a:observers)
+    for(FuzzballSystemObserver a:observers)
       a.advanced();}
   
   /*
