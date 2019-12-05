@@ -43,18 +43,18 @@ public class Fuzzball{
   DVector v;
   
   public void move(){
-    DVector w=new DVector(system.windspeed,system.winddirection);
-    w.add(v);
+//    DVector w=new DVector(system.windspeed,system.winddirection);
+//    w.add(v);
+//    DPoint p=new DPoint(x,y);
+//    p.applyVector(w);
+//    x=p.x;
+//    y=p.y;
     DPoint p=new DPoint(x,y);
-    p.applyVector(w);
+    p.applyVector(v);
     x=p.x;
-    y=p.y;}
+    y=p.y;
   
-  /*
-   * ################################
-   * LIFE AND DEATH
-   * ################################
-   */
+  }
  
   void init(){
     double r=system.radius*FuzzballSystem.ENTRYRADIUS;
@@ -69,7 +69,7 @@ public class Fuzzball{
   //TODO
   //there should be a tendancy towards a mean
   void initRadius(){
-    radius=rnd.nextDouble()*99+29;
+    radius=rnd.nextDouble()*111+66;
   }
   
   //TODO
@@ -79,8 +79,8 @@ public class Fuzzball{
   }
   
   static final double 
-    VECTORMAGMIN=0.1,
-    VECTORMAGMAX=3;
+    VECTORMAGMIN=0.01,
+    VECTORMAGMAX=0.02;
   
   //TODO
   //there should be a tendancy towards a mean
@@ -92,6 +92,12 @@ public class Fuzzball{
     d+=a;
     d=GD.normalizeDirection(d);
     v=new DVector(d,m);}
+  
+  /*
+   * ################################
+   * LIFE AND DEATH
+   * ################################
+   */
   
   boolean destroyMe(){
     double d=GD.getDistance_PointPoint(x,y,system.centerx,system.centery);

@@ -66,7 +66,7 @@ public class FuzzballSystem{
    * ################################
    */
   
-  static final int INITFUZZBALLCOUNT=88;
+  static final int INITFUZZBALLCOUNT=12;
   /*
    * a fuzzball enters the system at distance from system center = ENTRYRADIUS*radius
    * a fuzzball exits the system at distance from system center = EXITRADIUS*radius
@@ -75,17 +75,18 @@ public class FuzzballSystem{
    * somewhat huge. We will tweak these values to ensure that fuzzball creation an destruction always occur offstage  
    */
   static final double 
-    ENTRYRADIUS=6.0,
-    EXITRADIUS=7.0;
+    ENTRYRADIUS=2.0,
+    EXITRADIUS=3.0;
   
   Set<Fuzzball> fuzzballs=new HashSet<Fuzzball>();
   
   void initFuzzballs(){
     int x,y;
-    for(int i=0;i<INITFUZZBALLCOUNT/5;i++){
+    for(int i=0;i<2;i++){
       x=(int)(rnd.nextDouble()*width);
       y=(int)(rnd.nextDouble()*height);
-      fuzzballs.add(new Fuzzball(this,x,y));}}
+      fuzzballs.add(new Fuzzball(this,x,y));}
+    }
   
   void moveFuzzballs(){
     for(Fuzzball z:fuzzballs)
@@ -156,20 +157,49 @@ public class FuzzballSystem{
         for(Fuzzball z:fuzzballs){
           grid[x][y]+=getBallPresence(x,y,z);}}}}
   
+//  void updateGrid(){
+//    //init it
+//    for(int x=0;x<width;x++){
+//      for(int y=0;y<height;y++){
+//        grid[x][y]=getCellVal(x,y);}}
+//    //sum circles at all cells
+//    //do it crude because suave is annoyingly complex
+////    for(int x=0;x<width;x++){
+////      for(int y=0;y<height;y++){
+////        for(Fuzzball z:fuzzballs){
+////          grid[x][y]+=getBallPresence(x,y,z);}}}
+//    }
+  
+//  int getCellVal(int x,int y){
+//    double 
+//      cx=x+0.5,
+//      cy=y+0.5;
+//    double a=(cx*cy*age/33)%66;
+//    return (int)a;
+//  }
+  
   /*
    * TODO add some fuzz at edge of circle
    * I mean, a circle will have a presence of 10 or so
    * so that value will be consistent throughout its mass but then taper down to 1 at the edge
    */
+  
+  static final double PRESENCEFACTOR=6;//32;
+  
   int getBallPresence(int x,int y,Fuzzball z){
     double 
       cellcenterx=x+0.5,
       cellcentery=y+0.5;
     double d=GD.getDistance_PointPoint(cellcenterx,cellcentery,z.x,z.y);
-    if(d>z.radius)
-      return 0;
-    else 
-      return 1;}
+    double v;
+    if(d>z.radius){
+      v=0;
+    }else{ 
+      v=(z.radius-d)/z.radius;
+      v*=PRESENCEFACTOR;
+      }
+    return (int)v;
+  }
   
   /*
    * ################################

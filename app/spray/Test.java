@@ -1,4 +1,4 @@
-package org.fleen.bread.app.communityExhibition2019_11_27;
+package org.fleen.bread.app.spray;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -19,7 +19,7 @@ public class Test{
    */
   
   Test(){
-    fuzzballsystem=new FuzzballSystem(WIDTH,HEIGHT,observer);
+    target=new Target(WIDTH,HEIGHT,observer);
     ui=new UI(this);
     renderer=new Renderer(this);
     exporter=new Exporter(this);}
@@ -30,7 +30,7 @@ public class Test{
    * ################################
    */
   
-  FuzzballSystem fuzzballsystem;
+  Target target;
   
   /*
    * ################################
@@ -54,7 +54,7 @@ public class Test{
    * ################################
    */
   
-  FuzzballSystemObserver observer=new FuzzballSystemObserver(){
+  TargetObserver observer=new TargetObserver(){
     public void advanced(){
       renderer.render();
       ui.repaint();
@@ -95,11 +95,12 @@ public class Test{
   
   public static final void main(String[] a){
     Test test=new Test();
+    test.target.addSprayer(new Sprayer000_RndHStripeBlinker());
     for(int i=0;i<FRAMECOUNT;i++){
-      test.fuzzballsystem.advance();
+      test.target.advance();
 //      System.out.println("FBS : "+test.fuzzballsystem);
      try{
-//      Thread.sleep(20);
+      Thread.sleep(20);
      }catch(Exception x){};}}
     
 }
