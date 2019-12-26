@@ -1,4 +1,4 @@
-package org.fleen.bread.app.spray;
+package org.fleen.bread.app.spray.videoRenderer;
 
 import java.awt.Color;
 import java.awt.RenderingHints;
@@ -7,12 +7,14 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
-public class Renderer{
+import org.fleen.bread.app.spray.Test;
+
+public class VideoRenderer{
   
-  Renderer(Test test){
+  public VideoRenderer(Test test){
     this.test=test;
-    //createPalette();
-    palette=PALETTETEST;
+    createPalette();
+//    palette=PALETTETEST;
     }
   
   public static final HashMap<RenderingHints.Key,Object> RENDERING_HINTS=
@@ -36,9 +38,9 @@ public class Renderer{
   
   Test test;
   
-  BufferedImage image;
+  public BufferedImage image;
       
-  void render(){
+  public void render(){
     int 
       w=(int)test.target.width,
       h=(int)test.target.height;
@@ -79,7 +81,7 @@ public class Renderer{
     //load it
     BufferedImage paletteimage=null;
     try{
-      paletteimage=ImageIO.read(Renderer.class.getResource("palette008.png"));
+      paletteimage=ImageIO.read(VideoRenderer.class.getResource("palette001.png"));
     }catch(Exception x){
       System.out.println("exception in get palette image");
       x.printStackTrace();}

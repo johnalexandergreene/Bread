@@ -5,12 +5,17 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+import org.fleen.bread.app.spray.sprayer.Sprayer000_RndHStripeBlinker;
+import org.fleen.bread.app.spray.sprayer.Sprayer001_AgeFnk;
+import org.fleen.bread.app.spray.sprayer.Sprayer002_RovingRainbow;
+import org.fleen.bread.app.spray.videoRenderer.VideoRenderer;
+
 public class Test{
  
   public static final int 
-    WIDTH=25,
-    HEIGHT=25,
-    FRAMECOUNT=900;
+    WIDTH=32,
+    HEIGHT=32,
+    FRAMECOUNT=300;
   
   /*
    * ################################
@@ -21,7 +26,7 @@ public class Test{
   Test(){
     target=new Target(WIDTH,HEIGHT,observer);
     ui=new UI(this);
-    renderer=new Renderer(this);
+    videorenderer=new VideoRenderer(this);
     exporter=new Exporter(this);}
   
   /*
@@ -30,7 +35,7 @@ public class Test{
    * ################################
    */
   
-  Target target;
+  public Target target;
   
   /*
    * ################################
@@ -42,11 +47,11 @@ public class Test{
   
   /*
    * ################################
-   * RENDERER
+   * VIDEO RENDERER
    * ################################
    */
  
-  Renderer renderer;
+  VideoRenderer videorenderer;
   
   /*
    * ################################
@@ -56,7 +61,7 @@ public class Test{
   
   TargetObserver observer=new TargetObserver(){
     public void advanced(){
-      renderer.render();
+      videorenderer.render();
       ui.repaint();
       //rendersoundframe
       exporter.exportVideoFrame();
@@ -68,7 +73,7 @@ public class Test{
    * ################################
    */
       
-  static final String EXPORTDIR="/home/john/Desktop/fuzzballexport";
+  static final String EXPORTDIR="/home/john/Desktop/sprayerexport";
   static final double EXPORTSCALE=24;
   static final AffineTransform EXPORTTRANSFORM=AffineTransform.getScaleInstance(EXPORTSCALE,EXPORTSCALE);
   public File exportdir=new File(EXPORTDIR);
@@ -76,11 +81,11 @@ public class Test{
   
   public BufferedImage getImageForExport(){
     BufferedImage a=new BufferedImage(
-      (int)(renderer.image.getWidth()*EXPORTSCALE),
-      (int)(renderer.image.getHeight()*EXPORTSCALE),
+      (int)(videorenderer.image.getWidth()*EXPORTSCALE),
+      (int)(videorenderer.image.getHeight()*EXPORTSCALE),
       BufferedImage.TYPE_INT_RGB);
     Graphics2D g=a.createGraphics();
-    g.drawImage(renderer.image,EXPORTTRANSFORM,null);
+    g.drawImage(videorenderer.image,EXPORTTRANSFORM,null);
     return a;}
 
   /*
@@ -95,12 +100,16 @@ public class Test{
   
   public static final void main(String[] a){
     Test test=new Test();
-    test.target.addSprayer(new Sprayer000_RndHStripeBlinker());
+    test.target.addSprayer(new Sprayer001_AgeFnk());
+    test.target.addSprayer(new Sprayer002_RovingRainbow());
+    for(int i=0;i<33;i++)
+      test.target.addSprayer(new Sprayer000_RndHStripeBlinker());
+    //
     for(int i=0;i<FRAMECOUNT;i++){
       test.target.advance();
 //      System.out.println("FBS : "+test.fuzzballsystem);
      try{
-      Thread.sleep(20);
+      Thread.sleep(88);
      }catch(Exception x){};}}
     
 }

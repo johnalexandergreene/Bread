@@ -1,4 +1,4 @@
-package org.fleen.bread.app.spray;
+package org.fleen.bread.app.kCellTest.test0;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -19,11 +19,11 @@ public class Viewer extends JPanel{
   
   public void paint(Graphics g){
     super.paint(g);
-    if(ui==null||ui.test==null||ui.test.videorenderer==null||ui.test.videorenderer.image==null)return;
+    if(ui==null||ui.test==null||ui.test.renderer==null||ui.test.renderer.image==null)return;
     Graphics2D g2=(Graphics2D)g;
-    AffineTransform t=getScaleTransform(ui.test.videorenderer.image);
-    t.concatenate(getCenterTransform(ui.test.videorenderer.image,t));
-    g2.drawImage(ui.test.videorenderer.image,t,null);}
+    AffineTransform t=getScaleTransform(ui.test.renderer.image);
+    t.concatenate(getCenterTransform(ui.test.renderer.image,t));
+    g2.drawImage(ui.test.renderer.image,t,null);}
   
   private AffineTransform getScaleTransform(BufferedImage image){
     int

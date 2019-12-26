@@ -3,6 +3,8 @@ package org.fleen.bread.app.spray;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fleen.bread.app.spray.sprayer.Sprayer;
+
 /*
  * An array of ints (cells)
  * 
