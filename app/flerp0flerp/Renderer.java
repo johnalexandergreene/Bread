@@ -1,4 +1,4 @@
-package org.fleen.bread.app.communityExhibition2019_11_27;
+package org.fleen.bread.app.flerp0flerp;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -56,10 +56,11 @@ public class Renderer{
   
   void renderGrid(int w,int h){
     Color c;
+    double v;
     for(int x=0;x<w;x++){
       for(int y=0;y<h;y++){
-        int i=test.fuzzballsystem.grid[x][y];
-        c=getColor(i);
+        v=test.fuzzballsystem.grid[x][y];
+        c=getColor(v);
         image.setRGB(x,y,c.getRGB());}}}
   
   static final Color[] TEST={
@@ -70,7 +71,10 @@ public class Renderer{
     new Color(0,0,255),
     new Color(255,0,255)};
   
-  Color getColor(int i){
+  static final double COLORGETTERFACTOR=12;
+  
+  Color getColor(double v){
+    int i=(int)(v*COLORGETTERFACTOR);
     Color a=palette[i%palette.length];
     return a;}
   
@@ -80,26 +84,26 @@ public class Renderer{
    * ################################
    */
   
-  void renderFuzzballEdges(int w,int h){
-    Graphics2D g=image.createGraphics();
-    g.setRenderingHints(RENDERING_HINTS);
-    g.setPaint(Color.white);
-    g.fillRect(0,0,w,h);
-    g.setPaint(Color.black);
-    g.setStroke(new BasicStroke(3.0f));
-    for(Fuzzball p:test.fuzzballsystem.fuzzballs)
-      renderFuzzball(g,p);}
-  
-  void renderFuzzball(Graphics2D g,Fuzzball p){
-    Ellipse2D.Double e=getEllipse2D(p);
-    g.draw(e);}
-  
-  Ellipse2D.Double getEllipse2D(Fuzzball p){
-    double r;
-    Ellipse2D.Double e;
-    r=p.radius;
-    e=new Ellipse2D.Double(p.x-r,p.y-r,r*2,r*2);
-    return e;}
+//  void renderFuzzballEdges(int w,int h){
+//    Graphics2D g=image.createGraphics();
+//    g.setRenderingHints(RENDERING_HINTS);
+//    g.setPaint(Color.white);
+//    g.fillRect(0,0,w,h);
+//    g.setPaint(Color.black);
+//    g.setStroke(new BasicStroke(3.0f));
+//    for(Fuzzball p:test.fuzzballsystem.fuzzballs)
+//      renderFuzzball(g,p);}
+//  
+//  void renderFuzzball(Graphics2D g,Fuzzball p){
+//    Ellipse2D.Double e=getEllipse2D(p);
+//    g.draw(e);}
+//  
+//  Ellipse2D.Double getEllipse2D(Fuzzball p){
+//    double r;
+//    Ellipse2D.Double e;
+//    r=p.radius;
+//    e=new Ellipse2D.Double(p.x-r,p.y-r,r*2,r*2);
+//    return e;}
   
   /*
    * ################################
@@ -114,7 +118,7 @@ public class Renderer{
     //load it
     BufferedImage paletteimage=null;
     try{
-      paletteimage=ImageIO.read(Renderer.class.getResource("palette008.png"));
+      paletteimage=ImageIO.read(Renderer.class.getResource("palette009.png"));
     }catch(Exception x){
       System.out.println("exception in get palette image");
       x.printStackTrace();}

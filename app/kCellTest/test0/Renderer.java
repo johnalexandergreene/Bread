@@ -47,29 +47,28 @@ public class Renderer{
   
   Test test;
   BufferedImage image;
-  static final double STROKE0=1;
-  static final int PADDING=130;//pixels
+  static final double STROKE0=2;
+  static final int PADDING=30;//pixels
   
   void render(){
     System.out.println("render");
     int 
-      w=(int)HP.WIDTH,
-      h=(int)HP.HEIGHT;
+      w=(int)Test.WIDTH,
+      h=(int)Test.HEIGHT;
     image=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
     Graphics2D g=image.createGraphics();
     g.setRenderingHints(RENDERING_HINTS);
     g.setPaint(Color.white);
     g.fillRect(0,0,w,h);
     AffineTransform t=getCenterAndFitTransform(w,h); 
-    //
     g.setTransform(t);
-    g.setPaint(Color.black);
-    g.setStroke(new BasicStroke((float)(STROKE0/t.getScaleX())));
-    //
     renderCells(g);}
   
   void renderCells(Graphics2D g){
-    System.out.println("render cells");
+    g.setPaint(Color.gray);
+    for(KCell c:test.kcellsystem.cells){
+      g.fill(getPath(c));}
+    //
     g.setPaint(Color.black);
     double s=g.getTransform().getScaleX();
     g.setStroke(new BasicStroke((float)(STROKE0/s)));

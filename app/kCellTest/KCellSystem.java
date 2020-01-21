@@ -1,5 +1,6 @@
 package org.fleen.bread.app.kCellTest;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,13 @@ public class KCellSystem{
   public int age=-1;
   
   public void advanceState(){
+    
+    Set<KCell> newcells=new HashSet<KCell>();
+    newcells.addAll(cells);
+    for(KCell c:cells)
+      newcells.addAll(Arrays.asList(c.getAdjacents()));
+    cells=newcells;
+    
     age++;
     observer.advanced();
     

@@ -1,4 +1,4 @@
-package org.fleen.bread.app.communityExhibition2019_11_27;
+package org.fleen.bread.app.flerp0flerp;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -8,8 +8,8 @@ import java.io.File;
 public class Test{
  
   public static final int 
-    WIDTH=25,
-    HEIGHT=25,
+    WIDTH=100,
+    HEIGHT=100,
     FRAMECOUNT=900;
   
   /*
@@ -68,8 +68,8 @@ public class Test{
    * ################################
    */
       
-  static final String EXPORTDIR="/home/john/Desktop/fuzzballexport";
-  static final double EXPORTSCALE=24;
+  static final String EXPORTDIR="/home/john/Desktop/flerp0flerpexport";
+  static final double EXPORTSCALE=6;
   static final AffineTransform EXPORTTRANSFORM=AffineTransform.getScaleInstance(EXPORTSCALE,EXPORTSCALE);
   public File exportdir=new File(EXPORTDIR);
   Exporter exporter;
@@ -99,7 +99,7 @@ public class Test{
       test.fuzzballsystem.advance();
 //      System.out.println("FBS : "+test.fuzzballsystem);
      try{
-//      Thread.sleep(20);
+       Thread.sleep(20);
      }catch(Exception x){};}}
     
 }

@@ -11,6 +11,8 @@ import org.fleen.bread.app.kCellTest.KCellSystem;
 
 public class Test{
   
+  public static final int WIDTH=700,HEIGHT=700;
+  
   /*
    * ################################
    * CONSTRUCTOR
@@ -34,7 +36,7 @@ public class Test{
     public void advanced(){
       renderer.render();
       ui.repaint();
-//      exporter.export();
+      exporter.export();
       }};
       
   /*
@@ -43,7 +45,7 @@ public class Test{
    * ################################
    */
       
-  static final String EXPORT="/home/john/Desktop/hp_export";
+  static final String EXPORT="/home/john/Desktop/kct_export";
   
   public File exportdir=new File(EXPORT);
   
@@ -58,19 +60,20 @@ public class Test{
   Renderer renderer;
   Exporter exporter;
   
-  static final int EXPORTIMAGESCALE=1;
+  static final double EXPORTIMAGESCALE=0.9;
   static final AffineTransform EXPORTIMAGETRANSFORM=
     AffineTransform.getScaleInstance(EXPORTIMAGESCALE,EXPORTIMAGESCALE);
   
   BufferedImage getExportImage(){
-    return renderer.image;
-//    BufferedImage a=new BufferedImage(
-//      renderer.image.getWidth()*EXPORTIMAGESCALE,
-//      renderer.image.getHeight()*EXPORTIMAGESCALE,
-//      BufferedImage.TYPE_INT_RGB);
-//    Graphics2D g=a.createGraphics();
-//    g.drawImage(renderer.image,EXPORTIMAGETRANSFORM,null);
-//    return a;
+//    return renderer.image;
+    BufferedImage a=new BufferedImage(
+      (int)(renderer.image.getWidth()*EXPORTIMAGESCALE),
+      (int)(renderer.image.getHeight()*EXPORTIMAGESCALE),
+      BufferedImage.TYPE_INT_RGB);
+    Graphics2D g=a.createGraphics();
+    g.setRenderingHints(Renderer.RENDERING_HINTS);
+    g.drawImage(renderer.image,EXPORTIMAGETRANSFORM,null);
+    return a;
     }
   
   /*
@@ -83,7 +86,7 @@ public class Test{
    * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
    */
   
-  public static final int DURATION=10; 
+  public static final int DURATION=77; 
   
   public static final void main(String[] a){
     Test test=new Test();
