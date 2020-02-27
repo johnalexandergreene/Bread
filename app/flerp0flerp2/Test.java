@@ -1,4 +1,4 @@
-package org.fleen.bread.app.flerp0flerp;
+package org.fleen.bread.app.flerp0flerp2;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -8,8 +8,8 @@ import java.io.File;
 public class Test{
  
   public static final int 
-    WIDTH=100,
-    HEIGHT=100,
+    WIDTH=90,
+    HEIGHT=90,
     FRAMECOUNT=900;
   
   /*
@@ -59,7 +59,7 @@ public class Test{
       renderer.render();
       ui.repaint();
       //rendersoundframe
-//      exporter.exportVideoFrame();
+      exporter.exportVideoFrame();
       }};
       
   /*
@@ -69,7 +69,7 @@ public class Test{
    */
       
   static final String EXPORTDIR="/home/john/Desktop/flerp0flerpexport";
-  static final double EXPORTSCALE=6;
+  static final double EXPORTSCALE=10;
   static final AffineTransform EXPORTTRANSFORM=AffineTransform.getScaleInstance(EXPORTSCALE,EXPORTSCALE);
   public File exportdir=new File(EXPORTDIR);
   Exporter exporter;

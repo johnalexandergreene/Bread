@@ -1,4 +1,4 @@
-package org.fleen.bread.app.flerp0flerp;
+package org.fleen.bread.app.buzzingCircles;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -6,11 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class Test{
- 
-  public static final int 
-    WIDTH=100,
-    HEIGHT=100,
-    FRAMECOUNT=900;
   
   /*
    * ################################
@@ -19,34 +14,11 @@ public class Test{
    */
   
   Test(){
-    fuzzballsystem=new FuzzballSystem(WIDTH,HEIGHT,observer);
+    rmodel=new RModel(SPAN,SPAN);
+    rmodel.observers.add(observer);
     ui=new UI(this);
     renderer=new Renderer(this);
     exporter=new Exporter(this);}
-  
-  /*
-   * ################################
-   * FUZZBALLSYSTEM
-   * ################################
-   */
-  
-  FuzzballSystem fuzzballsystem;
-  
-  /*
-   * ################################
-   * UI
-   * ################################
-   */
-  
-  UI ui;
-  
-  /*
-   * ################################
-   * RENDERER
-   * ################################
-   */
- 
-  Renderer renderer;
   
   /*
    * ################################
@@ -54,12 +26,11 @@ public class Test{
    * ################################
    */
   
-  FuzzballSystemObserver observer=new FuzzballSystemObserver(){
+  RModelObserver observer=new RModelObserver(){
     public void advanced(){
       renderer.render();
       ui.repaint();
-      //rendersoundframe
-//      exporter.exportVideoFrame();
+      exporter.export();
       }};
       
   /*
@@ -68,8 +39,8 @@ public class Test{
    * ################################
    */
       
-  static final String EXPORTDIR="/home/john/Desktop/flerp0flerpexport";
-  static final double EXPORTSCALE=6;
+  static final String EXPORTDIR="/home/john/Desktop/rmodel_export";
+  static final double EXPORTSCALE=1.6;
   static final AffineTransform EXPORTTRANSFORM=AffineTransform.getScaleInstance(EXPORTSCALE,EXPORTSCALE);
   public File exportdir=new File(EXPORTDIR);
   Exporter exporter;
@@ -82,7 +53,17 @@ public class Test{
     Graphics2D g=a.createGraphics();
     g.drawImage(renderer.image,EXPORTTRANSFORM,null);
     return a;}
-
+  
+  /*
+   * ################################
+   * RMODEL, UI, RENDERER AND EXPORTER
+   * ################################
+   */
+  
+  RModel rmodel;
+  UI ui; 
+  Renderer renderer;
+  
   /*
    * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
    * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -93,13 +74,15 @@ public class Test{
    * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
    */
   
+  public static final int SPAN=400,FRAMECOUNT=1440;
+  
   public static final void main(String[] a){
     Test test=new Test();
     for(int i=0;i<FRAMECOUNT;i++){
-      test.fuzzballsystem.advance();
-//      System.out.println("FBS : "+test.fuzzballsystem);
+      test.rmodel.advanceState();
+      System.out.println("RMODEL : "+test.rmodel);
      try{
-       Thread.sleep(20);
+      Thread.sleep(20);
      }catch(Exception x){};}}
     
 }

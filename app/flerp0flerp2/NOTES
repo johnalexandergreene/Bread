@@ -1,0 +1,44 @@
+A flurry of circles drifting across the viewport
+
+Circles are of variable size. Mostly tiny. some middling. Occasionally huge.
+
+Circles are created offscreen, drift across the viewport, and are discarded.
+
+We try to keep some minimum number of circles in-view.
+
+We shoot for visual interest.
+
+We have wind. The drift vector of a circle is its personal vector + wind. 
+
+Wind shifts direction and strength randomly, shifting and rotating
+
+Circles are sometimes generated in clumps. A spatter of tiny circles.
+
+Circles are rendered to a field of cells.
+
+A cell's color depends on the number and proximity of local circles. Circles have radiance. Closer higher, further lower, until zero.
+
+We will render all this audially too.
+
+Gravity?
+
+---
+
+ffmpeg -r 24 -f image2 -s 640x640 -i %05d.png -vcodec libx264 -crf 25  -pix_fmt yuv420p -tune animation video.mp4
+
+---
+
+Another system
+
+~3 rectanguar arrays of fuzzballs, sized, spaced and oriented arbitrarily
+flowing by at arbitrary speed
+intersecting
+Thus we get a complex visual rhythm
+
+---
+
+could that be done trigonometrically? Like, with just algebra?
+Meh. Too fancy. Just make the fuzzball array objects.
+
+
+
